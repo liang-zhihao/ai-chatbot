@@ -14,5 +14,14 @@
 - [Chore]     |   Other types
 - [Refactor]  |   Code simplification, removal of redundant code, etc
 ```
+
+# Backend Install
+## Using Docker
+1. install docker
+2. build docker image `docker build -t chat-backend .`
+3. run container `docker run -p 5000:5000 --net=host chat-backend`
+
+# API Doc
+
 # Trello Link
 https://trello.com/w/chatbot723

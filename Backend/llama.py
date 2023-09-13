@@ -1,7 +1,7 @@
 from llama_index import VectorStoreIndex, SimpleDirectoryReader
 import os
 import json
-import openai
+import openai, tiktoken
 from llama_index.llms import AzureOpenAI
 from langchain.llms import AzureOpenAI
 from langchain.embeddings import OpenAIEmbeddings
@@ -71,3 +71,6 @@ def test_llama_index():
     print(f"Query: {query}")
     print(f"Answer: {answer}")
     print(f"Sources: {answer.get_formatted_sources()}")
+
+encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
+encoding.encode("tiktoken is great!")
