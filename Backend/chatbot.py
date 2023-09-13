@@ -6,11 +6,22 @@ from llama_index.llms import AzureOpenAI
 from langchain.llms import AzureOpenAI
 from langchain.embeddings import OpenAIEmbeddings
 from llama_index import GPTVectorStoreIndex, SimpleDirectoryReader, PromptHelper, LangchainEmbedding, ServiceContext
+import configparser
+from datetime import datetime
 
-os.environ["OPENAI_API_KEY"] = "ab5c91747ca0446dad39c2e227067266"
-os.environ["OPENAI_API_BASE"] = "https://loading8425-us.openai.azure.com/"
-os.environ["OPENAI_API_TYPE"] = "azure"
-os.environ["OPENAI_API_VERSION"] = "2023-05-15"
+# load configuration file
+dir_path = os.path.dirname(os.path.abspath(__file__))
+config = configparser.ConfigParser()
+config.read(os.path.join(dir_path,'config.ini'))
+OPENAI_API_KEY = config.get('openai', 'OPENAI_API_KEY')
+OPENAI_API_BASE = config.get('openai', 'OPENAI_API_BASE')
+OPENAI_API_TYPE = config.get('openai', 'OPENAI_API_TYPE')
+OPENAI_API_VERSION = config.get('openai', 'OPENAI_API_VERSION')
+
+os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
+os.environ["OPENAI_API_BASE"] = OPENAI_API_BASE
+os.environ["OPENAI_API_TYPE"] = OPENAI_API_TYPE
+os.environ["OPENAI_API_VERSION"] = OPENAI_API_VERSION
 
 openai.api_type = os.getenv('OPENAI_API_TYPE')
 openai.api_base = os.getenv('OPENAI_API_BASE')
@@ -23,9 +34,12 @@ class Chatbot:
         self.deployment_name = "gpt-35-turbo"
     
     def send_message(self, messages):
+        chat = []
+        for message in messages:
+            chat.append({"role": message["role"], "content": message["content"]})
         response = openai.ChatCompletion.create(
           engine=self.deployment_name,
-          messages=messages,
+          messages=chat,
           temperature=0.7,
           max_tokens=350,
           top_p=0.95,
@@ -34,21 +48,23 @@ class Chatbot:
           stop=None)
         
         reply = response['choices'][0]['message']['content']
+        usage = response['usage']
+        print(usage)
         return reply
 
 if __name__ == "__main__":
     chatbot = Chatbot()
     messages=[
-          {"role": "system", "content": "你是唐朝著名诗人李白，世人称你为诗仙太白，请用李白的口吻和用户对话"},
+          {"role": "system", "content": "You are Albert Einstein, Please use Albert Einstein's tone to talk to the user"},
         ]
-
     while True:
         user_input = input()
         if user_input == "bye bye":
             break
-        messages.append({"role": "user", "content": user_input})
+        messages.append({"role": "user", "content": user_input, "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")})
         reply = chatbot.send_message(messages)
         print(reply)
-        messages.append({"role": "assistant", "content": reply})
-    
-    print("Bye bye!")
+        messages.append({"role": "assistant", "content": reply, "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")})
+
+    print({"time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")})
+    print(messages)
