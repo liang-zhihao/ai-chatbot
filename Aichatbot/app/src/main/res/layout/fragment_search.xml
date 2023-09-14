@@ -44,9 +44,9 @@
     <ListView
         android:id="@+id/list_view_search"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="130dp"
+        android:layout_marginBottom="70dp"
         app:layout_constraintTop_toBottomOf="@+id/title_search"
         app:layout_constraintBottom_toBottomOf="parent"
         >
