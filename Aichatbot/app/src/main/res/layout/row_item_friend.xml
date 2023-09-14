@@ -21,5 +21,10 @@
         android:layout_marginLeft="52dp"
         android:layout_centerVertical="true"
         android:gravity="top"/>
+    
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="2dp"/>
+
 
 </FrameLayout >
