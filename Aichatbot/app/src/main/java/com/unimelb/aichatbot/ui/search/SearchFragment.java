@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.unimelb.aichatbot.MainActivity;
 import com.unimelb.aichatbot.R;
 import com.unimelb.aichatbot.databinding.FragmentSearchBinding;
 
@@ -56,36 +55,7 @@ public class SearchFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.row_item_friend,parent,false);
-
-            ImageView avatar = (ImageView)convertView.findViewById(R.id.image_avatar);
-            Handler handler = new Handler() {
-                public void handleMessage(Message msg) {
-                    switch (msg.what) {
-                        case 0:
-                            Bitmap bmp = (Bitmap) msg.obj;
-                            avatar.setImageBitmap(bmp);
-                            break;
-                    }
-                }
-            };
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    Bitmap bmp = getURLImage(mData.get(position).getAvatarUrl());
-                    Message msg = new Message();
-                    msg.what = 0;
-                    msg.obj = bmp;
-                    handler.sendMessage(msg);
-                }
-            }).start();
-
-            TextView name = (TextView)convertView.findViewById(R.id.text_name);
-            name.setText(mData.get(position).getName());
-
-            return convertView;
+            return mData.get(position).getView(convertView, parent, mContext);
         }
     }
 
@@ -123,25 +93,7 @@ public class SearchFragment extends Fragment {
         return root;
     }
 
-    // load image by url
-    public Bitmap getURLImage(String url) {
-        Bitmap bmp = null;
-        try {
-            URL myurl = new URL(url);
 
-            HttpURLConnection conn = (HttpURLConnection) myurl.openConnection();
-            conn.setConnectTimeout(6000);
-            conn.setDoInput(true);
-            conn.setUseCaches(false);
-            conn.connect();
-            InputStream is = conn.getInputStream();
-            bmp = BitmapFactory.decodeStream(is);
-            is.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return bmp;
-    }
 
     @Override
     public void onDestroyView() {
