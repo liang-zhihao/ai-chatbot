@@ -1,13 +1,22 @@
 package com.unimelb.aichatbot;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Spanned;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
+import com.unimelb.aichatbot.util.KeyboardUtils;
 
 import org.commonmark.node.Node;
 
@@ -24,6 +33,8 @@ public class MessageActivity extends AppCompatActivity {
     private MaterialButton sendMessageButton;
     private MaterialButton groupButton;
 
+    private LinearLayout bottomSheetLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,9 +46,9 @@ public class MessageActivity extends AppCompatActivity {
         sendMessageButton = findViewById(R.id.send_message_button);
         groupButton = findViewById(R.id.message_more_options_button);
 
+        bottomSheetLayout = findViewById(R.id.message_bottom_layout);
 
         List<MessageAdapter.Message> messages = new ArrayList<>();
-
 
 
         messages.add(new MessageAdapter.Message("June 11", "John Doe", "**Hello there!**", "9:00"));
@@ -69,12 +80,85 @@ public class MessageActivity extends AppCompatActivity {
         });
 
         // Setting click listener for the group button
-        groupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Handle group button click event here
-                // Perhaps you want to open a group chat or show group options
+        groupButton.setOnClickListener(v -> {
+            View currentFocus = this.getCurrentFocus();
+
+//
+            if (!hasPopupBottomSheet() && currentFocus == null) {
+                showBottomSheetDialog();
+                return;
+            }
+
+            if (hasPopupBottomSheet()) {
+                messageEditText.requestFocus();
+                currentFocus = this.getCurrentFocus();
+                KeyboardUtils.openKeyboard(this, currentFocus);
+                showBottomSheetDialog();
+            } else {
+                showBottomSheetDialog();
+                KeyboardUtils.hideKeyboard(this, currentFocus);
+                messageEditText.clearFocus();
+
+
             }
         });
+
+//
+        messageEditText.setOnClickListener(v -> {
+            closeBottomSheet();
+        });
+    }
+
+    private boolean hasPopupBottomSheet() {
+        return bottomSheetLayout.getChildCount() > 1;
+    }
+
+    private void closeKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    private void closeBottomSheet() {
+        if (hasPopupBottomSheet()) {
+            bottomSheetLayout.removeViewAt(1);
+            return;
+        }
+
+    }
+
+    private void showBottomSheetDialog() {
+
+        View view = getLayoutInflater().inflate(R.layout.bottom_sheet_dialog, null);
+//        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        if (bottomSheetLayout.getChildCount() > 1) {
+            bottomSheetLayout.removeViewAt(1);
+            return;
+        }
+        bottomSheetLayout.addView(view);
+
+        ImageButton sendPictureButton = view.findViewById(R.id.message_add_photo_button);
+        sendPictureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: Handle send picture action
+
+            }
+        });
+
+        ImageButton handleMapBtn = view.findViewById(R.id.message_map_button);
+        handleMapBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: Handle record voice action
+
+            }
+        });
+
+        // ... set click listeners for other options
+
     }
 }
+

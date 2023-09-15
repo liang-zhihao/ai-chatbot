@@ -1,0 +1,51 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/cultured"
+    android:divider="@drawable/bottom_sheet_divider"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal"
+    android:paddingVertical="8dp"
+    android:showDividers="middle">
+
+    <!-- add photo Icon -->
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/message_add_photo_button"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:backgroundTint="@color/white"
+        android:background="@drawable/rounded_icon_background"
+        android:contentDescription="Camera"
+        android:src="@drawable/ic_add_photo" />
+
+    <!-- map Icon -->
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/message_map_button"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:backgroundTint="@color/white"
+        android:background="@drawable/rounded_icon_background"
+        android:contentDescription="Phone"
+        android:src="@drawable/ic_location_point" />
+
+    <!-- question Icon -->
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/message_question_button"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:backgroundTint="@color/white"
+        android:background="@drawable/rounded_icon_background"
+        android:contentDescription="Message"
+        android:src="@drawable/ic_help_question" />
+
+    <!-- camera Icon -->
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/message_camera_button"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:backgroundTint="@color/white"
+        android:background="@drawable/rounded_icon_background"
+        android:contentDescription="Map"
+        android:src="@drawable/ic_photo_camera" />
+
+</LinearLayout>
