@@ -6,6 +6,8 @@ from .chatbot import Chatbot
 from .database import MongoDB
 import configparser
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager
+from flask_socketio import SocketIO, send
+
 
 file_path = os.path.abspath(__file__)
 dir_path = os.path.dirname(file_path)
@@ -24,11 +26,21 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config['JWT_SECRET_KEY']  = JWT_SECRET_KEY
     jwt = JWTManager(app)
+    socketio = SocketIO(app, cors_allowed_origins="*")
 
     # test server status
     @app.route('/', methods=['GET'])
     def server_status():
         return {"status": "success", "message": "server is running"}, 200
+
+    @app.route('/chat', methods=['GET'])
+    def index():
+        return render_template('chat.html')
+
+    @socketio.on('message')
+    def handleMessage(msg):
+        print('Message: ' + msg)
+        send(msg, broadcast=True)
 
     # user register
     @app.route('/api/register', methods=['POST'])

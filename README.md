@@ -22,6 +22,7 @@
 3. run container `docker run -p 5000:5000 --net=host chat-backend`
 
 # API Doc
+https://documenter.getpostman.com/view/17696381/2s9YC1XEqp
 
 # Trello Link
 https://trello.com/w/chatbot723
