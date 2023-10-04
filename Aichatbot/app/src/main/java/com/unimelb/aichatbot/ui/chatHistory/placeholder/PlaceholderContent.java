@@ -1,5 +1,7 @@
 package com.unimelb.aichatbot.ui.chatHistory.placeholder;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +25,7 @@ public class PlaceholderContent {
      */
     public static final Map<String, PlaceholderItem> ITEM_MAP = new HashMap<String, PlaceholderItem>();
 
-    private static final int COUNT = 25;
+    private static final int COUNT = 10;
 
     static {
         // Add some sample items.
@@ -69,4 +71,21 @@ public class PlaceholderContent {
             return content;
         }
     }
+
+
+    public static void toggleItems() {
+        if (ITEMS.size() == 5) {
+            for (int i = 6; i <= COUNT; i++) {
+                addItem(createPlaceholderItem(i));
+            }
+        } else {
+            while (ITEMS.size() > 5) {
+                ITEMS.remove(ITEMS.size() - 1);
+            }
+        }
+    }
+
+
+
+
 }
