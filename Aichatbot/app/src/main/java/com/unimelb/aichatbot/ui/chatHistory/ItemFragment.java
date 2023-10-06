@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -23,7 +24,7 @@ public class ItemFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
-
+    private MyItemRecyclerViewAdapter mAdapter;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -54,18 +55,32 @@ public class ItemFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
+        //get view
+        RecyclerView recyclerView = view.findViewById(R.id.chat_list);
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(PlaceholderContent.ITEMS));
-        }
+        //set list listener
+        MyItemRecyclerViewAdapter adapter = new MyItemRecyclerViewAdapter(
+                PlaceholderContent.ITEMS,
+                new MyItemRecyclerViewAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(PlaceholderContent.PlaceholderItem item) {
+                        // to do when click
+                        Toast.makeText(getContext(), "Item clicked: " + item.content, Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+        //set list adapter
+        recyclerView.setAdapter(adapter);
+        mAdapter=adapter;
         return view;
     }
+
+    public void updateList() {
+        // update list content
+        PlaceholderContent.toggleItems();
+        // notify list has changed
+        mAdapter.notifyDataSetChanged();
+    }
+
 }

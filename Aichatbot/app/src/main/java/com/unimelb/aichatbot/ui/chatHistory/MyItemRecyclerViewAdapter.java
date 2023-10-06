@@ -1,12 +1,14 @@
 package com.unimelb.aichatbot.ui.chatHistory;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unimelb.aichatbot.databinding.FragmentItemBinding;
+import com.unimelb.aichatbot.ui.chatHistory.placeholder.PlaceholderContent;
 import com.unimelb.aichatbot.ui.chatHistory.placeholder.PlaceholderContent.PlaceholderItem;
 
 import java.util.List;
@@ -18,9 +20,14 @@ import java.util.List;
 public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
 
     private final List<PlaceholderItem> mValues;
-
-    public MyItemRecyclerViewAdapter(List<PlaceholderItem> items) {
+    private final OnItemClickListener mListener;
+    public MyItemRecyclerViewAdapter(List<PlaceholderContent.PlaceholderItem> items, OnItemClickListener listener) {
         mValues = items;
+        mListener = listener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(PlaceholderContent.PlaceholderItem item);
     }
 
     @Override
@@ -51,7 +58,19 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
             super(binding.getRoot());
             mIdView = binding.itemNumber;
             mContentView = binding.content;
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        mListener.onItemClick(mItem);
+                    }
+                }
+            });
+
         }
+
+
 
         @Override
         public String toString() {
