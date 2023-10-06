@@ -1,6 +1,7 @@
 package com.unimelb.aichatbot.ui.chatHistory;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unimelb.aichatbot.R;
+import com.unimelb.aichatbot.modules.chat.MessageActivity;
 import com.unimelb.aichatbot.ui.chatHistory.placeholder.PlaceholderContent;
 
 /**
@@ -66,6 +68,11 @@ public class ItemFragment extends Fragment {
                     public void onItemClick(PlaceholderContent.PlaceholderItem item) {
                         // to do when click
                         Toast.makeText(getContext(), "Item clicked: " + item.content, Toast.LENGTH_SHORT).show();
+
+                        Context context = view.getContext();
+                        Intent intent = new Intent(context, MessageActivity.class);
+                        intent.putExtra("item_id", item.id);
+                        startActivity(intent);
                     }
                 }
         );
