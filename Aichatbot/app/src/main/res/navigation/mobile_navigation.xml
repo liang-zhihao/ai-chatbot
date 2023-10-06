@@ -18,8 +18,14 @@
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.unimelb.aichatbot.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
+        android:id="@+id/navigation_settings"
+        android:name="com.unimelb.aichatbot.ui.setting.SettingFragment"
+        android:label="@string/title_setting"
         tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/navigation_search"
+        android:name="com.unimelb.aichatbot.ui.search.SearchFragment"
+        android:label="@string/title_search"
+        tools:layout="@layout/fragment_search" />
 </navigation>
