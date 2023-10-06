@@ -14,4 +14,5 @@
     <!--    our project design system-->
     <color name="cultured">#F4F4F4</color>
     <color name="primary">#17CE92</color>
+    <color name="chat_left">#eef1f6</color>
 </resources>

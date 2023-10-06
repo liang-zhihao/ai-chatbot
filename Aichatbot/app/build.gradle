@@ -15,7 +15,13 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    viewBinding {
+        enabled = true
+    }
 
+    dataBinding {
+        enabled = true
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -32,7 +38,15 @@ android {
 }
 
 dependencies {
+    implementation 'com.google.android.gms:play-services-location:19.0.1'
+    def room_version = "2.5.2"
 
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+
+    // optional - Paging 3 Integration
+    implementation "androidx.room:room-paging:$room_version"
+    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.5.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -43,25 +57,26 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
-
-    final def markwon_version ='4.6.2'
-    implementation"io.noties.markwon:core:$markwon_version"
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    final def markwon_version = '4.6.2'
+    implementation "io.noties.markwon:core:$markwon_version"
 //    implementation"io.noties.markwon:editor:$markwon_version"
-    implementation"io.noties.markwon:ext-latex:$markwon_version"
-    implementation"io.noties.markwon:ext-strikethrough:$markwon_version"
-    implementation"io.noties.markwon:ext-tables:$markwon_version"
-    implementation"io.noties.markwon:ext-tasklist:$markwon_version"
-    implementation"io.noties.markwon:html:$markwon_version"
-    implementation"io.noties.markwon:image:$markwon_version"
-    implementation"io.noties.markwon:image-coil:$markwon_version"
-    implementation"io.noties.markwon:image-glide:$markwon_version"
-    implementation"io.noties.markwon:image-picasso:$markwon_version"
-    implementation"io.noties.markwon:inline-parser:$markwon_version"
-    implementation"io.noties.markwon:linkify:$markwon_version"
-    implementation"io.noties.markwon:recycler:$markwon_version"
-    implementation"io.noties.markwon:recycler-table:$markwon_version"
-    implementation"io.noties.markwon:simple-ext:$markwon_version"
+    implementation "io.noties.markwon:ext-latex:$markwon_version"
+    implementation "io.noties.markwon:ext-strikethrough:$markwon_version"
+    implementation "io.noties.markwon:ext-tables:$markwon_version"
+    implementation "io.noties.markwon:ext-tasklist:$markwon_version"
+    implementation "io.noties.markwon:html:$markwon_version"
+    implementation "io.noties.markwon:image:$markwon_version"
+    implementation "io.noties.markwon:image-coil:$markwon_version"
+    implementation "io.noties.markwon:image-glide:$markwon_version"
+    implementation "io.noties.markwon:image-picasso:$markwon_version"
+    implementation "io.noties.markwon:inline-parser:$markwon_version"
+    implementation "io.noties.markwon:linkify:$markwon_version"
+    implementation "io.noties.markwon:recycler:$markwon_version"
+    implementation "io.noties.markwon:recycler-table:$markwon_version"
+    implementation "io.noties.markwon:simple-ext:$markwon_version"
+
 
 }

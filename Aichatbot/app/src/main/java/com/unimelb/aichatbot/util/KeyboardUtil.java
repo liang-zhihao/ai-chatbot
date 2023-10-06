@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-public class KeyboardUtils {
+public class KeyboardUtil {
 
     // Function to open the keyboard
     public static void openKeyboard(Context context, View view) {
@@ -27,14 +27,6 @@ public class KeyboardUtils {
     }
 
     // Function to check if the keyboard is shown
-    public static boolean isKeyboardShown(View rootView) {
-        final int softKeyboardHeightDpThreshold = 100;
-        int rootViewHeight = rootView.getHeight();
-        int rootViewVisibleHeight = rootView.getRootView().getHeight();
-        int heightDiff = rootViewVisibleHeight - rootViewHeight;
-        float density = rootView.getResources().getDisplayMetrics().density;
 
-        return heightDiff > softKeyboardHeightDpThreshold * density;
-    }
 }
 

@@ -10,7 +10,7 @@
 
     <!-- add photo Icon -->
     <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/message_add_photo_button"
+        android:id="@+id/btn_msg__add_image"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:backgroundTint="@color/white"
@@ -20,7 +20,7 @@
 
     <!-- map Icon -->
     <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/message_map_button"
+        android:id="@+id/btn_msg__map"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:backgroundTint="@color/white"
@@ -40,7 +40,7 @@
 
     <!-- camera Icon -->
     <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/message_camera_button"
+        android:id="@+id/btn_msg__camera"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:backgroundTint="@color/white"
