@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="0dp"
+    android:layout_marginTop="16dp">
+
+    <LinearLayout
+        android:id="@+id/ll_msg__box"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/ll_avatar_time"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_msg__avatar"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/tv_msg__msg_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Admin - 121212" />
+        </LinearLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_gchat_message_other"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="#eef1f6"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:cardPreventCornerOverlap="false"
+            app:cardUseCompatPadding="true">
+
+            <TextView
+                android:id="@+id/tv_gchat_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:maxWidth="260dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="8dp"
+                android:paddingRight="8dp"
+                android:text="MessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageMessageessageMessageessageMessage"
+                android:textColor="#000000"
+                android:textSize="16sp" />
+
+        </androidx.cardview.widget.CardView>
+
+        <ImageView
+            android:id="@+id/iv_msg__msg_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
