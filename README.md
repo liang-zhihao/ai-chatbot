@@ -29,6 +29,15 @@ https://documenter.getpostman.com/view/17696381/2s9YC1XEqp
 
 - http request lib: https://square.github.io/retrofit/
 - android material: https://github.com/material-components/material-components-android/blob/master/docs/components/Button.md
+# Important Notes for android development
+  
+1. Zhihao have refactored the project, everyone must pay close attention to the project structure and naming conventions.
+2. Refer to LoginManager and SharedPreferencesHelper to store some global data.
+3. Refer to LoginActivity - Add loading animations to some buttons using this library: https://github.com/leandroBorgesFerreira/LoadingButtonAndroid#installation
+4. You can look at LoginActivity, SignActivity, and MessageActivity -> handleSendMessage, and the classes in the network package to send network requests. We are using a package called retrofit2.
+5. Refer to MessageActivity's onOptionsItemSelected and setupActionBar to use the Actionbar to display the top title and action bar.
+6. Pay attention to maintaining a visually pleasing distance between the view elements.
+
 # Trello Link
 https://trello.com/w/chatbot723
 

@@ -1,4 +1,4 @@
-package com.unimelb.aichatbot.modules.chat.adapter;
+package com.unimelb.aichatbot.modules.chatroom.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -16,11 +16,12 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unimelb.aichatbot.R;
-import com.unimelb.aichatbot.modules.chat.model.Message;
-import com.unimelb.aichatbot.modules.chat.model.type.MessageType;
-import com.unimelb.aichatbot.modules.chat.model.type.SenderType;
+import com.unimelb.aichatbot.modules.chatroom.model.Message;
+import com.unimelb.aichatbot.modules.chatroom.model.type.MessageType;
+import com.unimelb.aichatbot.modules.chatroom.model.type.SenderType;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Locale;
 
 import io.noties.markwon.Markwon;
@@ -34,6 +35,12 @@ public class MessageAdapter extends ListAdapter<Message, MessageAdapter.MessageV
         super(new MessageDiff());
         this.context = context;
         markwon = Markwon.builder(context).build();
+    }
+
+    @Override
+    public void submitList(@NonNull List<Message> list) {
+        submitList(list, null);
+        notifyItemChanged(list.size() - 1);
     }
 
     @NonNull
@@ -133,22 +140,6 @@ public class MessageAdapter extends ListAdapter<Message, MessageAdapter.MessageV
         return 0; // Invalid View Type
     }
 
-    // Rest of your Adapter including the MessageDiff and MessageViewHolder remains the same
-    static class MessageViewHolder extends RecyclerView.ViewHolder {
-        final TextView messageTextView;
-        final TextView timeTextView;
-        final ImageView avatarImageView;
-
-        public MessageViewHolder(@NonNull View itemView) {
-            super(itemView);
-            messageTextView = itemView.findViewById(R.id.tv_gchat_message);
-            timeTextView = itemView.findViewById(R.id.tv_msg__msg_time);
-            avatarImageView = itemView.findViewById(R.id.iv_msg__avatar);
-
-            // Initialize other views as per your layout
-        }
-    }
-
     enum ViewType {
         VIEW_TYPE_TEXT_ME(1),
         VIEW_TYPE_TEXT_OTHER(2),
@@ -176,6 +167,22 @@ public class MessageAdapter extends ListAdapter<Message, MessageAdapter.MessageV
             return value;
         }
     }
+
+    // Rest of your Adapter including the MessageDiff and MessageViewHolder remains the same
+    static class MessageViewHolder extends RecyclerView.ViewHolder {
+        final TextView messageTextView;
+        final TextView timeTextView;
+        final ImageView avatarImageView;
+
+        public MessageViewHolder(@NonNull View itemView) {
+            super(itemView);
+            messageTextView = itemView.findViewById(R.id.tv_gchat_message);
+            timeTextView = itemView.findViewById(R.id.tv_msg__msg_time);
+            avatarImageView = itemView.findViewById(R.id.iv_msg__avatar);
+
+            // Initialize other views as per your layout
+        }
+    }
 }
 
 class MessageDiff extends DiffUtil.ItemCallback<Message> {
@@ -183,7 +190,7 @@ class MessageDiff extends DiffUtil.ItemCallback<Message> {
     @Override
     public boolean areItemsTheSame(@NonNull Message oldItem, @NonNull Message newItem) {
         // Replace with your actual condition
-        return oldItem.getId().equals(newItem.getId());
+        return oldItem.equals(newItem);
     }
 
     @Override
@@ -191,6 +198,4 @@ class MessageDiff extends DiffUtil.ItemCallback<Message> {
         // Replace with your actual condition
         return oldItem.equals(newItem);
     }
-
-
 }

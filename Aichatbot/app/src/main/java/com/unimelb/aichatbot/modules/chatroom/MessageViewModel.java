@@ -1,10 +1,10 @@
-package com.unimelb.aichatbot.modules.chat;
+package com.unimelb.aichatbot.modules.chatroom;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.unimelb.aichatbot.modules.chat.model.Message;
+import com.unimelb.aichatbot.modules.chatroom.model.Message;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,9 @@ public class MessageViewModel extends ViewModel {
     // Logic for adding, removing or modifying messages
     public void addMessage(Message message) {
         List<Message> currentMessages = messagesLiveData.getValue();
-        if (currentMessages == null) currentMessages = new ArrayList<>();
+        if (currentMessages == null) {
+            currentMessages = new ArrayList<>();
+        }
         currentMessages.add(message);
         messagesLiveData.setValue(currentMessages);
     }

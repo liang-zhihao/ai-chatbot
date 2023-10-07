@@ -1,10 +1,13 @@
-package com.unimelb.aichatbot.modules.chat.model;
+package com.unimelb.aichatbot.modules.chatroom.model;
 
-import com.unimelb.aichatbot.modules.chat.model.type.MessageType;
-import com.unimelb.aichatbot.modules.chat.model.type.SenderType;
+import androidx.annotation.NonNull;
+
+import com.unimelb.aichatbot.modules.chatroom.model.type.MessageType;
+import com.unimelb.aichatbot.modules.chatroom.model.type.SenderType;
 
 import java.util.Date;
 // UUID
+import java.util.Objects;
 import java.util.UUID;
 
 public class Message {
@@ -24,7 +27,7 @@ public class Message {
         this.timestamp = timestamp;
         this.senderType = senderType;
     }
-    
+
     // Getters and Setters for the fields
     public String getContent() {
         return content;
@@ -90,9 +93,10 @@ public class Message {
             return false;
         }
         Message message = (Message) o;
-        return message.getId().equals(this.getId());
+        return Objects.equals(id, message.getId());
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Message{" +

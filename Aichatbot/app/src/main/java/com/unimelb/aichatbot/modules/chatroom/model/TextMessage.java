@@ -1,7 +1,7 @@
-package com.unimelb.aichatbot.modules.chat.model;
+package com.unimelb.aichatbot.modules.chatroom.model;
 
-import com.unimelb.aichatbot.modules.chat.model.type.MessageType;
-import com.unimelb.aichatbot.modules.chat.model.type.SenderType;
+import com.unimelb.aichatbot.modules.chatroom.model.type.MessageType;
+import com.unimelb.aichatbot.modules.chatroom.model.type.SenderType;
 
 import java.util.Date;
 

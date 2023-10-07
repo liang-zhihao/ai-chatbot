@@ -1,4 +1,4 @@
-package com.unimelb.aichatbot.modules.chat.model.type;
+package com.unimelb.aichatbot.modules.chatroom.model.type;
 
 import com.google.gson.annotations.SerializedName;
 

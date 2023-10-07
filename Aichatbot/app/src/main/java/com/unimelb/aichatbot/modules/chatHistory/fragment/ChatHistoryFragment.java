@@ -29,7 +29,6 @@ public class ChatHistoryFragment extends Fragment {
                 if (itemFragment != null) {
                     itemFragment.updateList();
                 }
-
             }
         });
 
