@@ -1,12 +1,12 @@
 from datetime import datetime
 import os, json
-from flask import Flask, render_template, abort
+from flask import Flask, render_template, abort, jsonify
 from flask import request
 from .chatbot import Chatbot
 from .database import MongoDB
 import configparser
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager
-from flask_socketio import SocketIO, send
+from flask_socketio import SocketIO, send, emit
 
 
 file_path = os.path.abspath(__file__)
@@ -20,6 +20,13 @@ config.read(os.path.join(dir_path,'config.ini'))
 JWT_SECRET_KEY = config.get('secret', 'JWT_SECRET_KEY')
 CHAT_LENGTH_LIMIT = config.getint('openai', 'CHAT_LENGTH_LIMIT')
 
+def error_out(msg, code):
+    return jsonify({
+        'status': code,
+        'message': msg,
+        'success': False,
+        'data':{}
+    }), code
 
 def create_app(test_config=None):
     # create and configure the app
@@ -28,14 +35,59 @@ def create_app(test_config=None):
     jwt = JWTManager(app)
     socketio = SocketIO(app, cors_allowed_origins="*")
 
+    # Mapping of username to session ID
+    users = {}
+
+    @jwt.expired_token_loader
+    def expired_token_callback(jwt_header, jwt_payload):
+        return error_out('Token has expired', 401)
+    
+    @jwt.unauthorized_loader
+    def unauthorized_loader_callback(msg):
+        return error_out('Missing Authorization Header', 401)
+
+    @jwt.invalid_token_loader
+    def invalid_token_callback(msg):
+        return error_out('Invalid JWT', 422)
+
     # test server status
     @app.route('/', methods=['GET'])
     def server_status():
-        return {"status": "success", "message": "server is running"}, 200
+        return jsonify({
+            'status': 200,
+            'message': 'server is running',
+            'success': True,
+            'data':{}
+        }), 200
 
     @app.route('/chat', methods=['GET'])
     def index():
         return render_template('chat.html')
+
+    @socketio.on('connect')
+    def handle_connect():
+        print("User Connected", request.sid, type(request.sid))
+
+    @socketio.on('disconnect')
+    def handle_disconnect():
+        username = None
+        for user, sid in users.items():
+            if sid == request.sid:
+                username = user
+                break
+        if username:
+            del users[username]
+            print(f"{username} Disconnected")
+
+    @socketio.on('private_message')
+    def handle_private_message(data):
+        to_username = data['to']
+        message = data['message']
+        from_username = data['from']
+        to_sid = users.get(to_username)
+
+        print('private_message', {'from': from_username, 'message': message},to_username)
+        emit('private_message', {'from': from_username, 'message': message}, room=to_username)
 
     @socketio.on('message')
     def handleMessage(msg):
@@ -51,10 +103,15 @@ def create_app(test_config=None):
             password = request.json['password']
             status = db.create_user(user_id, username, password)
             if status["status"] == "success":
-                return status, 200
+                return jsonify({
+                    'status': 200,
+                    'message': status["message"],
+                    'success': True,
+                    'data':{}
+                }), 200
         except Exception as e:
-            return {"status": "error", "message": str(e)}, 500
-        return status, 400
+            return error_out(str(e), 401)
+        return error_out(status["message"], 401)
     
     @app.route('/api/login', methods=['POST'])
     def login():
@@ -65,12 +122,15 @@ def create_app(test_config=None):
             print(status)
             if status["status"] == "success":
                 access_token = create_access_token(identity=user_id)
-                print(access_token)
-                status["access_token"] = access_token
-                return status, 200
+                return jsonify({
+                    'status': 200,
+                    'message': status["message"],
+                    'success': True,
+                    'data': {"access_token": access_token}
+                }), 200
         except Exception as e:
-            return {"status": "error", "message": str(e)}, 500  
-        return status, 400
+            return error_out(str(e), 401)
+        return error_out(status["message"], 401)
     
     @app.route('/api/send_img', methods=['GET', 'POST'])
     @jwt_required()
@@ -88,14 +148,24 @@ def create_app(test_config=None):
             try:
                 user_id = request.json['user_id']
                 if user_id != current_user:
-                    return {"status": "error", "message": "user_id not match with auth token"}, 400
+                    return error_out("user_id not match with auth token", 401)
                 user_roles = db.get_user_roles(user_id)
-                return {"status": "success","roles": user_roles}, 200
+                return jsonify({
+                    'status': 200,
+                    'message': "get user roles successfully",
+                    'success': True,
+                    'data': {"roles": user_roles}
+                }), 200
             except Exception as e:
-                return {"status": "error","roles": [], "message": str(e)}, 500
+                return error_out(str(e), 401)
         else:
             roles = get_roles()
-        return {"status": "success", "roles": roles}, 200
+        return jsonify({
+                'status': 200,
+                'message': "get roles successfully",
+                'success': True,
+                'data': {"roles": roles}
+            }), 200
 
     # user send message to a chatbot
     @app.route('/api/chatbot/send_message', methods=['POST'])
@@ -105,32 +175,37 @@ def create_app(test_config=None):
             user_id = request.json['user_id']
             # match user_id with auth token
             if user_id != get_jwt_identity():
-                return {"status": "error", "message": "user_id not match with auth token"}, 400
+                return error_out("user_id not match with auth token", 401)
             chatbot_id = request.json['chatbot_id']
             message = {"role": "user", "content": request.json['message'], "time": get_time()}
 
             # check message length
             if request.json['message'] == "":
-                return {"status": "error", "message": "message cannot be empty"}, 400
+                return error_out("message should not be empty", 401)
             print(request.json['message'].split())
             if len(request.json['message'].split()) > CHAT_LENGTH_LIMIT :
-                return {"status": "error", "message": "message length should be less than"+str(CHAT_LENGTH_LIMIT)}, 400
+                return error_out("message length should be less than " + str(CHAT_LENGTH_LIMIT), 401)
             
             # check if user exists
             if db.user_exists(user_id):
                 chat_history = db.get_chat_history(user_id, chatbot_id)
                 if chat_history == None:
-                    return {"status": "error", "message": "user dont have this chatbot, chat history not exists"}, 400
+                    return error_out("user dont have this chatbot, chat history not exists", 401)
                 chat_history.append(message)
                 reply = chatbot.send_message(chat_history)
                 time = get_time()
                 chat_history.append({"role": "assistant", "content": reply, "time": time})
                 db.update_chat_history(user_id, chatbot_id, chat_history)
-                return {"status": "success", "message": reply, "time":time}, 200
+                return jsonify({
+                    'status': 200,
+                    'message': "send message successfully",
+                    'success': True,
+                    'data': {"time": time, "reply": reply}
+                }), 200
             else:
-                return {"status": "error", "message": "user not exists or missing parameter"}, 500
+                return error_out("user not exists", 401)
         except Exception as e:
-            return {"status": "error", "message": str(e)}, 400
+            return error_out(str(e), 401)
 
     # user create a new chatbot
     @app.route('/api/chatbot/create_chatbot', methods=['POST'])
@@ -143,21 +218,26 @@ def create_app(test_config=None):
 
             # match user_id with auth token
             if user_id != get_jwt_identity():
-                return {"status": "error", "message": "user_id not match with auth token"}, 400
+                return error_out("user_id not match with auth token", 401) 
             
             if chatbot_id not in available_roles:
-                return {"status": "error", "message": "chatbot not exists"}, 400
+                return error_out("chatbot_id not exists", 401)
             init_message = json.load(open(os.path.join(dir_path, 'roles', chatbot_id + '.json'), encoding='utf-8'))
         except Exception as e:
-            return {"status": "error", "message": str(e)}, 400
+            return error_out(str(e), 401)
         record = {
             "user_id": user_id,
             "chatbot_id": chatbot_id,
             "messages": [init_message],
         }
         if db.new_user_chatbot(record):
-            return {"status": "success", "message": "create chatbot successfully"}, 200
-        return {"status": "error", "message": "create chatbot failed, chatbot already exist"}, 400
+            return jsonify({
+                'status': 200,
+                'message': "create chatbot successfully",
+                'success': True,
+                'data': {}
+            }), 200
+        return error_out("create chatbot failed, chatbot already exist", 401)
         
 
     # user delete a chatbot
@@ -169,12 +249,17 @@ def create_app(test_config=None):
             chatbot_id = request.json['chatbot_id']
             # match user_id with auth token
             if user_id != get_jwt_identity():
-                return {"status": "error", "message": "user_id not match with auth token"}, 400
+                return error_out("user_id not match with auth token", 401)
             if db.delete_chat_history(user_id, chatbot_id):
-                return {"status": "success", "message": "delete chat history successfully"}, 200
-            return {"status": "error", "message": "delete chat history failed"}, 400
+                return jsonify({
+                    'status': 200,
+                    'message': "delete chatbot successfully",
+                    'success': True,
+                    'data': {}
+                }), 200
+            return error_out("delete chatbot failed", 401)
         except Exception as e:
-            return {"status": "error", "message": str(e)}, 400
+            return error_out(str(e), 401)
 
     # get user chat history
     @app.route('/api/chatbot/get_chat_history', methods=['GET'])
@@ -185,15 +270,20 @@ def create_app(test_config=None):
             chatbot_id = request.json['chatbot_id']
             # match user_id with auth token
             if user_id != get_jwt_identity():
-                return {"status": "error", "message": "user_id not match with auth token"}, 400
+                return error_out("user_id not match with auth token", 401)
             
             if db.user_exists(user_id):
                 chat_history = db.get_chat_history(user_id, chatbot_id)
                 if chat_history == None:
-                    return {"status": "error", "message": "user dont have this chatbot, chat history not exists"}, 400
-                return {"status": "success", "chat history": chat_history}, 200
+                    return error_out("user dont have this chatbot, chat history not exists", 401)
+                return jsonify({
+                    'status': 200,
+                    'message': "get chat history successfully",
+                    'success': True,
+                    'data': {"chat_history": chat_history}
+                }), 200
         except Exception as e:
-            return {"status": "error", "message": str(e)}, 400
+            return error_out(str(e), 401)
         
     # user delete chat history
     @app.route('/api/chatbot/delete_chat_history', methods=['POST'])
@@ -205,12 +295,17 @@ def create_app(test_config=None):
             init_message = json.load(open(os.path.join(dir_path, 'roles', chatbot_id + '.json'), encoding='utf-8'))
             # match user_id with auth token
             if user_id != get_jwt_identity():
-                return {"status": "error", "message": "user_id not match with auth token"}, 400
+                return error_out("user_id not match with auth token", 401)
             if db.update_chat_history(user_id, chatbot_id, [init_message]):
-                return {"status": "success", "message": "delete chat history successfully"}, 200
-            return {"status": "error", "message": "delete chat history failed"}, 400
+                return jsonify({
+                    'status': 200,
+                    'message': "delete chat history successfully",
+                    'success': True,
+                    'data': {}
+                }), 200
+            return error_out("delete chat history failed", 401)
         except Exception as e:
-            return {"status": "error", "message": str(e)}, 400
+            return error_out(str(e), 401)
         
     # get user information
     @app.route('/api/user/get_user_info', methods=['GET'])

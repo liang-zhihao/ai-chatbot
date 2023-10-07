@@ -35,7 +35,8 @@ class Chatbot:
     
     def send_message(self, messages):
         chat = []
-        for message in messages:
+        # get latest 5 messages
+        for message in messages[-10:]:
             chat.append({"role": message["role"], "content": message["content"]})
         response = openai.ChatCompletion.create(
           engine=self.deployment_name,

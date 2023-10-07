@@ -16,6 +16,7 @@
 ```
 
 # Backend Install
+flask --app Backend run --host=0.0.0.0
 ## Using Docker
 1. install docker
 2. build docker image `docker build -t chat-backend .`
