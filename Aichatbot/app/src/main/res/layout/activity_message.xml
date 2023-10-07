@@ -13,11 +13,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        tools:context=".modules.chat.activity.MessageActivity">
 
-        tools:context=".modules.chat.MessageActivity">
-
-
-        <!-- RecyclerView to display a list of messages or other content -->
 
         <!-- LinearLayout to contain the message input field and send button -->
 
@@ -29,7 +26,7 @@
             app:layout_constraintBottom_toTopOf="@+id/message_bottom_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/top_bar" />
 
         <LinearLayout
             android:id="@+id/message_bottom_layout"

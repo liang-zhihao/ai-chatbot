@@ -3,29 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_chat_history">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.unimelb.aichatbot.ui.home.HomeFragment"
-        android:label="@string/title_home"
+        android:id="@+id/navigation_chat_history"
+        android:name="com.unimelb.aichatbot.modules.chatHistory.fragment.ChatHistoryFragment"
+        android:label="@string/bottom_nav_title1"
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.unimelb.aichatbot.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
+        android:id="@+id/navigation_contacts"
+        android:name="com.unimelb.aichatbot.modules.contacts.fragment.ContactsFragment"
+        android:label="@string/bottom_nav_title2"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
         android:id="@+id/navigation_settings"
-        android:name="com.unimelb.aichatbot.ui.setting.SettingFragment"
-        android:label="@string/title_setting"
+        android:name="com.unimelb.aichatbot.modules.setting.fragment.SettingFragment"
+        android:label="@string/bottom_nav_title4"
         tools:layout="@layout/fragment_notifications" />
 
     <fragment
         android:id="@+id/navigation_search"
-        android:name="com.unimelb.aichatbot.ui.search.SearchFragment"
-        android:label="@string/title_search"
+        android:name="com.unimelb.aichatbot.modules.searchFriend.fragment.SearchFriendFragment"
+        android:label="@string/bottom_nav_title3"
         tools:layout="@layout/fragment_search" />
 </navigation>

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Aichatbot</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_setting">Setting</string>
-    <string name="title_search">Search</string>
+    <string name="bottom_nav_title1">Chats</string>
+    <string name="bottom_nav_title2">Contacts</string>
+    <string name="bottom_nav_title4">Setting</string>
+    <string name="bottom_nav_title3">Search</string>
 </resources>

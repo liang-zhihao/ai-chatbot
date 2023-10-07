@@ -57,7 +57,7 @@ android:fillViewport="true">
 
         <fragment
             android:id="@+id/chatHistory"
-            android:name="com.unimelb.aichatbot.ui.chatHistory.ItemFragment"
+            android:name="com.unimelb.aichatbot.modules.chatHistory.fragment.ItemFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginStart="10dp"
