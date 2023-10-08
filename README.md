@@ -15,7 +15,7 @@
 - [Refactor]  |   Code simplification, removal of redundant code, etc
 ```
 
-# Backend Install
+## Backend Install
 flask --app Backend run --host=0.0.0.0
 ## Using Docker
 1. install docker
