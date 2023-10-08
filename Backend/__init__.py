@@ -20,6 +20,7 @@ config.read(os.path.join(dir_path,'config.ini'))
 JWT_SECRET_KEY = config.get('secret', 'JWT_SECRET_KEY')
 CHAT_LENGTH_LIMIT = config.getint('openai', 'CHAT_LENGTH_LIMIT')
 
+
 def error_out(msg, code):
     return jsonify({
         'status': code,
@@ -29,41 +30,19 @@ def error_out(msg, code):
     }), code
 
 def create_app(test_config=None):
-    # create and configure the app
+    # create the app
     app = Flask(__name__, instance_relative_config=True)
+
+    # configure the app
     app.config['JWT_SECRET_KEY']  = JWT_SECRET_KEY
+
     jwt = JWTManager(app)
     socketio = SocketIO(app, cors_allowed_origins="*")
 
     # Mapping of username to session ID
     users = {}
 
-    @jwt.expired_token_loader
-    def expired_token_callback(jwt_header, jwt_payload):
-        return error_out('Token has expired', 401)
-    
-    @jwt.unauthorized_loader
-    def unauthorized_loader_callback(msg):
-        return error_out('Missing Authorization Header', 401)
-
-    @jwt.invalid_token_loader
-    def invalid_token_callback(msg):
-        return error_out('Invalid JWT', 422)
-
-    # test server status
-    @app.route('/', methods=['GET'])
-    def server_status():
-        return jsonify({
-            'status': 200,
-            'message': 'server is running',
-            'success': True,
-            'data':{}
-        }), 200
-
-    @app.route('/chat', methods=['GET'])
-    def index():
-        return render_template('chat.html')
-
+    # socketio
     @socketio.on('connect')
     def handle_connect():
         print("User Connected", request.sid, type(request.sid))
@@ -93,6 +72,33 @@ def create_app(test_config=None):
     def handleMessage(msg):
         print('Message: ' + msg)
         send(msg, broadcast=True)
+
+    # HTTP 
+    @jwt.expired_token_loader
+    def expired_token_callback(jwt_header, jwt_payload):
+        return error_out('Token has expired', 401)
+    
+    @jwt.unauthorized_loader
+    def unauthorized_loader_callback(msg):
+        return error_out('Missing Authorization Header', 401)
+
+    @jwt.invalid_token_loader
+    def invalid_token_callback(msg):
+        return error_out('Invalid JWT', 422)
+
+    # test server status
+    @app.route('/', methods=['GET'])
+    def server_status():
+        return jsonify({
+            'status': 200,
+            'message': 'server is running',
+            'success': True,
+            'data':{}
+        }), 200
+
+    @app.route('/chat', methods=['GET'])
+    def index():
+        return render_template('chat.html')
 
     # user register
     @app.route('/api/register', methods=['POST'])
@@ -262,7 +268,7 @@ def create_app(test_config=None):
             return error_out(str(e), 401)
 
     # get user chat history
-    @app.route('/api/chatbot/get_chat_history', methods=['GET'])
+    @app.route('/api/chatbot/get_chat_history', methods=['POST'])
     @jwt_required()
     def get_chat_history():
         try: 
@@ -308,10 +314,22 @@ def create_app(test_config=None):
             return error_out(str(e), 401)
         
     # get user information
-    @app.route('/api/user/get_user_info', methods=['GET'])
+    @app.route('/api/user/get_user_info', methods=['POST'])
     @jwt_required()
     def get_user_info():
-        pass
+        try:
+            user_id = request.json['user_id']
+            user_info = db.get_user_info(user_id)
+            if user_info == None:
+                return error_out("user not exists", 401)
+            return jsonify({
+                'status': 200,
+                'message': "get user info successfully",
+                'success': True,
+                'data': {"user_info": user_info}
+            }), 200
+        except Exception as e:
+            return error_out(str(e), 401)
 
     return app
 

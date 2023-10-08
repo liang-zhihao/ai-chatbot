@@ -54,6 +54,15 @@ class MongoDB():
             return {"status": "success", "message": "user created successfully"}
         return {"status": "error", "message": "user created failed"}
     
+    def get_user_info(self, user_id):
+        db = self.get_databse(self.USER_DB)
+        collection = db[self.USER_COLLECTION]
+        # validation check
+        for user in collection.find({"user_id": user_id}):
+            if user["user_id"] == user_id:
+                return {"user_id": user["user_id"], "username": user["username"]}
+        return None
+
     def login(self, user_id, password):
         db = self.get_databse(self.USER_DB)
         collection = db[self.USER_COLLECTION]
