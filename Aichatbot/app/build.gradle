@@ -78,6 +78,8 @@ dependencies {
     implementation "io.noties.markwon:recycler:$markwon_version"
     implementation "io.noties.markwon:recycler-table:$markwon_version"
     implementation "io.noties.markwon:simple-ext:$markwon_version"
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
  
 
