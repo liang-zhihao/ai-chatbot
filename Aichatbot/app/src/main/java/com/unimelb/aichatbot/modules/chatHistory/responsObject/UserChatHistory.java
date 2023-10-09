@@ -1,4 +1,4 @@
-package com.unimelb.aichatbot.modules.responsObject;
+package com.unimelb.aichatbot.modules.chatHistory.responsObject;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -21,7 +21,19 @@ public class UserChatHistory {
         @SerializedName("chat_history")
         private List<ChatMessage> chatHistory;
 
-        // Getters and setters...
+        public List<ChatMessage> getChatHistory() {
+            return chatHistory;
+        }
+
+        @Override
+        public String toString() {
+            return "Data{" +
+                    "chatHistory=" + chatHistory +
+                    '}';
+
+
+        }
+// Getters and setters...
     }
 
     public static class ChatMessage {
@@ -40,6 +52,19 @@ public class UserChatHistory {
                     ", time='" + time + '\'' +
                     '}';
         }
+
+
+        public String getContent() {
+            return content;
+        }
+
+        public String getRole() {
+            return role;
+        }
+
+        public String getTime() {
+            return time;
+        }
     }
 
     @Override
@@ -51,4 +76,13 @@ public class UserChatHistory {
                 ", success=" + success +
                 '}';
     }
+
+    public Data getData() {
+        return data;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
 }
