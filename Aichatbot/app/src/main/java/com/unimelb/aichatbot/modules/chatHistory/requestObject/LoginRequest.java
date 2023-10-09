@@ -1,4 +1,4 @@
-package com.unimelb.aichatbot.modules.requestObject;
+package com.unimelb.aichatbot.modules.chatHistory.requestObject;
 
 public class LoginRequest {
     private String user_id;

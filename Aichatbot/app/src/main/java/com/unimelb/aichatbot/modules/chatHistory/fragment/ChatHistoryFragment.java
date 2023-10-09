@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,14 +13,15 @@ import androidx.fragment.app.Fragment;
 
 import com.unimelb.aichatbot.R;
 import com.unimelb.aichatbot.databinding.FragmentHomeBinding;
-import com.unimelb.aichatbot.modules.requestObject.GetChatHistoryRequest;
-import com.unimelb.aichatbot.modules.requestObject.GetUserRoleRequest;
-import com.unimelb.aichatbot.modules.requestObject.LoginRequest;
-import com.unimelb.aichatbot.modules.responsObject.UserChatHistory;
-import com.unimelb.aichatbot.modules.responsObject.UserInfo;
+import com.unimelb.aichatbot.modules.chatHistory.requestObject.GetChatHistoryRequest;
+import com.unimelb.aichatbot.modules.chatHistory.requestObject.GetUserRoleRequest;
+import com.unimelb.aichatbot.modules.chatHistory.requestObject.LoginRequest;
+import com.unimelb.aichatbot.modules.chatHistory.responsObject.UserChatHistory;
+import com.unimelb.aichatbot.modules.chatHistory.responsObject.UserInfo;
 import com.unimelb.aichatbot.modules.chatHistory.service.ChatHistoryService;
-import com.unimelb.aichatbot.modules.responsObject.UserRoles;
+import com.unimelb.aichatbot.modules.chatHistory.responsObject.UserRoles;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -29,18 +31,23 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChatHistoryFragment extends Fragment {
-
+    ItemFragment itemFragment;
     private FragmentHomeBinding binding;
     private String userToken;
     ChatHistoryService apiService;
     UserRoles userRoles;
+    UserChatHistory userChatHistory;
 
+    ProgressBar progressBar;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.home_layout, container, false);
         TextView seeMoreButton = root.findViewById(R.id.see_more);
+        progressBar = root.findViewById(R.id.progressBar);
+        itemFragment = (ItemFragment) getChildFragmentManager().findFragmentById(R.id.chatHistory);
 
+        showLoading(true);
 
         //do request, create retrofit
         Retrofit retrofit = new Retrofit.Builder()
@@ -56,9 +63,9 @@ public class ChatHistoryFragment extends Fragment {
         seeMoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ItemFragment itemFragment = (ItemFragment) getChildFragmentManager().findFragmentById(R.id.chatHistory);
+
                 if (itemFragment != null) {
-                    itemFragment.updateList();
+                    itemFragment.toggleItems();
                 }
 
             }
@@ -134,7 +141,7 @@ public class ChatHistoryFragment extends Fragment {
     }
 
     public void doGetChatHistoryRequest() {
-
+        List<UserChatHistory>userChatHistoryList=new ArrayList<>();
         for (String role:userRoles.getData().getRoles()){
             GetChatHistoryRequest getChatHistoryRequest = new GetChatHistoryRequest("yc975@xxxmail.com",role);
 
@@ -147,9 +154,13 @@ public class ChatHistoryFragment extends Fragment {
                 @Override
                 public void onResponse(Call<UserChatHistory> call, Response<UserChatHistory> response) {
                     if (response.isSuccessful()) {
-                        UserChatHistory userChatHistory = response.body();
+                        userChatHistory = response.body();
 
-                        Log.d("11", userRoles.toString());
+                        Log.d("11", userChatHistory.getData().toString());
+                        userChatHistoryList.add(userChatHistory);
+                        itemFragment.displayListItem(userChatHistoryList);
+
+                        showLoading(false);
 
                     } else {
 
@@ -167,6 +178,14 @@ public class ChatHistoryFragment extends Fragment {
 
         }
 
+
+
+    }
+
+    private void showLoading(boolean isLoading) {
+        progressBar.bringToFront();
+
+        progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
     }
 
 }

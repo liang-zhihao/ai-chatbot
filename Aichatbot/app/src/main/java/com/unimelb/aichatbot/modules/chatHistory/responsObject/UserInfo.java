@@ -1,4 +1,4 @@
-package com.unimelb.aichatbot.modules.responsObject;
+package com.unimelb.aichatbot.modules.chatHistory.responsObject;
 
 import com.google.gson.annotations.SerializedName;
 

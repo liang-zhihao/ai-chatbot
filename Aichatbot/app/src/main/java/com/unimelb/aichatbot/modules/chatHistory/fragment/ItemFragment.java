@@ -14,6 +14,9 @@ import com.unimelb.aichatbot.R;
 import com.unimelb.aichatbot.modules.chat.activity.MessageActivity;
 import com.unimelb.aichatbot.modules.chatHistory.adapter.ChatHistoryItemRecyclerViewAdapter;
 import com.unimelb.aichatbot.modules.chatHistory.placeholder.PlaceholderContent;
+import com.unimelb.aichatbot.modules.chatHistory.responsObject.UserChatHistory;
+
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -80,9 +83,16 @@ public class ItemFragment extends Fragment {
         return view;
     }
 
-    public void updateList() {
+    public void toggleItems() {
         // update list content
         PlaceholderContent.toggleItems();
+        // notify list has changed
+        mAdapter.notifyDataSetChanged();
+    }
+
+    public void displayListItem(List<UserChatHistory> userChatHistoryList) {
+        // update list content
+        PlaceholderContent.display(userChatHistoryList);
         // notify list has changed
         mAdapter.notifyDataSetChanged();
     }
