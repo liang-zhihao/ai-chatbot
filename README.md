@@ -128,4 +128,90 @@ AiChatBot
 - Utility classes used across the project.
 
 ---
+## Program flowchart (Android)
  
+``` mermaid
+graph TD
+
+A[Start App] --> B[Initialize Components]
+B --> C{User Signed In?}
+
+C -->|Yes| D[Chat History Page]
+C -->|No| E[Show Sign-in/Register Page]
+
+D --> D1[Display Chat History & Rooms]
+D -->|Bottom Nav| D2[Friends Page]
+D -->|Bottom Nav| D3[Search Friend Page]
+D -->|Bottom Nav| D4[Settings Page]
+
+ 
+D1 -->|User Clicks a Chat/Room| G[Enter Chat/Room]
+ 
+
+D2 --> H{Tap a Friend?}
+ 
+H -->|Short tap| G
+ 
+H -->|Long tap| IA[Show Operations Menu]
+
+
+IA --> IB{Select Operation}
+IB -->|View Profile| IC[View Friend Profile]
+IB -->|Delete| ID[Delete Friend]
+IC --> ICD[Done]
+ID --> ICD
+ICD --> D2
+D3 --> K[Display Search Bar]
+K --> L{Search Friend?}
+L -->|Yes| M[Show Search Results]
+L -->|No| K
+
+M --> N{Select a Friend in Results?}
+N -->|Yes| G
+N -->|No| M
+
+D4 --> P[Display Settings]
+P --> Q{Select Option?}
+Q -->|Profile| R[Go to Profile Page]
+Q -->|Logout| S[Log Out]
+ 
+
+S --> A[Start App]
+
+E --> S1[User Sign-in]
+E --> S2[User Register]
+
+S1 --> T[Redirect to Chat History]
+S2 --> U[Registration Process]
+U --> V[Redirect to Chat History]
+
+T --> D
+V --> D
+
+G --> W[Load Messages]
+W --> X[Display Messages]
+X --> Y{New Message?}
+Y -->|Yes| Z[Add to Chat]
+Y -->|No| X
+
+Z --> AA[Send Message]
+AA --> AB[Update Message List]
+AB --> X
+
+R --> AC[Display Profile]
+AC --> AD{Update Name/Avatar?}
+AD -->|Yes| AE[Save Changes]
+AD -->|No| AC
+AE --> AF[Update Profile]
+AF --> AC
+ 
+D1 -->|Tap Create New Chat Button| FA[Search AI Bot Page]
+
+ 
+ 
+
+FA --> FB[Select an AI Bot]
+FB --> FC[Start New Chat with AI Bot]
+FC --> G
+
+```
