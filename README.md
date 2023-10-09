@@ -15,13 +15,15 @@
 - [Refactor]  |   Code simplification, removal of redundant code, etc
 ```
 
-## Backend Install
+## Backend Debug Mode
 flask --app Backend run --host=0.0.0.0
-## Using Docker
-1. install docker
-2. build docker image `docker build -t chat-backend .`
-3. run container `docker run -p 5000:5000 --net=host chat-backend`
 
+## Actural deployment (Production mode)
+1. install docker 
+2. build docker image `docker build -t chat-backend .`
+3. run container `docker run --net=host chat-backend`
+4. using nginx do reverse proxy to handle gunicorn server
+   
 # API Doc
 https://documenter.getpostman.com/view/17696381/2s9YC1XEqp
 

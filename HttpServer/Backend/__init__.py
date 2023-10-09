@@ -42,37 +42,6 @@ def create_app(test_config=None):
     # Mapping of username to session ID
     users = {}
 
-    # socketio
-    @socketio.on('connect')
-    def handle_connect():
-        print("User Connected", request.sid, type(request.sid))
-
-    @socketio.on('disconnect')
-    def handle_disconnect():
-        username = None
-        for user, sid in users.items():
-            if sid == request.sid:
-                username = user
-                break
-        if username:
-            del users[username]
-            print(f"{username} Disconnected")
-
-    @socketio.on('private_message')
-    def handle_private_message(data):
-        to_username = data['to']
-        message = data['message']
-        from_username = data['from']
-        to_sid = users.get(to_username)
-
-        print('private_message', {'from': from_username, 'message': message},to_username)
-        emit('private_message', {'from': from_username, 'message': message}, room=to_username)
-
-    @socketio.on('message')
-    def handleMessage(msg):
-        print('Message: ' + msg)
-        send(msg, broadcast=True)
-
     # HTTP 
     @jwt.expired_token_loader
     def expired_token_callback(jwt_header, jwt_payload):
