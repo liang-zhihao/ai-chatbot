@@ -1,6 +1,6 @@
 package com.unimelb.aichatbot.modules.chatHistory.placeholder;
 
-import android.util.Log;
+import com.unimelb.aichatbot.modules.chatHistory.responsObject.UserChatHistory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,22 +25,25 @@ public class PlaceholderContent {
      */
     public static final Map<String, PlaceholderItem> ITEM_MAP = new HashMap<String, PlaceholderItem>();
 
-    private static final int COUNT = 10;
+    private static final int COUNT = 5;
 
-    static {
-        // Add some sample items.
-        for (int i = 1; i <= COUNT; i++) {
-            addItem(createPlaceholderItem(i));
-        }
-    }
+//    static {
+//        // Add some sample items.
+//        for (int i = 1; i <= COUNT; i++) {
+//            addItem(createPlaceholderItem(i));
+//        }
+//    }
 
     private static void addItem(PlaceholderItem item) {
         ITEMS.add(item);
         ITEM_MAP.put(item.id, item);
     }
 
-    private static PlaceholderItem createPlaceholderItem(int position) {
-        return new PlaceholderItem(String.valueOf(position), "Item " + position, makeDetails(position));
+    private static PlaceholderItem createPlaceholderItem(UserChatHistory userChatHistory) {
+
+        //display the last chat
+        List<UserChatHistory.ChatMessage> list = userChatHistory.getData().getChatHistory();
+        return new PlaceholderItem("11", list.get(list.size() - 1).getContent(), "");
     }
 
     private static String makeDetails(int position) {
@@ -74,17 +77,24 @@ public class PlaceholderContent {
 
 
     public static void toggleItems() {
-        if (ITEMS.size() == 5) {
-            for (int i = 6; i <= COUNT; i++) {
-                addItem(createPlaceholderItem(i));
-            }
-        } else {
-            while (ITEMS.size() > 5) {
-                ITEMS.remove(ITEMS.size() - 1);
-            }
-        }
+//        if (ITEMS.size() == 5) {
+//            for (int i = 6; i <= COUNT; i++) {
+//                addItem(createPlaceholderItem(i));
+//            }
+//        } else {
+//            while (ITEMS.size() > 5) {
+//                ITEMS.remove(ITEMS.size() - 1);
+//            }
+//        }
     }
 
+    public static void display(List<UserChatHistory> userChatHistoryList) {
+        ITEMS.clear();
+        for(UserChatHistory u:userChatHistoryList){
+            addItem(createPlaceholderItem(u));
+        }
+
+    }
 
 
 
