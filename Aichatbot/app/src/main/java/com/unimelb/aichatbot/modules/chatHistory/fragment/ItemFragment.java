@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unimelb.aichatbot.R;
-import com.unimelb.aichatbot.modules.chat.activity.MessageActivity;
+import com.unimelb.aichatbot.modules.chatroom.activity.MessageActivity;
 import com.unimelb.aichatbot.modules.chatHistory.adapter.ChatHistoryItemRecyclerViewAdapter;
 import com.unimelb.aichatbot.modules.chatHistory.placeholder.PlaceholderContent;
 import com.unimelb.aichatbot.modules.chatHistory.responsObject.UserChatHistory;
@@ -28,6 +28,7 @@ public class ItemFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private ChatHistoryItemRecyclerViewAdapter mAdapter;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -58,10 +59,10 @@ public class ItemFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
-        //get view
+        // get view
         RecyclerView recyclerView = view.findViewById(R.id.chat_list);
 
-        //set list listener
+        // set list listener
         ChatHistoryItemRecyclerViewAdapter adapter = new ChatHistoryItemRecyclerViewAdapter(
                 PlaceholderContent.ITEMS,
                 new ChatHistoryItemRecyclerViewAdapter.OnItemClickListener() {
@@ -77,9 +78,9 @@ public class ItemFragment extends Fragment {
                 }
         );
 
-        //set list adapter
+        // set list adapter
         recyclerView.setAdapter(adapter);
-        mAdapter=adapter;
+        mAdapter = adapter;
         return view;
     }
 

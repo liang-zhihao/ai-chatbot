@@ -12,15 +12,15 @@ import com.unimelb.aichatbot.R;
 
 public class ChooseBotActivity extends AppCompatActivity {
 
-    Button choose_Bt;
+    Button chooseBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.choose_charas);
 
-        choose_Bt = findViewById(R.id.chooseBt);
-        choose_Bt.setOnClickListener(new View.OnClickListener() {
+        chooseBtn = findViewById(R.id.chooseBt);
+        chooseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ChooseBotActivity.this, MainActivity.class);

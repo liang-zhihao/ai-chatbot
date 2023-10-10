@@ -5,14 +5,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class SharedPreferencesHelper {
-    private final SharedPreferences sp;
-
-    public static final String KEY_CURRENT_USER_ID = "currentUserId";
-
-    public static final String KEY_CURRENT_LIST_ID = "currentListId";
-    public static final String KEY_EMAIL = "email";
-    public static final String KEY_PASSWORD = "password";
+    //    login info
+    public static final String KEY_USER_ID = "currentUserId";
+    public static final String KEY_USERNAME = "currentUsername";
     public static final String KEY_JWT_TOKEN = "jwt_token";
+
+
+    private final SharedPreferences sp;
 
     public SharedPreferencesHelper(Context mContext) {
         String PREF_NAME = "app_status";
@@ -21,7 +20,6 @@ public class SharedPreferencesHelper {
     }
 
     public String getString(String key) {
-
         return sp.getString(key, null);
     }
 
@@ -55,6 +53,16 @@ public class SharedPreferencesHelper {
         editor.clear();
         editor.apply();
 
+    }
+
+    public void remove(String key) {
+        SharedPreferences.Editor editor = sp.edit();
+        editor.remove(key);
+        editor.apply();
+    }
+
+    public boolean exists(String key) {
+        return sp.contains(key);
     }
 
 
