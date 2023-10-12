@@ -1,6 +1,8 @@
+# run container with command: docker run -p 8001:8001 -d --name imserver imserver:latest
+# build image with command: docker build -t imserver:latest .
 FROM python:3.11
 
-EXPOSE 8000
+EXPOSE 8001
 
 WORKDIR /app
 COPY . /app

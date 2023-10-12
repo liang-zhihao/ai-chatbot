@@ -17,6 +17,7 @@
 
 ## Backend Debug Mode
 flask --app Backend run --host=0.0.0.0
+flask --app IMServer.src.app run
 
 ## Actural deployment (Production mode)
 1. install docker 
