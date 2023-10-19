@@ -5,7 +5,7 @@ from flask import request
 from .database import MongoDB
 import configparser
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager
-from flask_socketio import SocketIO, send, emit, disconnect
+from flask_socketio import SocketIO, send, emit, disconnect, join_room, leave_room
 from .message_queue import MessageQueue
 
 file_path = os.path.abspath(__file__)
@@ -19,7 +19,7 @@ mq = MessageQueue()
 config = configparser.ConfigParser()
 config.read(os.path.join(dir_path,'config.ini'))
 JWT_SECRET_KEY = config.get('secret', 'JWT_SECRET_KEY')
-CHAT_LENGTH_LIMIT = config.getint('openai', 'CHAT_LENGTH_LIMIT')
+CHAT_LENGTH_LIMIT = 256
 
 def error_out(msg):
     return {
@@ -130,6 +130,40 @@ def handle_private_message(data):
 def handleMessage(msg):
     print('Message: ' + msg)
     #send(msg, broadcast=True)
+
+@socketio.on('join')
+def on_join(data):
+    user_id = data['user_id']
+    room_id = data['room_id']
+    join_room(room_id)
+    send(user_id  + ' has entered the room.', to=room_id)
+
+@socketio.on('group_chat')
+def handle_group_chat(data):
+    room_id = data['room_id']
+    message = data['message']
+    user_id = data['user_id']
+    
+    data = {
+        "from_user_id":user_id,
+        "to_user_id": room_id,
+        "messages":[{"message":message,'timestamp':get_time()}]
+    }
+    return_message = {
+        'status': 200,
+        'message': "send message successfully",
+        'success': True,
+        'data':data
+    }
+    print('group_chat', data, room_id, flush=True)
+    emit('group_chat', return_message, room=room_id)
+
+@socketio.on('leave')
+def on_leave(data):
+    user_id = data['user_id']
+    room_id = data['room']
+    leave_room(room_id)
+    send(user_id + ' has left the room.', to=room_id)
 
 def get_time():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
