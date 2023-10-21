@@ -3,22 +3,28 @@ package com.unimelb.aichatbot.modules.chatroom.activity;
 import android.Manifest;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.unimelb.aichatbot.CustomViewController;
 import com.unimelb.aichatbot.R;
 import com.unimelb.aichatbot.modules.chatroom.adapter.MessageAdapter;
 import com.unimelb.aichatbot.modules.chatroom.MessageViewModel;
@@ -36,6 +42,7 @@ import com.unimelb.aichatbot.network.dto.ChatWithBotResponse;
 import com.unimelb.aichatbot.network.dto.UserChatHistoryRequest;
 import com.unimelb.aichatbot.network.dto.UserChatHistoryResponse;
 import com.unimelb.aichatbot.util.KeyboardUtil;
+import com.unimelb.aichatbot.util.UIHelper;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,7 +50,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 
-public class MessageActivity extends AppCompatActivity {
+public class MessageActivity extends AppCompatActivity implements CustomViewController {
 
     Logger logger = Logger.getLogger("MessageActivity");
     private RecyclerView messageRecyclerView;
@@ -59,17 +66,49 @@ public class MessageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
-        setupActionBar();
-        int PERMISSION_ALL = 1;
-        String[] PERMISSIONS = {Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_SMS, Manifest.permission.CAMERA, Manifest.permission.INTERNET};
-        ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
-
-        setupViewModel();
-        setupViews();
+        requestPermission();
+        initializeActionBar();
+        initializeViewModel();
+        initializeView();
         initializeRecyclerView();
-        setClickListeners();
+        initializeListener();
+        initializeBackAction();
 // Check if the app has internet permission
+        // This callback is only called when MyFragment is at least started
+        loadChatHistory();
 
+
+    }
+
+    @Override
+    public void initializeView() {
+        messageRecyclerView = findViewById(R.id.message_recycler_view);
+        messageEditText = findViewById(R.id.message_edit_text);
+        sendMessageButton = findViewById(R.id.send_message_button);
+        groupButton = findViewById(R.id.message_more_options_button);
+        bottomSheetLayout = findViewById(R.id.message_bottom_layout);
+    }
+
+    @Override
+    public void initializeListener() {
+        sendMessageButton.setOnClickListener(v -> handleSendMessageBtn());
+        groupButton.setOnClickListener(v -> handleGroupButtonBtn());
+        messageEditText.setOnClickListener(v -> closeBottomSheetBtn());
+
+
+    }
+
+    private void initializeBackAction() {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+            }
+        };
+        this.getOnBackPressedDispatcher().addCallback(this, callback);
+    }
+
+    private void loadChatHistory() {
 
         // List<Message> messages = createMessages();
         ChatService chatService = RetrofitFactory.createWithAuth(ChatService.class, MessageActivity.this);
@@ -128,24 +167,40 @@ public class MessageActivity extends AppCompatActivity {
 
     }
 
-    private void setupActionBar() {
+    private void requestPermission() {
+        int PERMISSION_ALL = 1;
+        String[] PERMISSIONS = {Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_SMS, Manifest.permission.CAMERA, Manifest.permission.INTERNET};
+        ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+
+    }
+
+    @Override
+    public void initializeActionBar() {
+        // OnBackPressed is different from the back button in the action bar
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle("Chat");
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
+
+            this.addMenuProvider(new MenuProvider() {
+                @Override
+                public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                }
+
+                @Override
+                public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+
+                    if (menuItem.getItemId() == android.R.id.home) {
+                        finish();
+                        return true;
+                    } else return false;
+                }
+            }, this, Lifecycle.State.RESUMED);
         }
     }
 
-    private void setupViews() {
-        messageRecyclerView = findViewById(R.id.message_recycler_view);
-        messageEditText = findViewById(R.id.message_edit_text);
-        sendMessageButton = findViewById(R.id.send_message_button);
-        groupButton = findViewById(R.id.message_more_options_button);
-        bottomSheetLayout = findViewById(R.id.message_bottom_layout);
-    }
 
-    private void setupViewModel() {
+    private void initializeViewModel() {
         messageViewModel = new ViewModelProvider(this).get(MessageViewModel.class);
         messageViewModel.getMessages().observe(this, messages -> {
             messageAdapter.submitList(messages); // Or however you update your adapter
@@ -159,13 +214,8 @@ public class MessageActivity extends AppCompatActivity {
         messageRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void setClickListeners() {
-        sendMessageButton.setOnClickListener(v -> handleSendMessage());
-        groupButton.setOnClickListener(v -> handleGroupButton());
-        messageEditText.setOnClickListener(v -> closeBottomSheet());
-    }
 
-    private void handleSendMessage() {
+    private void handleSendMessageBtn() {
         String messageContent = messageEditText.getText().toString();
         // if (messageContent.isEmpty()) {
         //     return;
@@ -210,7 +260,7 @@ public class MessageActivity extends AppCompatActivity {
 
     }
 
-    private void handleGroupButton() {
+    private void handleGroupButtonBtn() {
         // Existing logic for handling group button click
 //
         View currentFocus;
@@ -223,7 +273,7 @@ public class MessageActivity extends AppCompatActivity {
                 messageEditText.requestFocus();
                 currentFocus = this.getCurrentFocus();
                 KeyboardUtil.openKeyboard(this, currentFocus);
-                closeBottomSheet();
+                closeBottomSheetBtn();
                 operationStatus = 2;
                 break;
             case 2:
@@ -235,17 +285,8 @@ public class MessageActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        if (operationStatus == 0) {
-            finish();
-        }
 
-        closeBottomSheet();
-        operationStatus = 0;
-    }
-
-    private void closeBottomSheet() {
+    private void closeBottomSheetBtn() {
         if (hasPopupBottomSheet()) {
             Fragment bottom = getSupportFragmentManager().findFragmentById(R.id.message_bottom_layout);
             if (bottom != null) {
@@ -271,18 +312,5 @@ public class MessageActivity extends AppCompatActivity {
                 .commit();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            // your other cases here
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
-
-    // Other existing methods remain mostly unchanged
 }

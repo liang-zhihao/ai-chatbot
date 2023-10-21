@@ -1,5 +1,7 @@
 package com.unimelb.aichatbot.network;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.unimelb.aichatbot.util.GsonHelper;
@@ -17,6 +19,7 @@ public abstract class MyCallback<T> implements retrofit2.Callback<BaseResponse<T
         } else {
             assert response.errorBody() != null;
             try {
+                Log.d("MyCallback", "onResponse: " + response.errorBody().string());
                 BaseResponse errorResponse = GsonHelper.getErrorResponse(response.errorBody());
                 onError(errorResponse, null);
             } catch (Exception e) {

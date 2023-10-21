@@ -11,13 +11,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.unimelb.aichatbot.BuildConfig;
 import com.unimelb.aichatbot.R;
 import com.unimelb.aichatbot.network.BaseResponse;
 import com.unimelb.aichatbot.network.MyCallback;
 import com.unimelb.aichatbot.network.dto.SignUpRequest;
 import com.unimelb.aichatbot.modules.account.service.AccountService;
 import com.unimelb.aichatbot.network.RetrofitFactory;
+import com.unimelb.aichatbot.util.UIHelper;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -31,13 +31,13 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-
+        UIHelper.hideActionBar(this);
         loginTv = findViewById(R.id.login_tv);
         signUpBtn = findViewById(R.id.signup_btn);
 
         nameEt = findViewById(R.id.name_et);
-        emailEt = findViewById(R.id.email_txt);
-        passwordEt = findViewById(R.id.pswd_txt);
+        emailEt = findViewById(R.id.emailEt);
+        passwordEt = findViewById(R.id.passwordEt);
         //        TODO need a confirm password
         //        confirmPswdEt = findViewById(R.id.confirm_pswd_txt);
 

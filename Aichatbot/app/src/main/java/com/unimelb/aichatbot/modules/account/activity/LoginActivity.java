@@ -2,10 +2,7 @@ package com.unimelb.aichatbot.modules.account.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.transition.CircularPropagation;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,10 +18,8 @@ import com.unimelb.aichatbot.network.dto.LoginRequest;
 import com.unimelb.aichatbot.network.dto.LoginResponse;
 import com.unimelb.aichatbot.modules.account.service.AccountService;
 import com.unimelb.aichatbot.network.RetrofitFactory;
-import com.unimelb.aichatbot.util.GsonHelper;
 import com.unimelb.aichatbot.util.LoginManager;
-
-import java.io.IOException;
+import com.unimelb.aichatbot.util.UIHelper;
 
 import retrofit2.Call;
 
@@ -38,12 +33,11 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        UIHelper.hideActionBar(this);
         signUpTv = findViewById(R.id.signupTxt);
         loginBtn = findViewById(R.id.loginBt);
-
-        emailEt = findViewById(R.id.email_txt);
-        passwordEt = findViewById(R.id.pswd_txt);
+        emailEt = findViewById(R.id.emailEt);
+        passwordEt = findViewById(R.id.passwordEt);
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -9,10 +9,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import com.unimelb.aichatbot.R;
+import com.unimelb.aichatbot.SettingsActivity;
 import com.unimelb.aichatbot.databinding.FragmentSettingBinding;
 import com.unimelb.aichatbot.modules.account.activity.ChooseBotActivity;
 import com.unimelb.aichatbot.modules.profile.activity.ProfileActivity;
@@ -28,8 +27,8 @@ public class SettingFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.setting_layout, container, false);
 
-        TextView  profileButton = root.findViewById(R.id.Profile);
-        TextView  editCharacterButton = root.findViewById(R.id.Edit_Character);
+        TextView profileButton = root.findViewById(R.id.Profile);
+        TextView editCharacterButton = root.findViewById(R.id.Edit_Character);
         TextView chatHistoryButton = root.findViewById(R.id.Chat_History);
 
         profileButton.setOnClickListener(new View.OnClickListener() {
@@ -54,16 +53,18 @@ public class SettingFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                NavController navController = Navigation.findNavController(view);
+                // NavController navController = Navigation.findNavController(view);
+                //
+                // // navigate HomeFragment
+                // navController.navigate(R.id.navigation_chat_history);
 
-                // navigate HomeFragment
-                navController.navigate(R.id.navigation_chat_history);
+                Intent intent = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(intent);
 
             }
         });
         return root;
     }
-
 
 
     @Override

@@ -47,8 +47,9 @@ dependencies {
     implementation('io.socket:socket.io-client:2.0.0') {
         exclude group: 'org.json', module: 'json'
     }
-
+    implementation 'com.airbnb.android:lottie:6.1.0'
     implementation 'com.google.android.gms:play-services-location:19.0.1'
+    implementation 'androidx.preference:preference:1.2.0'
     def room_version = "2.5.2"
 
     implementation "androidx.room:room-runtime:$room_version"

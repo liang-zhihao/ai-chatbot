@@ -13,6 +13,7 @@
     <color name="gray_400">#FFBDBDBD</color>
     <color name="gray_600">#FF757575</color>
     <!--    our project design system-->
+    <color name="dark_blue">#000080</color>
     <color name="cultured">#F4F4F4</color>
     <color name="primary">#17CE92</color>
     <color name="chat_left">#eef1f6</color>
