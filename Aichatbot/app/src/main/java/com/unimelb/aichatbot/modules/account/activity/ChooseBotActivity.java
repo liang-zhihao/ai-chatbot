@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.unimelb.aichatbot.MainActivity;
 import com.unimelb.aichatbot.R;
+import com.unimelb.aichatbot.util.UIHelper;
 
 public class ChooseBotActivity extends AppCompatActivity {
 
@@ -18,7 +19,7 @@ public class ChooseBotActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.choose_charas);
-
+        UIHelper.hideActionBar(this);
         chooseBtn = findViewById(R.id.chooseBt);
         chooseBtn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -5,42 +5,113 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <TextView
         android:id="@+id/logIn"
-        android:layout_width="179dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="42dp"
-        android:layout_marginBottom="16dp"
-        android:text="Log In"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:text="Hi, Welcome Back!"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textSize="32sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <TextView
         android:id="@+id/textView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="56dp"
-        android:layout_marginEnd="56dp"
-        android:layout_marginBottom="46dp"
-        android:text="Please enter your Email and Password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="You’ve been missed"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/email_txt"
+        app:layout_constraintBottom_toTopOf="@+id/animationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logIn" />
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animationView"
+        android:layout_width="200dp"
+        android:layout_height="150dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_fileName="c.json" />
+
+
+    <com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
+        android:id="@+id/loginBt"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="64dp"
+        android:background="@drawable/btn_round_style"
+        android:backgroundTint="#17CD91"
+        android:text="LogIn"
+        android:textColor="#FDFDFD"
+        android:textColorHighlight="#17CD91"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordEt"
+        app:spinning_bar_color="#FFF" />
+
+    <EditText
+        android:id="@+id/emailEt"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/btn_round_style"
+        android:backgroundTint="#F3F3F3"
+        android:drawableLeft="@drawable/ic_email"
+        android:drawablePadding="8dp"
+        android:ems="10"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:paddingStart="12dp"
+        android:textColor="#8D8D94"
+        app:layout_constraintBottom_toTopOf="@+id/passwordEt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/animationView" />
+
+    <EditText
+        android:id="@+id/passwordEt"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="109dp"
+        android:background="@drawable/btn_round_style"
+        android:backgroundTint="#F3F3F3"
+        android:drawableLeft="@drawable/ic_password"
+        android:drawablePadding="8dp"
+        android:paddingStart="12dp"
+
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPassword"
+        app:layout_constraintBottom_toTopOf="@+id/loginBt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emailEt" />
+
     <TextView
         android:id="@+id/signupTxt"
-        android:layout_width="90dp"
-        android:layout_height="59dp"
-        android:layout_marginEnd="65dp"
-        android:layout_marginBottom="62dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="100dp"
         android:clickable="true"
         android:onClick="onClick"
         android:text="Sign Up"
@@ -49,77 +120,21 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/loginBt" />
+        app:layout_constraintStart_toEndOf="@+id/textView2" />
 
     <TextView
         android:id="@+id/textView2"
-        :layout_constraintBottom_toBottomOf="parent"
-        android:layout_width="155dp"
-        android:layout_height="23dp"
-        android:layout_marginStart="56dp"
-        android:layout_marginEnd="6dp"
-        android:text="Create a new account? "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="86dp"
+        android:layout_marginEnd="8dp"
+
+        android:layout_marginBottom="100dp"
+
+        android:text="Create a new account?"
         android:textAlignment="textEnd"
-        app:layout_constraintBaseline_toBaselineOf="@+id/signupTxt"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/signupTxt"
         app:layout_constraintStart_toStartOf="parent" />
-
-
-    <com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
-        android:id="@+id/loginBt"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginEnd="64dp"
-        android:layout_marginBottom="93dp"
-        android:background="@drawable/btn_round_style"
-        android:backgroundTint="#17CD91"
-        android:text="LogIn"
-        android:textColor="#FDFDFD"
-        android:textColorHighlight="#17CD91"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/signupTxt"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pswd_txt"
-        app:spinning_bar_color="#FFF" />
-
-    <EditText
-        android:id="@+id/email_txt"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="27dp"
-        android:layout_marginEnd="27dp"
-        android:layout_marginBottom="24dp"
-        android:background="@drawable/btn_round_style"
-        android:backgroundTint="#F3F3F3"
-        android:drawableLeft="@drawable/ic_email"
-        android:ems="10"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
-        android:textColor="#8D8D94"
-        app:layout_constraintBottom_toTopOf="@+id/pswd_txt"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-    <EditText
-        android:id="@+id/pswd_txt"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="27dp"
-        android:layout_marginEnd="27dp"
-        android:layout_marginBottom="104dp"
-        android:background="@drawable/btn_round_style"
-        android:backgroundTint="#F3F3F3"
-        android:drawableLeft="@drawable/ic_password"
-        android:ems="10"
-        android:hint="Password"
-        android:inputType="textPassword"
-        app:layout_constraintBottom_toTopOf="@+id/loginBt"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email_txt" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

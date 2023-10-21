@@ -5,35 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <TextView
         android:id="@+id/signUp"
-        android:layout_width="179dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="104dp"
-        android:layout_marginTop="35dp"
-        android:layout_marginEnd="105dp"
-        android:layout_marginBottom="14dp"
-        android:text="Sign Up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:text="Create an account"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textSize="32sp"
+        android:textSize="34sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
-        app:layout_constraintEnd_toEndOf="@+id/name_et"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <TextView
         android:id="@+id/textView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="29dp"
-        android:text="Please enter your Name, Email and Password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Connect with our amazing  chat bot today!"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/name_et"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signUp" />
@@ -41,106 +34,108 @@
     <EditText
         android:id="@+id/name_et"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="23dp"
-        android:layout_marginEnd="23dp"
-        android:layout_marginBottom="17dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/btn_round_style"
         android:backgroundTint="#F3F3F3"
         android:drawableLeft="@drawable/ic_signup_user"
+        android:drawablePadding="8dp"
         android:ems="10"
         android:hint="Name"
         android:inputType="text"
+        android:paddingStart="12dp"
         android:textAlignment="2"
         android:textColor="#8D8D94"
-        app:layout_constraintBottom_toTopOf="@+id/email_txt"
+        app:layout_constraintBottom_toTopOf="@+id/emailEt"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/email_txt"
+        android:id="@+id/emailEt"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="23dp"
-        android:layout_marginEnd="23dp"
-        android:layout_marginBottom="20dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/btn_round_style"
         android:backgroundTint="#F3F3F3"
         android:drawableLeft="@drawable/ic_email"
+        android:drawablePadding="8dp"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
+        android:paddingStart="12dp"
         android:textColor="#8D8D94"
-        app:layout_constraintBottom_toTopOf="@+id/pswd_txt"
+        app:layout_constraintBottom_toTopOf="@+id/passwordEt"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name_et" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/pswd_txt"
+        android:id="@+id/passwordEt"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="23dp"
-        android:layout_marginEnd="23dp"
-        android:layout_marginBottom="77dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="64dp"
         android:background="@drawable/btn_round_style"
         android:backgroundTint="#F3F3F3"
         android:drawableLeft="@drawable/ic_password"
+        android:drawablePadding="8dp"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
+        android:paddingStart="12dp"
         app:layout_constraintBottom_toTopOf="@+id/signup_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email_txt" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <Button
         android:id="@+id/signup_btn"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginEnd="64dp"
-        android:layout_marginBottom="67dp"
+        android:layout_width="283dp"
+        android:layout_height="59dp"
+        android:layout_marginBottom="72dp"
         android:background="@drawable/btn_round_style"
         android:backgroundTint="#17CD91"
         android:text="Sign Up"
         android:textColor="#FDFDFD"
         android:textColorHighlight="#17CD91"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/login_tv"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pswd_txt" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="204dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="87dp"
+        android:layout_marginBottom="103dp"
         android:text="Already have an account? "
         android:textAlignment="textEnd"
-        app:layout_constraintBottom_toBottomOf="@+id/login_tv"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/login_tv"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/login_tv"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/login_tv"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="83dp"
-        android:layout_marginBottom="60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="103dp"
         android:text="Log In"
-        android:textAlignment="center"
+        android:textAlignment="textStart"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/signup_btn" />
+        app:layout_constraintStart_toEndOf="@+id/textView2" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="textView2,login_tv" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
