@@ -17,6 +17,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.MenuProvider;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
@@ -26,6 +27,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.button.MaterialButton;
 import com.unimelb.aichatbot.CustomViewController;
 import com.unimelb.aichatbot.R;
+import com.unimelb.aichatbot.databinding.ActivityLoginBinding;
+import com.unimelb.aichatbot.databinding.ActivityMessageBinding;
 import com.unimelb.aichatbot.modules.chatroom.adapter.MessageAdapter;
 import com.unimelb.aichatbot.modules.chatroom.MessageViewModel;
 import com.unimelb.aichatbot.modules.chatroom.model.BottomFragment;
@@ -60,12 +63,13 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
     private MessageViewModel messageViewModel;
     private MessageAdapter messageAdapter;
     private int operationStatus = 0;
-
+    private ActivityMessageBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_message);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_message);
+
         requestPermission();
         initializeActionBar();
         initializeViewModel();
@@ -82,7 +86,7 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
 
     @Override
     public void initializeView() {
-        messageRecyclerView = findViewById(R.id.message_recycler_view);
+        messageRecyclerView = binding.messageRecyclerView;
         messageEditText = findViewById(R.id.message_edit_text);
         sendMessageButton = findViewById(R.id.send_message_button);
         groupButton = findViewById(R.id.message_more_options_button);
