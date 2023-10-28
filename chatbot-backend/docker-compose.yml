@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  api:
+    container_name: api
+    volumes:
+      - "./api:/home/project/flask-api"
+    build: 
+      context: ./
+      dockerfile: ./docker/Dockerfile-api
+    ports:
+      - "8000:8000"
+
+  im:
+    container_name: im
+    volumes:
+      - "./im:/home/project/im"
+    build: 
+      context: ./
+      dockerfile: ./docker/Dockerfile-im
+    ports:
+      - "8001:8001"

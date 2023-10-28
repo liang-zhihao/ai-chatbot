@@ -2,11 +2,11 @@ from datetime import datetime
 import os, json
 from flask import Flask, render_template, abort, jsonify
 from flask import request
-from .database import MongoDB
+from database import MongoDB
 import configparser
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager
 from flask_socketio import SocketIO, send, emit, disconnect, join_room, leave_room
-from .message_queue import MessageQueue
+from message_queue import MessageQueue
 
 file_path = os.path.abspath(__file__)
 dir_path = os.path.dirname(file_path)
