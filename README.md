@@ -18,6 +18,7 @@
 ## Backend Debug Mode
 flask --app Backend run --host=0.0.0.0
 flask --app IMServer.src.app run
+[NEW]: run `docker compose up` to auto reload the projects 
 
 ## Actural deployment (Production mode)
 1. install docker 
