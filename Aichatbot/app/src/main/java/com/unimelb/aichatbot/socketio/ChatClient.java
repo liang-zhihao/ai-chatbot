@@ -10,6 +10,7 @@ import com.unimelb.aichatbot.socketio.dto.RoomMessageData;
 import android.util.Log;
 
 
+import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -101,7 +102,9 @@ public class ChatClient {
         joinEvent.setEvent("join_room");
         joinEvent.setData(roomData);
 
-        socket.emit("join_room", gson.toJson(joinEvent));
+        socket.emit("join_room", gson.toJson(joinEvent), (Ack) args -> {
+            System.out.println("Join room ack: " + args[0]);
+        });
     }
 
     public void sendMessage(String roomName, String message) {

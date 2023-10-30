@@ -1,0 +1,12 @@
+
+// server side on data
+{ "event": "private_message", "data": { "to_user_id": "user_name", "message": "message_content" } }
+
+// server side emit data
+{ "event": "private_message", "data": { "from_user_id": "user_name", "message": "message_content" } }
+ 
+
+{ "event": "message", "data": { "room_id": "room_name", "message": "message_content",from_user_id:"user_id" } }
+{ "event": "join_room", "data": { "room_id": "room_name" } }
+{ "event": "leave_room", "data": { "room_id": "room_name" } }
+{ "event": "initialize_connection", "data": { "user_id": "user_name", } }
