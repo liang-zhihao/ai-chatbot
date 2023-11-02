@@ -174,7 +174,21 @@ class MongoDB:
         db = self.get_databse(database)
         return db[collection].delete_many({}).acknowledged
 
+    def change_password(self, user_id, old_password, new_password):
+        db = self.get_databse(self.USER_DB)
+        collection = db[self.USER_COLLECTION]
+        query = {"$and": [{"user_id": user_id}, {"password": old_password}]}
+        return collection.update_one(
+            query, {"$set": {"password": new_password}}
+        ).acknowledged
 
+    def change_username(self, user_id, new_username):
+        db = self.get_databse(self.USER_DB)
+        collection = db[self.USER_COLLECTION]
+        query = {"user_id": user_id}
+        return collection.update_one(
+            query, {"$set": {"username": new_username}}
+        ).acknowledged
 # test cases
 if __name__ == "__main__":
     db = MongoDB()
