@@ -4,6 +4,7 @@ from flask import Flask, render_template, abort, jsonify
 from flask import request
 from chatbot import Chatbot
 from database import MongoDB
+from geo import GeoLocation
 import configparser
 from flask_jwt_extended import (
     create_access_token,
@@ -51,7 +52,7 @@ def standard_response(status, message, success=True, data={}, http_status=200):
 
 
 app = Flask(__name__, instance_relative_config=True)
-
+geo = GeoLocation()
 
 # create the app
 
@@ -455,6 +456,53 @@ def change_username():
                 200,
             )
         return error_out("change username failed", 401)
+    except Exception as e:
+        return error_out(str(e), 401)
+
+# get nearby restaurants
+@app.route("/api/geo/get_nearby_restaurants", methods=["POST"])
+@jwt_required()
+def get_nearby_restaurants():
+    try:
+        latitude = request.json["latitude"]
+        longitude = request.json["longitude"]
+        restaurants = geo.get_nearby_restaurants(latitude, longitude)
+        if restaurants == None:
+            return error_out("get restaurants failed", 401)
+        return (
+            jsonify(
+                {
+                    "status": 200,
+                    "message": "get restaurants successfully",
+                    "success": True,
+                    "data": restaurants,
+                }
+            ),
+            200,
+        )
+    except Exception as e:
+        return error_out(str(e), 401)
+    
+# get restaurant details
+@app.route("/api/geo/get_restaurant_details", methods=["POST"])
+@jwt_required()
+def get_restaurant_details():
+    try:
+        place_id = request.json["place_id"]
+        details = geo.get_restaurant_details(place_id)
+        if details == None:
+            return error_out("get restaurant details failed", 401)
+        return (
+            jsonify(
+                {
+                    "status": 200,
+                    "message": "get restaurant details successfully",
+                    "success": True,
+                    "data": details,
+                }
+            ),
+            200,
+        )
     except Exception as e:
         return error_out(str(e), 401)
 
