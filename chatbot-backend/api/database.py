@@ -16,6 +16,7 @@ chat_db = config.get("mongodb", "chat_db")
 user_db = config.get("mongodb", "user_db")
 chat_collection = config.get("mongodb", "chat_collection")
 user_collection = config.get("mongodb", "user_collection")
+real_uri = config.get("mongodb", "uri")
 
 
 class MongoDB:
@@ -33,6 +34,8 @@ class MongoDB:
         self.uri = "mongodb://{}:{}@{}:{}/?authSource=admin".format(
             MONGO_USER, MONGO_PASS, MONGO_HOST, MONGO_PORT
         )
+        # self.uri = real_uri
+
         self.client = pymongo.MongoClient(self.uri)
 
     def create_user(self, user_id, username, password):

@@ -1,8 +1,27 @@
 package com.unimelb.aichatbot.socketio.dto;
 
+import com.google.gson.annotations.SerializedName;
+
 public class RoomMessageData {
+    @SerializedName("room_id")
+
     private String roomId;
+    @SerializedName("message")
+
     private String message;
+
+    @SerializedName("from_user_id")
+
+    private String fromUserId;
+
+
+    public String getFromUserId() {
+        return fromUserId;
+    }
+
+    public void setFromUserId(String fromUserId) {
+        this.fromUserId = fromUserId;
+    }
 
     public String getRoomId() {
         return roomId;

@@ -25,9 +25,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.gson.Gson;
 import com.unimelb.aichatbot.CustomViewController;
 import com.unimelb.aichatbot.R;
-import com.unimelb.aichatbot.databinding.ActivityLoginBinding;
 import com.unimelb.aichatbot.databinding.ActivityMessageBinding;
 import com.unimelb.aichatbot.modules.chatroom.adapter.MessageAdapter;
 import com.unimelb.aichatbot.modules.chatroom.MessageViewModel;
@@ -44,12 +44,17 @@ import com.unimelb.aichatbot.network.dto.ChatWithBotRequest;
 import com.unimelb.aichatbot.network.dto.ChatWithBotResponse;
 import com.unimelb.aichatbot.network.dto.UserChatHistoryRequest;
 import com.unimelb.aichatbot.network.dto.UserChatHistoryResponse;
+import com.unimelb.aichatbot.socketio.BaseEvent;
+import com.unimelb.aichatbot.socketio.SocketClient;
+import com.unimelb.aichatbot.socketio.dto.MessageEvents;
+import com.unimelb.aichatbot.socketio.dto.RoomMessageData;
 import com.unimelb.aichatbot.util.KeyboardUtil;
-import com.unimelb.aichatbot.util.UIHelper;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 
@@ -64,6 +69,14 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
     private MessageAdapter messageAdapter;
     private int operationStatus = 0;
     private ActivityMessageBinding binding;
+
+    Map<String, SenderType> roleToSenderType = new HashMap<>();
+
+    {
+        roleToSenderType.put("user", SenderType.ME);
+        roleToSenderType.put("assistant", SenderType.OTHER);
+        roleToSenderType.put("system", SenderType.BOT);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +130,7 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
         // List<Message> messages = createMessages();
         ChatService chatService = RetrofitFactory.createWithAuth(ChatService.class, MessageActivity.this);
 //       send request to get all messages
+//         TODO remove hard code
         UserChatHistoryRequest userChatHistoryRequest = new UserChatHistoryRequest();
         userChatHistoryRequest.setUserId("loading8425@gmail.com");
         userChatHistoryRequest.setChatbotId("Einstein");
@@ -128,27 +142,31 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
                 UserChatHistoryResponse userChatHistoryResponse = result.getData();
                 List<ChatHistoryItem> chatHistoryItemList = userChatHistoryResponse.getChatHistory();
                 assert chatHistoryItemList != null;
-                // convert chatHistoryList to messages
-                List<Message> messages1 = new ArrayList<>();
-                for (ChatHistoryItem chatHistoryItem : chatHistoryItemList) {
-                    switch (chatHistoryItem.getRole()) {
-                        case "user":
-                            messages1.add(new Message(chatHistoryItem.getContent(), MessageType.TEXT, "Loading", SenderType.ME, new Date()));
-                            break;
-                        case "assistant":
-                            messages1.add(new Message(chatHistoryItem.getContent(), MessageType.TEXT, "Edie", SenderType.OTHER, new Date()));
-                            break;
-                        case "system":
-                            messages1.add(new Message(chatHistoryItem.getContent(), MessageType.TEXT, "Edie", SenderType.BOT, new Date()));
-                            break;
-                    }
-
-                }
-
                 if (chatHistoryItemList.isEmpty()) {
                     Toast.makeText(MessageActivity.this, "No messages", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                // convert chatHistoryList to messages
+                List<Message> messages1 = new ArrayList<>();
+                // TODO date is wrong
+                Date currentDate = new Date(); // Reuse the same date object for all messages
+
+                for (ChatHistoryItem chatHistoryItem : chatHistoryItemList) {
+                    // Get the sender type based on the role from the map
+                    SenderType senderType = roleToSenderType.get(chatHistoryItem.getRole());
+
+                    // If the role is not known, continue to the next iteration
+                    if (senderType == null) continue;
+                    messages1.add(new Message(
+                            chatHistoryItem.getContent(),
+                            MessageType.TEXT,
+                            chatHistoryItem.getRole(),
+                            senderType,
+                            currentDate
+                    ));
+
+                }
+
                 logger.info("messages: " + chatHistoryItemList);
                 messageAdapter.submitList(messages1);
 
@@ -224,6 +242,7 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
         // if (messageContent.isEmpty()) {
         //     return;
         // }
+        // TODO DEBUG hard code
         messageContent = "Only say test";
         messageViewModel.addMessage(new Message(messageContent, MessageType.TEXT, "Loading", SenderType.ME, new Date()));
         messageEditText.setText("");
@@ -240,8 +259,9 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
                 // Your success logic here
                 ChatWithBotResponse chatWithBotResponse = result.getData();
                 Toast.makeText(MessageActivity.this, "Successfully sent message!", Toast.LENGTH_SHORT).show();
-                messageViewModel.addMessage(new Message(chatWithBotResponse.getReply(), MessageType.TEXT, "Edie", SenderType.OTHER, new Date()));
-                messageAdapter.notifyDataSetChanged();
+                // TODO hard code
+                Message newMessage = new Message(chatWithBotResponse.getReply(), MessageType.TEXT, "Edie", SenderType.OTHER, new Date());
+                appendMessageToUI(newMessage);
 
                 Log.d("messages", messageViewModel.getMessages().getValue().toString());
 
@@ -316,5 +336,21 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
                 .commit();
     }
 
+    private void appendMessageToUI(Message message) {
+        messageViewModel.addMessage(message);
+        messageAdapter.notifyDataSetChanged();
+    }
+
+    private void initializeSocketListener() {
+        SocketClient.getInstance().on(MessageEvents.MESSAGE.getStr(), args -> {
+            Gson gson = new Gson();
+            String json = (String) args[0];
+            BaseEvent<RoomMessageData> event = gson.fromJson(json, BaseEvent.class);
+            System.out.println("Message received: " + event.getData().getMessage());
+            //     Update UI
+            Message newMessage = new Message(event.getData().getMessage(), MessageType.TEXT, "Edie", SenderType.OTHER, new Date());
+            appendMessageToUI(newMessage);
+        });
+    }
 
 }
