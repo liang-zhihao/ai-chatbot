@@ -36,7 +36,6 @@ public class InputNameBottomSheetDialogFragment extends BottomSheetDialogFragmen
             public void onClick(View v) {
                 String newName = input.getText().toString();
                 // 在这里处理用户输入的名字
-                // 例如，保存到数据库或更新 UI 等
 
                 dismiss();
             }
