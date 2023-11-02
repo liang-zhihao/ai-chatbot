@@ -56,8 +56,10 @@ class GeoLocation:
             details["phone_number"] = result.get('formatted_phone_number', "")
             details["reviews"] = ""
 
-            for review in result.get('reviews', []): 
-                text = review.get('text', '')
+            # get most recent 5 reviews
+            reviews = result.get('reviews', [])
+            for i in range(min(5, len(reviews))):
+                text = reviews[i].get('text', '')
                 details["reviews"] += text
         
         except requests.RequestException as e:
@@ -97,7 +99,7 @@ def haversine_distance(lat1, lon1, lat2, lon2):
 
 if __name__ == "__main__":
     geo = GeoLocation()
-    geo.get_city_name(-37.800045, 144.965310)
+    print(geo.get_city_name(-37.800045, 144.965310))
     restaurants = geo.get_nearby_restaurants(-37.800045, 144.965310)
     print(restaurants[0])
     print(geo.get_restaurant_details(restaurants[2]['place_id']))
