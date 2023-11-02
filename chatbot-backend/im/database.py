@@ -15,9 +15,12 @@ chat_db = config.get('mongodb', 'chat_db')
 user_db = config.get('mongodb', 'user_db')
 chat_collection = config.get('mongodb', 'chat_collection')
 user_collection = config.get('mongodb', 'user_collection')
+real_uri = config.get("mongodb", "uri")
+
+
 
 class MongoDB():
-
+ 
     def __init__(self, MONGO_HOST= host , MONGO_PORT= port, MONGO_USER= username, MONGO_PASS=password):
         self.MONGO_HOST = MONGO_HOST
         self.MONGO_PORT = MONGO_PORT
@@ -27,7 +30,10 @@ class MongoDB():
         self.CHAT_COLLECTION = chat_collection
         self.USER_DB = user_db
         self.USER_COLLECTION = user_collection 
+        
         self.uri = "mongodb://{}:{}@{}:{}/?authSource=admin".format(MONGO_USER, MONGO_PASS, MONGO_HOST, MONGO_PORT)
+        # TODO change to altas uri
+        # self.uri = real_uri
         self.client = pymongo.MongoClient(self.uri)
 
     def create_user(self, user_id, username, password):

@@ -3,7 +3,7 @@ package com.unimelb.aichatbot.socketio;
 import com.google.gson.Gson;
 import com.unimelb.aichatbot.BuildConfig;
 import com.unimelb.aichatbot.socketio.dto.InitializeConnectionData;
-import com.unimelb.aichatbot.socketio.dto.PrivateMessageData;
+import com.unimelb.aichatbot.socketio.dto.MessageEvents;
 import com.unimelb.aichatbot.socketio.dto.RoomData;
 import com.unimelb.aichatbot.socketio.dto.RoomMessageData;
 
@@ -17,26 +17,26 @@ import io.socket.emitter.Emitter;
 
 import java.net.URISyntaxException;
 
-public class ChatClient {
+public class SocketClient {
     private final Gson gson = new Gson();
     private static final String BASE_URL = BuildConfig.SOCKET_URI;
 
-    public static final String TAG = ChatClient.class.getSimpleName();
-    private static ChatClient mInstance;
+    public static final String TAG = SocketClient.class.getSimpleName();
+    private static SocketClient mInstance;
     private final Emitter.Listener onConnect = args -> Log.d(TAG, "Socket Connected!");
     private final Emitter.Listener onConnectError = args -> Log.d(TAG, "onConnectError");
     private final Emitter.Listener onDisconnect = args -> Log.d(TAG, "onDisconnect");
     private Socket socket;
 
-    private ChatClient() {
+    private SocketClient() {
         initializeSocket();
     }
 
-    public static ChatClient getInstance() {
+    public static SocketClient getInstance() {
         if (mInstance == null) {
-            synchronized (ChatClient.class) {
+            synchronized (SocketClient.class) {
                 if (mInstance == null) {
-                    mInstance = new ChatClient();
+                    mInstance = new SocketClient();
                 }
             }
         }
@@ -57,52 +57,49 @@ public class ChatClient {
             socket.on(Socket.EVENT_DISCONNECT, onDisconnect);
             if (!socket.connected()) {
                 socket.connect();
+                registerListener();
             }
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public Socket getSocket() {
-        return socket;
-    }
 
-    private void registerMessageListener() {
+    private void registerListener() {
+
         socket.on(Socket.EVENT_CONNECT, args -> {
             System.out.println("Connected!");
             // Initialize connection
             InitializeConnectionData initData = new InitializeConnectionData();
             // TODO access username from shared preferences
             initData.setUserId("JohnDoe");
+            String event = MessageEvents.INITIALIZE_CONNECTION.getStr();
             BaseEvent<InitializeConnectionData> initEvent = new BaseEvent<>();
-            initEvent.setEvent("initialize_connection");
+            initEvent.setEvent(MessageEvents.INITIALIZE_CONNECTION.getStr());
             initEvent.setData(initData);
 
-            socket.emit("initialize_connection", gson.toJson(initEvent));
+            emit(event, initEvent);
         });
+        //  receive message listener
+        // socket.on(MessageEvents.MESSAGE.getStr(), args -> {
+        //     String json = (String) args[0];
+        //     BaseEvent<RoomMessageData> event = gson.fromJson(json, BaseEvent.class);
+        //     System.out.println("Message received: " + event.getData().getMessage());
+        // });
 
-        socket.on("receive_message", args -> {
-            String json = (String) args[0];
-            BaseEvent<RoomMessageData> event = gson.fromJson(json, BaseEvent.class);
-            System.out.println("Message received: " + event.getData().getMessage());
-        });
 
-        socket.on("receive_private_message", args -> {
-            String json = (String) args[0];
-            BaseEvent<PrivateMessageData> event = gson.fromJson(json, BaseEvent.class);
-            System.out.println("Private message received from " + event.getData().getFromUser());
-        });
     }
 
     public void joinRoom(String roomName) {
         RoomData roomData = new RoomData();
         roomData.setRoom_id(roomName);
-
+        String event = MessageEvents.JOIN_ROOM.getStr();
         BaseEvent<RoomData> joinEvent = new BaseEvent<>();
-        joinEvent.setEvent("join_room");
+        joinEvent.setEvent(event);
         joinEvent.setData(roomData);
 
-        socket.emit("join_room", gson.toJson(joinEvent), (Ack) args -> {
+
+        emit(event, joinEvent, (Ack) args -> {
             System.out.println("Join room ack: " + args[0]);
         });
     }
@@ -111,43 +108,38 @@ public class ChatClient {
         RoomMessageData messageData = new RoomMessageData();
         messageData.setRoomId(roomName);
         messageData.setMessage(message);
-
+        String event = MessageEvents.MESSAGE.getStr();
         BaseEvent<RoomMessageData> messageEvent = new BaseEvent<>();
-        messageEvent.setEvent("send_message");
+        messageEvent.setEvent(event);
         messageEvent.setData(messageData);
-
-        socket.emit("send_message", gson.toJson(messageEvent));
+        emit(event, messageEvent);
     }
 
     public void leaveRoom(String roomName) {
         RoomData roomData = new RoomData();
         roomData.setRoom_id(roomName);
-
+        String event = MessageEvents.LEAVE_ROOM.getStr();
         BaseEvent<RoomData> leaveEvent = new BaseEvent<>();
-        leaveEvent.setEvent("leave_room");
+        leaveEvent.setEvent(event);
         leaveEvent.setData(roomData);
-
-        socket.emit("leave_room", gson.toJson(leaveEvent));
+        emit(event, leaveEvent);
     }
 
-    public void sendPrivateMessage(String toUser, String message) {
-        PrivateMessageData privateMessageData = new PrivateMessageData();
-        privateMessageData.setToUser(toUser);
-        privateMessageData.setMessage(message);
-
-        BaseEvent<PrivateMessageData> privateMessageEvent = new BaseEvent<>();
-        privateMessageEvent.setEvent("send_private_message");
-        privateMessageEvent.setData(privateMessageData);
-
-        socket.emit("send_private_message", gson.toJson(privateMessageEvent));
+    private void emit(String event, BaseEvent<?> data, Ack ack) {
+        socket.emit(event, gson.toJson(data));
     }
 
-    public void start() {
-        initializeSocket();
+    private void emit(String event, BaseEvent<?> data) {
+        socket.emit(event, gson.toJson(data));
+    }
+
+    public void on(String event, Emitter.Listener listener) {
+        socket.on(event, listener);
     }
 
     public void stop() {
         socket.disconnect();
     }
+
 }
 
