@@ -9,7 +9,7 @@
         android:id="@+id/navigation_chat_history"
         android:name="com.unimelb.aichatbot.modules.chatHistory.fragment.ChatHistoryFragment"
         android:label="@string/bottom_nav_title1"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_recent_chat" />
 
     <fragment
         android:id="@+id/navigation_contacts"

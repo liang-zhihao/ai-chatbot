@@ -50,9 +50,9 @@ public class LoginActivity extends AppCompatActivity {
                 //     return;
                 // }
 
-                //     Debug mode
+                // TODO    Debug mode
                 userId = "loading8425@gmail.com";
-                password = "123456789";
+                password = "1234567890";
                 loginBtn.startAnimation();
                 //     send login request to server
 
@@ -80,16 +80,17 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onError(BaseResponse error, @NonNull Throwable t) {
+                    public void onError(BaseResponse error, Throwable t) {
                         // Your failure logic here
                         loginBtn.revertAnimation();
-
                         if (error != null) {
                             // Handle server-defined error
                             Toast.makeText(LoginActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
                         } else {
                             // Handle other types of errors (like network issues)
-                            t.printStackTrace();
+                            if (t != null) {
+                                t.printStackTrace();
+                            }
                             Toast.makeText(LoginActivity.this, "Server is not available", Toast.LENGTH_SHORT).show();
                         }
                     }

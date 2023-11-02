@@ -19,10 +19,12 @@ public abstract class MyCallback<T> implements retrofit2.Callback<BaseResponse<T
         } else {
             assert response.errorBody() != null;
             try {
-                Log.d("MyCallback", "onResponse: " + response.errorBody().string());
                 BaseResponse errorResponse = GsonHelper.getErrorResponse(response.errorBody());
+                Log.d("MyCallback", "onResponse: " + errorResponse.toString());
+
                 onError(errorResponse, null);
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }

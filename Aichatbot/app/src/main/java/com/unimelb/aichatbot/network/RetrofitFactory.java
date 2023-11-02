@@ -20,7 +20,7 @@ public final class RetrofitFactory {
     private static final Map<String, Retrofit> OTHERS = new ConcurrentHashMap<>(2);
     private static final String BASE_URL = BuildConfig.SERVER_LOCAL_URL;
     // private static final String BASE_URL = BuildConfig.SERVER_URL;
-
+    
     private RetrofitFactory() {
         OTHERS.put("default", buildRetrofit(new OkHttpClient.Builder()));
     }
