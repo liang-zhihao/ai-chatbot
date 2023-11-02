@@ -1,6 +1,7 @@
 package com.unimelb.aichatbot.modules.chatHistory.placeholder;
 
 import com.unimelb.aichatbot.modules.chatHistory.responsObject.UserChatHistory;
+import com.unimelb.aichatbot.modules.chatHistory.responsObject.UserRoles;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,11 +40,18 @@ public class PlaceholderContent {
         ITEM_MAP.put(item.id, item);
     }
 
-    private static PlaceholderItem createPlaceholderItem(UserChatHistory userChatHistory) {
+//    private static PlaceholderItem createPlaceholderItem(UserChatHistory userChatHistory) {
+//
+//        //display the last chat
+////        List<UserChatHistory.ChatMessage> list = userChatHistory.getData().getChatHistory();
+////        return new PlaceholderItem("11", list.get(list.size() - 1).getContent(), "");
+
+//    }
+
+    private static PlaceholderItem createPlaceholderItem(String role) {
 
         //display the last chat
-        List<UserChatHistory.ChatMessage> list = userChatHistory.getData().getChatHistory();
-        return new PlaceholderItem("11", list.get(list.size() - 1).getContent(), "");
+        return new PlaceholderItem(role, "", "",role);
     }
 
     private static String makeDetails(int position) {
@@ -62,11 +70,13 @@ public class PlaceholderContent {
         public final String id;
         public final String content;
         public final String details;
+        public final String image;
 
-        public PlaceholderItem(String id, String content, String details) {
+        public PlaceholderItem(String id, String content, String details, String image) {
             this.id = id;
             this.content = content;
             this.details = details;
+            this.image = image;
         }
 
         @Override
@@ -74,6 +84,7 @@ public class PlaceholderContent {
             return content;
         }
     }
+
 
 
     public static void toggleItems() {
@@ -88,14 +99,20 @@ public class PlaceholderContent {
 //        }
     }
 
-    public static void display(List<UserChatHistory> userChatHistoryList) {
+//    public static void display(List<UserChatHistory> userChatHistoryList) {
+//        ITEMS.clear();
+//        for(UserChatHistory u:userChatHistoryList){
+//            addItem(createPlaceholderItem(u));
+//        }
+//
+//    }
+
+    public static void display(UserRoles userRoles) {
         ITEMS.clear();
-        for(UserChatHistory u:userChatHistoryList){
+        for(String  u:userRoles.getData().getRoles()){
             addItem(createPlaceholderItem(u));
         }
 
     }
-
-
 
 }

@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unimelb.aichatbot.R;
+import com.unimelb.aichatbot.modules.chatHistory.responsObject.UserRoles;
 import com.unimelb.aichatbot.modules.chatroom.activity.MessageActivity;
 import com.unimelb.aichatbot.modules.chatHistory.adapter.ChatHistoryItemRecyclerViewAdapter;
 import com.unimelb.aichatbot.modules.chatHistory.placeholder.PlaceholderContent;
@@ -91,9 +92,16 @@ public class ItemFragment extends Fragment {
         mAdapter.notifyDataSetChanged();
     }
 
-    public void displayListItem(List<UserChatHistory> userChatHistoryList) {
+//    public void displayListItem(List<UserChatHistory> userChatHistoryList) {
+//        // update list content
+//        PlaceholderContent.display(userChatHistoryList);
+//        // notify list has changed
+//        mAdapter.notifyDataSetChanged();
+//    }
+
+    public void displayListItem(UserRoles userRoles) {
         // update list content
-        PlaceholderContent.display(userChatHistoryList);
+        PlaceholderContent.display(userRoles);
         // notify list has changed
         mAdapter.notifyDataSetChanged();
     }

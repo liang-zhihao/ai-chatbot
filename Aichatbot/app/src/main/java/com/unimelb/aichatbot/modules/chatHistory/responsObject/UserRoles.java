@@ -29,6 +29,10 @@ public class UserRoles {
         public List<String> getRoles() {
             return roles;
         }
+
+        public void setRoles(List<String> roles) {
+            this.roles = roles;
+        }
     }
 
     @Override
@@ -55,5 +59,9 @@ public class UserRoles {
 
     public boolean isSuccess() {
         return success;
+    }
+
+    public void setData(Data data) {
+        this.data = data;
     }
 }

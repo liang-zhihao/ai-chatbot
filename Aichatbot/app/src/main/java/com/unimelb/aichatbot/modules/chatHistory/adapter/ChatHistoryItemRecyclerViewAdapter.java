@@ -3,10 +3,12 @@ package com.unimelb.aichatbot.modules.chatHistory.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.unimelb.aichatbot.R;
 import com.unimelb.aichatbot.databinding.FragmentItemBinding;
 import com.unimelb.aichatbot.modules.chatHistory.placeholder.PlaceholderContent;
 import com.unimelb.aichatbot.modules.chatHistory.placeholder.PlaceholderContent.PlaceholderItem;
@@ -42,6 +44,15 @@ public class ChatHistoryItemRecyclerViewAdapter extends RecyclerView.Adapter<Cha
         holder.mItem = mValues.get(position);
         holder.mIdView.setText(mValues.get(position).id);
         holder.mContentView.setText(mValues.get(position).content);
+        //holder.mImageView.setImageResource(mValues.get(position).imageResourceId);
+        String role =mValues.get(position).image;
+        if(role.equals("Donald Trump")){
+            holder.mImageView.setImageResource(R.drawable.donald_trump);
+        } else if (role.equals("Mark Zuckerberg")) {
+            holder.mImageView.setImageResource(R.drawable.mark_zuckerberg);
+        }
+
+
     }
 
     @Override
@@ -52,12 +63,14 @@ public class ChatHistoryItemRecyclerViewAdapter extends RecyclerView.Adapter<Cha
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView mIdView;
         public final TextView mContentView;
+        public final ImageView mImageView;
         public PlaceholderItem mItem;
 
         public ViewHolder(FragmentItemBinding binding) {
             super(binding.getRoot());
             mIdView = binding.itemNumber;
             mContentView = binding.content;
+            mImageView = binding.imageView;
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -67,8 +80,8 @@ public class ChatHistoryItemRecyclerViewAdapter extends RecyclerView.Adapter<Cha
                     }
                 }
             });
-
         }
+
 
 
 
