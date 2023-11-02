@@ -17,6 +17,7 @@ OPENAI_API_KEY = config.get('openai', 'OPENAI_API_KEY')
 OPENAI_API_BASE = config.get('openai', 'OPENAI_API_BASE')
 OPENAI_API_TYPE = config.get('openai', 'OPENAI_API_TYPE')
 OPENAI_API_VERSION = config.get('openai', 'OPENAI_API_VERSION')
+MAX_CHAT_LENGTH = config.getint('openai', 'MAX_CHAT_LENGTH')
 
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 os.environ["OPENAI_API_BASE"] = OPENAI_API_BASE
@@ -35,9 +36,13 @@ class Chatbot:
     
     def send_message(self, messages):
         chat = []
-        # get latest 5 messages
-        for message in messages[-10:]:
+        print(messages, flush=True)
+        # get latest messages
+        if len(messages) > MAX_CHAT_LENGTH:
+            chat.append({"role": messages[0]["role"], "content": messages[0]["content"]})
+        for message in messages[-MAX_CHAT_LENGTH:]:
             chat.append({"role": message["role"], "content": message["content"]})
+        print(chat, flush=True)
         response = openai.ChatCompletion.create(
           engine=self.deployment_name,
           messages=chat,
@@ -50,7 +55,7 @@ class Chatbot:
         
         reply = response['choices'][0]['message']['content']
         usage = response['usage']
-        print(usage)
+        print(usage,flush=True)
         return reply
 
 if __name__ == "__main__":

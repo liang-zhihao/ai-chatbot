@@ -411,6 +411,52 @@ def get_user_info():
     except Exception as e:
         return error_out(str(e), 401)
 
+# change user password
+@app.route("/api/user/change_password", methods=["POST"])
+@jwt_required()
+def change_password():
+    try:
+        user_id = request.json["user_id"]
+        old_password = request.json["old_password"]
+        new_password = request.json["new_password"]
+        if db.change_password(user_id, old_password, new_password):
+            return (
+                jsonify(
+                    {
+                        "status": 200,
+                        "message": "change password successfully",
+                        "success": True,
+                        "data": {},
+                    }
+                ),
+                200,
+            )
+        return error_out("change password failed", 401)
+    except Exception as e:
+        return error_out(str(e), 401)
+
+# change user username
+@app.route("/api/user/change_username", methods=["POST"])
+@jwt_required()
+def change_username():
+    try:
+        user_id = request.json["user_id"]
+        new_username = request.json["new_username"]
+        if db.change_username(user_id, new_username):
+            return (
+                jsonify(
+                    {
+                        "status": 200,
+                        "message": "change username successfully",
+                        "success": True,
+                        "data": {},
+                    }
+                ),
+                200,
+            )
+        return error_out("change username failed", 401)
+    except Exception as e:
+        return error_out(str(e), 401)
 
 if __name__ in "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)
