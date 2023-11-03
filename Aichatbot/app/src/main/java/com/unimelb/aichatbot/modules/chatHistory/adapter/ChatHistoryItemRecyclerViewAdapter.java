@@ -46,15 +46,34 @@ public class ChatHistoryItemRecyclerViewAdapter extends RecyclerView.Adapter<Cha
         holder.mContentView.setText(mValues.get(position).content);
         //holder.mImageView.setImageResource(mValues.get(position).imageResourceId);
         String role =mValues.get(position).image;
-        if(role.equals("Donald Trump")){
+        if(role.equals("DonaldTrump")){
             holder.mImageView.setImageResource(R.drawable.donald_trump);
-        } else if (role.equals("Mark Zuckerberg")) {
+        } else if (role.equals("MarkZuckerberg")) {
             holder.mImageView.setImageResource(R.drawable.mark_zuckerberg);
+        }else if (role.equals("SteveJobs")) {
+            holder.mImageView.setImageResource(R.drawable.steve_jobs);
+        }else if (role.equals("Einstein")) {
+            holder.mImageView.setImageResource(R.drawable.einstein);
+        }else if (role.equals("GordonRamsay")) {
+            holder.mImageView.setImageResource(R.drawable.gordon_ramsay);
+        }else if (role.equals("ElizabethII")) {
+            holder.mImageView.setImageResource(R.drawable.elizabeth_ii);
+        }else if (role.equals("TroyeSivan")) {
+            holder.mImageView.setImageResource(R.drawable.troye_sivan);
         }
 
-
+        holder.mDeleteImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Do something when delete is clicked
+                // position will tell you which item was clicked
+                onDeleteClicked(position);
+            }
+        });
     }
-
+    private void onDeleteClicked(int position) {
+        // Handle the delete action for the item at the given position
+    }
     @Override
     public int getItemCount() {
         return mValues.size();
@@ -65,13 +84,13 @@ public class ChatHistoryItemRecyclerViewAdapter extends RecyclerView.Adapter<Cha
         public final TextView mContentView;
         public final ImageView mImageView;
         public PlaceholderItem mItem;
-
+        public ImageView mDeleteImageView;
         public ViewHolder(FragmentItemBinding binding) {
             super(binding.getRoot());
             mIdView = binding.itemNumber;
             mContentView = binding.content;
             mImageView = binding.imageView;
-
+            mDeleteImageView = binding.delete;
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -80,7 +99,12 @@ public class ChatHistoryItemRecyclerViewAdapter extends RecyclerView.Adapter<Cha
                     }
                 }
             });
+
+            // Set the click listener for the delete button
+
+
         }
+
 
 
 

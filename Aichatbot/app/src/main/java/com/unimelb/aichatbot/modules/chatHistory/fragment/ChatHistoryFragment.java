@@ -59,8 +59,8 @@ public class ChatHistoryFragment extends Fragment {
         apiService = RetrofitFactory.create(ChatHistoryService.class);
 
         // do login request
-//        doLoginRequest();
-        testShowList();
+        doLoginRequest();
+//        testShowList();
 
         seeMoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,68 +80,69 @@ public class ChatHistoryFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-//
-//    public void doLoginRequest() {
-//
-//
-//        // do login request
-//        LoginRequest loginRequest = new LoginRequest("loading8425@gmail.com", "123456789");
-//        Call<UserInfo> call = apiService.getUserInfo(loginRequest);
-//        call.enqueue(new Callback<UserInfo>() {
-//            @Override
-//            public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
-//                if (response.isSuccessful()) {
-//                    UserInfo userInfo = response.body();
-//
-//
-//                    userToken = userInfo.getData().getAccessToken();
-//                    Log.d("11", userToken);
-//                    doGetUserRolesRequest();
-//                } else {
-//
-//                    Log.d("22", response.toString());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<UserInfo> call, Throwable t) {
-//
-//                Log.d("33", t.toString());
-//            }
-//        });
-//
-//    }
-//
-//
-//    public void doGetUserRolesRequest() {
-//
-//        GetUserRoleRequest getUserRoleRequest = new GetUserRoleRequest("loading8425@gmail.com");
-//        // do get UserRoles
-//        Call<UserRoles> callUserRoles = apiService.getUserRoles("Bearer " + userToken, getUserRoleRequest);
-//        callUserRoles.enqueue(new Callback<UserRoles>() {
-//            @Override
-//            public void onResponse(Call<UserRoles> call, Response<UserRoles> response) {
-//                if (response.isSuccessful()) {
-//                    userRoles = response.body();
-//
-//                    Log.d("11", userRoles.toString());
-//                    doGetChatHistoryRequest();
-//
-//                } else {
-//
-//                    Log.d("22", response.toString());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<UserRoles> call, Throwable t) {
-//
-//                Log.d("33", t.toString());
-//            }
-//        });
-//
-//    }
-//
+
+    public void doLoginRequest() {
+
+
+        // do login request
+        LoginRequest loginRequest = new LoginRequest("loading8425@gmail.com", "123456789");
+        Call<UserInfo> call = apiService.getUserInfo(loginRequest);
+        call.enqueue(new Callback<UserInfo>() {
+            @Override
+            public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
+                if (response.isSuccessful()) {
+                    UserInfo userInfo = response.body();
+
+
+                    userToken = userInfo.getData().getAccessToken();
+                    Log.d("11", userToken);
+                    doGetUserRolesRequest();
+                } else {
+
+                    Log.d("22", response.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserInfo> call, Throwable t) {
+
+                Log.d("33", t.toString());
+            }
+        });
+
+    }
+
+
+    public void doGetUserRolesRequest() {
+
+        GetUserRoleRequest getUserRoleRequest = new GetUserRoleRequest("loading8425@gmail.com");
+        // do get UserRoles
+        Call<UserRoles> callUserRoles = apiService.getUserRoles("Bearer " + userToken, getUserRoleRequest);
+        callUserRoles.enqueue(new Callback<UserRoles>() {
+            @Override
+            public void onResponse(Call<UserRoles> call, Response<UserRoles> response) {
+                if (response.isSuccessful()) {
+                    userRoles = response.body();
+
+                    Log.d("11", userRoles.toString());
+                    itemFragment.displayListItem(userRoles);
+                    //doGetChatHistoryRequest();
+                    showLoading(false);
+                } else {
+
+                    Log.d("22", response.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserRoles> call, Throwable t) {
+
+                Log.d("33", t.toString());
+            }
+        });
+
+    }
+
 //    public void doGetChatHistoryRequest() {
 //        List<UserChatHistory> userChatHistoryList = new ArrayList<>();
 //        for (String role : userRoles.getData().getRoles()) {
