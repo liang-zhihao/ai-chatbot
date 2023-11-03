@@ -181,6 +181,8 @@ class MongoDB:
         db = self.get_databse(self.USER_DB)
         collection = db[self.USER_COLLECTION]
         query = {"$and": [{"user_id": user_id}, {"password": old_password}]}
+        if collection.find_one(query) == None:
+            return False
         return collection.update_one(
             query, {"$set": {"password": new_password}}
         ).acknowledged
