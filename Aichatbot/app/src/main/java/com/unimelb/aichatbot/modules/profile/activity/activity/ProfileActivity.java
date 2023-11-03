@@ -3,6 +3,8 @@ package com.unimelb.aichatbot.modules.profile.activity.activity;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import com.unimelb.aichatbot.R;
@@ -10,7 +12,7 @@ import com.unimelb.aichatbot.modules.profile.activity.Fragment.InputNameBottomSh
 import com.unimelb.aichatbot.modules.profile.activity.Fragment.InputPasswordBottomSheetDialogFragment;
 
 public class ProfileActivity extends AppCompatActivity
-        implements InputNameBottomSheetDialogFragment.OnNameUpdatedListener { // 实现接口
+        implements InputNameBottomSheetDialogFragment.OnNameUpdatedListener , InputPasswordBottomSheetDialogFragment.OnPasswordUpdatedListener { // 实现接口
 
     private TextView nameButton;
 
@@ -40,6 +42,7 @@ public class ProfileActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 InputPasswordBottomSheetDialogFragment bottomSheetDialogFragment = new InputPasswordBottomSheetDialogFragment();
+                bottomSheetDialogFragment.setPasswordUpdatedListener(ProfileActivity.this);
                 bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
             }
         });
@@ -56,5 +59,10 @@ public class ProfileActivity extends AppCompatActivity
         if(nameButton != null) {
             nameButton.setText(newName);
         }
+    }
+
+    @Override
+    public void onPwdUpdated(String pwd) {
+        Log.e("XXX", pwd);
     }
 }

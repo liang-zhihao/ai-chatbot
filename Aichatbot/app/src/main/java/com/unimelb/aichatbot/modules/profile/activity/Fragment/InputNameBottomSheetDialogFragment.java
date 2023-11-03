@@ -61,6 +61,7 @@ public class InputNameBottomSheetDialogFragment extends BottomSheetDialogFragmen
                 String userId = "loading8425@gmail.com";
 
                 ChangeUsernameRequest nameRequest = new ChangeUsernameRequest(userId, newName);
+                service = RetrofitFactory.createWithAuth(ApiService.class,getActivity());
                 Call<Void> call = service.changeUsername(nameRequest);
 
                 call.enqueue(new Callback<Void>() {
