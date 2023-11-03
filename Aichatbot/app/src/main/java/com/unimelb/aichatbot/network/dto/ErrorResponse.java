@@ -1,12 +1,10 @@
-package com.unimelb.aichatbot.network;
+package com.unimelb.aichatbot.network.dto;
 
-public class BaseResponse<T> {
-
+public class ErrorResponse {
     private int status;
     private String message;
 
     private boolean success;
-    private T data;
 
     public int getStatus() {
         return status;
@@ -14,14 +12,6 @@ public class BaseResponse<T> {
 
     public void setStatus(int status) {
         this.status = status;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
     }
 
     public String getMessage() {
@@ -32,17 +22,17 @@ public class BaseResponse<T> {
         this.message = message;
     }
 
-    public T getData() {
-        return data;
+    public boolean isSuccess() {
+        return success;
     }
 
-    public void setData(T data) {
-        this.data = data;
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 
     @Override
     public String toString() {
-        return "BaseResponse{" +
+        return "ErrorResponse{" +
                 "status=" + status +
                 ", message='" + message + '\'' +
                 ", success=" + success +

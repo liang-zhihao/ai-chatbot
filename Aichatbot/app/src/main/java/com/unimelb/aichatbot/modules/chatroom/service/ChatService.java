@@ -3,6 +3,7 @@ package com.unimelb.aichatbot.modules.chatroom.service;
 import com.unimelb.aichatbot.network.BaseResponse;
 import com.unimelb.aichatbot.network.dto.ChatWithBotRequest;
 import com.unimelb.aichatbot.network.dto.ChatWithBotResponse;
+import com.unimelb.aichatbot.network.dto.UserChatHistoryRequest;
 import com.unimelb.aichatbot.network.dto.UserChatHistoryResponse;
 
 import retrofit2.Call;
@@ -17,9 +18,8 @@ public interface ChatService {
     // @GET("messages")
     // Call<List<Message>> getAllMessages();
     @Headers("Content-Type:application/json")
-    @GET("api/chatbot/get_chat_history")
-    Call<BaseResponse<UserChatHistoryResponse>> getAllMessages(@Query("user_id") String userId,
-                                                               @Query("chatbot_id") String chatbotId);
+    @POST("api/chatbot/get_chat_history")
+    Call<BaseResponse<UserChatHistoryResponse>> getAllMessages(@Body UserChatHistoryRequest userChatHistoryRequest);
     // TODO more endpoints
 
     @POST("api/chatbot/send_message")

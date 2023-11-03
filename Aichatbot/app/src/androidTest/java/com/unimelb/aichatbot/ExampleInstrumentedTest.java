@@ -10,6 +10,10 @@ import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 
+import com.google.gson.Gson;
+import com.unimelb.aichatbot.network.BaseResponse;
+import com.unimelb.aichatbot.util.GsonHelper;
+
 /**
  * Instrumented test, which will execute on an Android device.
  *
@@ -22,5 +26,10 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         assertEquals("com.unimelb.aichatbot", appContext.getPackageName());
+        Gson gson = new Gson();
+        String s = "{\"data\":{},\"message\":\"user_id not exists??\",\"status\":401,\"success\":false}";
+        BaseResponse errorResponse = gson.fromJson(s, BaseResponse.class);
+
+        assert errorResponse != null;
     }
 }

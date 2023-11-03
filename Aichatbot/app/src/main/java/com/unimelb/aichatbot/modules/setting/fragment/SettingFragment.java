@@ -7,16 +7,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.unimelb.aichatbot.CustomViewController;
 import com.unimelb.aichatbot.R;
 import com.unimelb.aichatbot.SettingsActivity;
 import com.unimelb.aichatbot.databinding.FragmentSettingBinding;
 import com.unimelb.aichatbot.modules.account.activity.ChooseBotActivity;
 import com.unimelb.aichatbot.modules.profile.activity.activity.ProfileActivity;
 
-public class SettingFragment extends Fragment {
+public class SettingFragment extends Fragment implements CustomViewController {
 
     private FragmentSettingBinding binding;
 
@@ -31,22 +33,16 @@ public class SettingFragment extends Fragment {
         TextView editCharacterButton = root.findViewById(R.id.Edit_Character);
         TextView chatHistoryButton = root.findViewById(R.id.Chat_History);
 
-        profileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        profileButton.setOnClickListener(view -> {
 
-                Intent intent = new Intent(getActivity(), ProfileActivity.class);
-                startActivity(intent);
-            }
+            Intent intent = new Intent(getActivity(), ProfileActivity.class);
+            startActivity(intent);
         });
 
-        editCharacterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        editCharacterButton.setOnClickListener(view -> {
 
-                Intent intent = new Intent(getActivity(), ChooseBotActivity.class);
-                startActivity(intent);
-            }
+            Intent intent = new Intent(getActivity(), ChooseBotActivity.class);
+            startActivity(intent);
         });
 
         chatHistoryButton.setOnClickListener(new View.OnClickListener() {
@@ -72,4 +68,30 @@ public class SettingFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+    @Override
+    public void initializeView() {
+
+    }
+
+    @Override
+    public void initializeListener() {
+
+    }
+
+    @Override
+    public void initializeActionBar() {
+
+    }
+
+    @Override
+    public void initializeViewModel() {
+
+    }
+
+    @Override
+    public void initializeRecyclerView() {
+
+    }
+
 }

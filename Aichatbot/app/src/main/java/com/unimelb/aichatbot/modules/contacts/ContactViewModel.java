@@ -1,4 +1,4 @@
-package com.unimelb.aichatbot.modules.searchFriend;
+package com.unimelb.aichatbot.modules.contacts;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -9,11 +9,15 @@ import com.unimelb.aichatbot.modules.common.model.FriendListItem;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SearchViewModel extends ViewModel {
+public class ContactViewModel extends ViewModel {
 
-
+    private final MutableLiveData<String> mText;
     private MutableLiveData<List<FriendListItem>> mFriends;
 
+    public ContactViewModel() {
+        mText = new MutableLiveData<>();
+        mText.setValue("This is contacts fragment");
+    }
 
     public LiveData<List<FriendListItem>> getFriends() {
         if (mFriends == null) {
@@ -34,10 +38,7 @@ public class SearchViewModel extends ViewModel {
         mFriends.setValue(friendListItems);
     }
 
-    public void addFriend(FriendListItem friendListItem) {
-        List<FriendListItem> friendListItems = mFriends.getValue();
-        assert friendListItems != null;
-        friendListItems.add(friendListItem);
-        mFriends.setValue(friendListItems);
+    public LiveData<String> getText() {
+        return mText;
     }
 }

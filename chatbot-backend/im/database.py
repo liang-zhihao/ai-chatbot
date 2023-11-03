@@ -33,7 +33,7 @@ class MongoDB():
         
         self.uri = "mongodb://{}:{}@{}:{}/?authSource=admin".format(MONGO_USER, MONGO_PASS, MONGO_HOST, MONGO_PORT)
         # TODO change to altas uri
-        # self.uri = real_uri
+        self.uri = real_uri
         self.client = pymongo.MongoClient(self.uri)
 
     def create_user(self, user_id, username, password):

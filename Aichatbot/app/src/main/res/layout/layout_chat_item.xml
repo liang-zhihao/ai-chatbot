@@ -6,23 +6,19 @@
     android:background="@drawable/chat_item_style"
     android:elevation="1dp"
     android:translationZ="0dp"
+
     android:layout_margin="0dp">
 
     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/image_avatar"
+        android:id="@+id/imageView"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_gravity="center_vertical"
-        android:layout_margin="16dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="9dp"
         android:src="@drawable/donald_trump"
-        app:civ_border_color="#800080"
         app:civ_border_width="2dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:civ_border_color="#800080"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="16dp" />
+    <!-- Vertical LinearLayout for Title and Description -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -32,7 +28,7 @@
 
         <!-- TextView for the Title -->
         <TextView
-            android:id="@+id/text_name"
+            android:id="@+id/item_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?attr/textAppearanceListItem"
@@ -50,23 +46,5 @@
             android:textAppearance="?attr/textAppearanceListItem" />
 
     </LinearLayout>
-
-
-    <Button
-        android:id="@+id/button_friend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:layout_marginEnd="16dp"
-        android:text="add"
-        android:textColor="@color/white"
-        android:visibility="invisible" />
-
-    <!--    <com.google.android.material.divider.MaterialDivider-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="2dp"-->
-    <!--        android:layout_marginLeft="24dp"-->
-    <!--        android:layout_marginRight="24dp"/>-->
-
 
 </LinearLayout>

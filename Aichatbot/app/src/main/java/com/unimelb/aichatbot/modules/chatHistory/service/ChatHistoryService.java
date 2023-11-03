@@ -18,11 +18,9 @@ public interface ChatHistoryService {
     Call<UserRoles> getUserRoles(@Header("Authorization") String token,
                                  @Body GetUserRoleRequest getUserRoleRequest);
 
-    @POST("/api/login")
-    Call<UserInfo> getUserInfo(@Body LoginRequest loginRequest);
 
     @POST("api/chatbot/get_chat_history")
-    Call<UserChatHistory> getChatHistory(@Header("Authorization") String token,@Body GetChatHistoryRequest getChatHistoryRequest);
+    Call<UserChatHistory> getChatHistory(@Header("Authorization") String token, @Body GetChatHistoryRequest getChatHistoryRequest);
 
 
 }

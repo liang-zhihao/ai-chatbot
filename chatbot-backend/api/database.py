@@ -34,7 +34,7 @@ class MongoDB:
         self.uri = "mongodb://{}:{}@{}:{}/?authSource=admin".format(
             MONGO_USER, MONGO_PASS, MONGO_HOST, MONGO_PORT
         )
-        # self.uri = real_uri
+        self.uri = real_uri
 
         self.client = pymongo.MongoClient(self.uri)
 
@@ -194,6 +194,8 @@ class MongoDB:
         return collection.update_one(
             query, {"$set": {"username": new_username}}
         ).acknowledged
+
+
 # test cases
 if __name__ == "__main__":
     db = MongoDB()

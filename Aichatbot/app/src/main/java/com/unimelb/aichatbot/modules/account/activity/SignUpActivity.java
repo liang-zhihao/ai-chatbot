@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.unimelb.aichatbot.R;
 import com.unimelb.aichatbot.network.BaseResponse;
 import com.unimelb.aichatbot.network.MyCallback;
+import com.unimelb.aichatbot.network.dto.ErrorResponse;
 import com.unimelb.aichatbot.network.dto.SignUpRequest;
 import com.unimelb.aichatbot.modules.account.service.AccountService;
 import com.unimelb.aichatbot.network.RetrofitFactory;
@@ -74,7 +75,7 @@ public class SignUpActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onError(BaseResponse error, @NonNull Throwable t) {
+                    public void onError(ErrorResponse error, @NonNull Throwable t) {
                         // Handle errors
                         if (error != null) {
                             // Handle error defined by the server

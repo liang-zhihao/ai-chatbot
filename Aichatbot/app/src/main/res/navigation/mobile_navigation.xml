@@ -7,15 +7,15 @@
 
     <fragment
         android:id="@+id/navigation_chat_history"
-        android:name="com.unimelb.aichatbot.modules.chatHistory.fragment.ChatHistoryFragment"
+        android:name="com.unimelb.aichatbot.modules.chatHistory.fragment.RecentChatFragment"
         android:label="@string/bottom_nav_title1"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_recent_chat" />
 
     <fragment
         android:id="@+id/navigation_contacts"
-        android:name="com.unimelb.aichatbot.modules.contacts.fragment.ContactsFragment"
+        android:name="com.unimelb.aichatbot.modules.contacts.fragment.ContactFragment"
         android:label="@string/bottom_nav_title2"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_contact" />
 
     <fragment
         android:id="@+id/navigation_settings"
