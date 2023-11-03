@@ -14,7 +14,7 @@ import com.unimelb.aichatbot.R;
 import com.unimelb.aichatbot.SettingsActivity;
 import com.unimelb.aichatbot.databinding.FragmentSettingBinding;
 import com.unimelb.aichatbot.modules.account.activity.ChooseBotActivity;
-import com.unimelb.aichatbot.modules.profile.activity.ProfileActivity;
+import com.unimelb.aichatbot.modules.profile.activity.activity.ProfileActivity;
 
 public class SettingFragment extends Fragment {
 
