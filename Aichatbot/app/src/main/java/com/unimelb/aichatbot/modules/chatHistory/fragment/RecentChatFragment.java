@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -16,13 +17,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.button.MaterialButton;
 import com.unimelb.aichatbot.CustomViewController;
 
 import com.unimelb.aichatbot.databinding.FragmentRecentChatBinding;
 import com.unimelb.aichatbot.modules.chatHistory.ChatHistoryViewModel;
 import com.unimelb.aichatbot.modules.chatHistory.adapter.ChatHistoryItemAdapter;
 import com.unimelb.aichatbot.modules.chatroom.activity.MessageActivity;
+import com.unimelb.aichatbot.modules.newChat.NewChatActivity;
 
 /*
  *
@@ -39,7 +40,7 @@ public class RecentChatFragment extends Fragment implements CustomViewController
     ProgressBar progressBar;
 
     private FragmentRecentChatBinding binding;
-    private MaterialButton btnSend;
+    private Button newChatBtn;
 
     private ChatHistoryViewModel historyViewModel;
 
@@ -51,9 +52,10 @@ public class RecentChatFragment extends Fragment implements CustomViewController
         binding = FragmentRecentChatBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         // TODO Loading animation
+        initializeView();
         initializeRecyclerView();
         initializeActionBar();
-
+        initializeListener();
         initializeViewModel();
         return root;
     }
@@ -73,9 +75,8 @@ public class RecentChatFragment extends Fragment implements CustomViewController
 
     @Override
     public void initializeView() {
-        recyclerView = binding.recentChatRecyclerView;
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
+        newChatBtn = binding.button;
     }
 
     public void initializeViewModel() {
@@ -106,7 +107,11 @@ public class RecentChatFragment extends Fragment implements CustomViewController
 
     @Override
     public void initializeListener() {
-
+        newChatBtn.setOnClickListener(v -> {
+            // TODO add intent to new chat activity
+            Toast.makeText(getContext(), "New chat", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getActivity(), NewChatActivity.class));
+        });
     }
 
     @Override

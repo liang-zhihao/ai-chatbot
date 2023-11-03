@@ -2,11 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center_vertical"
     android:orientation="horizontal"
+    android:padding="0dp"
     android:background="@drawable/chat_item_style"
-    android:elevation="1dp"
-    android:translationZ="0dp"
-    android:layout_margin="0dp">
+    
+    >
+
+    <CheckBox
+        android:id="@+id/chatUserCheckbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/image_avatar"
@@ -26,17 +32,17 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        android:orientation="vertical"
-        android:layout_gravity="center_vertical">
+        android:orientation="vertical">
 
         <!-- TextView for the Title -->
         <TextView
             android:id="@+id/text_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceListItem"
-            android:layout_marginBottom="4dp" />
+            android:layout_marginBottom="4dp"
+            android:textAppearance="?attr/textAppearanceListItem" />
 
         <!-- TextView for the Description -->
         <TextView
@@ -46,27 +52,16 @@
             android:ellipsize="end"
             android:maxEms="10"
             android:maxLines="2"
-            android:textColor="@color/grey_100"
-            android:textAppearance="?attr/textAppearanceListItem" />
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textColor="@color/grey_100" />
 
     </LinearLayout>
 
-
-    <Button
-        android:id="@+id/button_friend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:layout_marginEnd="16dp"
-        android:text="add"
-        android:textColor="@color/white"
-        android:visibility="invisible" />
 
     <!--    <com.google.android.material.divider.MaterialDivider-->
     <!--        android:layout_width="match_parent"-->
     <!--        android:layout_height="2dp"-->
     <!--        android:layout_marginLeft="24dp"-->
     <!--        android:layout_marginRight="24dp"/>-->
-
 
 </LinearLayout>

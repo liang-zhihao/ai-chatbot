@@ -73,7 +73,7 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
-    
+
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -87,6 +87,7 @@
 
         <activity android:name=".modules.account.activity.SignUpActivity" />
         <activity android:name=".modules.account.activity.ChooseBotActivity" />
+        <activity android:name=".modules.newChat.NewChatActivity" />
     </application>
 
 </manifest>
