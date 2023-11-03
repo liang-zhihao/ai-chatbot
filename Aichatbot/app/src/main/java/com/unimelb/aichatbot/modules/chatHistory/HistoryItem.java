@@ -1,39 +1,50 @@
 package com.unimelb.aichatbot.modules.chatHistory;
 
 public class HistoryItem {
-    private String id;
-    private String content;
-    private int imageResource; // Drawable resource ID
+    private String roomId;
+    private String lastMessage;
+    private String imageUrl; // Drawable resource ID
 
-    public HistoryItem(String id, String content, int imageResource) {
-        this.id = id;
-        this.content = content;
-        this.imageResource = imageResource;
+    private String roomName;
+
+    public HistoryItem(String roomId, String lastMessage, String imageUrl, String roomName) {
+        this.roomId = roomId;
+        this.lastMessage = lastMessage;
+        this.imageUrl = imageUrl;
+        this.roomName = roomName;
     }
 
-
-    public String getId() {
-        return id;
+    public String getRoomName() {
+        return roomName;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
     }
 
-    public String getContent() {
-        return content;
+    public String getRoomId() {
+        return roomId;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
     }
 
-    public int getImageResource() {
-        return imageResource;
+    public String getLastMessage() {
+        return lastMessage;
     }
 
-    public void setImageResource(int imageResource) {
-        this.imageResource = imageResource;
+    public void setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
     }
-    // Constructor, getters, and setters omitted for brevity
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+// Constructor, getters, and setters omitted for brevity
 }

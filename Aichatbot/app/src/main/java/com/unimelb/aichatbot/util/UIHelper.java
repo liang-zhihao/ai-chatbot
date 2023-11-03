@@ -10,11 +10,12 @@ public class UIHelper {
     public static void hideActionBar(Context context) {
         // Hide the action bar
         assert ((AppCompatActivity) context).getSupportActionBar() != null;
+
         ((AppCompatActivity) context).getSupportActionBar().hide();
     }
 
     public static void setupActionBarBackButton(OnBackPressedDispatcher onBackPressedDispatcher, OnBackPressedCallback onBackPressedCallback) {
-        
+
         onBackPressedDispatcher.addCallback(onBackPressedCallback);
     }
 }

@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- 边框颜色和宽度 -->
-    <stroke
-        android:width="2dp"
-        android:color="#000000" />
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- 可选：背景颜色 -->
-    <solid android:color="#FFFFFF" />
+    <!-- Background color -->
+    <item>
+        <shape>
+            <solid android:color="#FFFFFF" />
+        </shape>
+    </item>
 
-    <!-- 可选：边框圆角 -->
-    <corners android:radius="15dp" />
+    <!-- Bottom stroke -->
+    <item android:top="-2dp" android:left="-2dp" android:right="-2dp">
+        <shape>
+            <solid android:color="#FFFFFF" />
+            <stroke
+                android:width="1dp"
+                android:color="@color/grey" />
+        </shape>
 
-    <stroke
-        android:width="0dp"
-        android:color="#000000" />
+    </item>
 
-</shape>
+</layer-list>

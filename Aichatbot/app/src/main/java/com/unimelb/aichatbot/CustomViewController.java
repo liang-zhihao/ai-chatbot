@@ -6,4 +6,10 @@ public interface CustomViewController {
     void initializeListener();
 
     void initializeActionBar();
+
+    void initializeViewModel();
+
+    void initializeRecyclerView();
+
+   
 }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".modules.chatHistory.fragment.ChatHistoryFragment">
+    tools:context=".modules.chatHistory.fragment.RecentChatFragment">
 
     <TextView
         android:id="@+id/text_home"

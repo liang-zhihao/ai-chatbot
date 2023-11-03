@@ -14,6 +14,7 @@ import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgre
 import com.unimelb.aichatbot.R;
 import com.unimelb.aichatbot.network.BaseResponse;
 import com.unimelb.aichatbot.network.MyCallback;
+import com.unimelb.aichatbot.network.dto.ErrorResponse;
 import com.unimelb.aichatbot.network.dto.LoginRequest;
 import com.unimelb.aichatbot.network.dto.LoginResponse;
 import com.unimelb.aichatbot.modules.account.service.AccountService;
@@ -52,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 // TODO    Debug mode
                 userId = "loading8425@gmail.com";
-                password = "1234567890";
+                password = "123456789";
                 loginBtn.startAnimation();
                 //     send login request to server
 
@@ -80,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onError(BaseResponse error, Throwable t) {
+                    public void onError(ErrorResponse error, Throwable t) {
                         // Your failure logic here
                         loginBtn.revertAnimation();
                         if (error != null) {

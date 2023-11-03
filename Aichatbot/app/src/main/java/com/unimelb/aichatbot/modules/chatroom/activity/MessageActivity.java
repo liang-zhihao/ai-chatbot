@@ -42,6 +42,7 @@ import com.unimelb.aichatbot.network.RetrofitFactory;
 import com.unimelb.aichatbot.network.dto.ChatHistoryItem;
 import com.unimelb.aichatbot.network.dto.ChatWithBotRequest;
 import com.unimelb.aichatbot.network.dto.ChatWithBotResponse;
+import com.unimelb.aichatbot.network.dto.ErrorResponse;
 import com.unimelb.aichatbot.network.dto.UserChatHistoryRequest;
 import com.unimelb.aichatbot.network.dto.UserChatHistoryResponse;
 import com.unimelb.aichatbot.socketio.BaseEvent;
@@ -89,7 +90,7 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
         initializeView();
         initializeRecyclerView();
         initializeListener();
-        initializeBackAction();
+
 // Check if the app has internet permission
         // This callback is only called when MyFragment is at least started
         loadChatHistory();
@@ -115,15 +116,6 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
 
     }
 
-    private void initializeBackAction() {
-        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
-            @Override
-            public void handleOnBackPressed() {
-                finish();
-            }
-        };
-        this.getOnBackPressedDispatcher().addCallback(this, callback);
-    }
 
     private void loadChatHistory() {
 
@@ -131,11 +123,11 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
         ChatService chatService = RetrofitFactory.createWithAuth(ChatService.class, MessageActivity.this);
 //       send request to get all messages
 //         TODO remove hard code
-        UserChatHistoryRequest userChatHistoryRequest = new UserChatHistoryRequest();
-        userChatHistoryRequest.setUserId("loading8425@gmail.com");
-        userChatHistoryRequest.setChatbotId("Einstein");
+
+        UserChatHistoryRequest userChatHistoryRequest = new UserChatHistoryRequest("loading8425@gmail.com", "Einstein");
+
         // get chat history
-        chatService.getAllMessages(userChatHistoryRequest.getUserId(), userChatHistoryRequest.getChatbotId()).enqueue(new MyCallback<UserChatHistoryResponse>() {
+        chatService.getAllMessages(userChatHistoryRequest).enqueue(new MyCallback<UserChatHistoryResponse>() {
             @Override
             public void onSuccess(BaseResponse<UserChatHistoryResponse> result) {
                 // Your success logic here
@@ -173,7 +165,7 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
             }
 
             @Override
-            public void onError(BaseResponse error, @NonNull Throwable t) {
+            public void onError(ErrorResponse error, @NonNull Throwable t) {
                 // Your failure logic here
                 if (error != null) {
                     // Handle server-defined error
@@ -221,8 +213,8 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
         }
     }
 
-
-    private void initializeViewModel() {
+    @Override
+    public void initializeViewModel() {
         messageViewModel = new ViewModelProvider(this).get(MessageViewModel.class);
         messageViewModel.getMessages().observe(this, messages -> {
             messageAdapter.submitList(messages); // Or however you update your adapter
@@ -230,7 +222,8 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
         });
     }
 
-    private void initializeRecyclerView() {
+    @Override
+    public void initializeRecyclerView() {
         messageAdapter = new MessageAdapter(this);
         messageRecyclerView.setAdapter(messageAdapter);
         messageRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -268,7 +261,7 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
             }
 
             @Override
-            public void onError(BaseResponse error, Throwable t) {
+            public void onError(ErrorResponse error, Throwable t) {
                 // Your failure logic here
                 if (error != null) {
                     // Handle server-defined error

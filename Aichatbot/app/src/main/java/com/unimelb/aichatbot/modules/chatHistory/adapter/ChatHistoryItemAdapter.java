@@ -1,14 +1,15 @@
 package com.unimelb.aichatbot.modules.chatHistory.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.unimelb.aichatbot.R;
 
 import com.unimelb.aichatbot.databinding.LayoutChatItemBinding;
@@ -21,7 +22,7 @@ import java.util.List;
 public class ChatHistoryItemAdapter extends RecyclerView.Adapter<ChatHistoryItemAdapter.ChatHistoryItemViewHolder> {
 
     private final List<HistoryItem> itemList = new ArrayList<>();
-
+    private Context context;
 
     public interface OnItemClickListener {
         void onItemClick(int position, HistoryItem item);
@@ -29,9 +30,10 @@ public class ChatHistoryItemAdapter extends RecyclerView.Adapter<ChatHistoryItem
 
     private final ChatHistoryItemAdapter.OnItemClickListener onItemClickListener;
 
-    public ChatHistoryItemAdapter(List<HistoryItem> itemList, ChatHistoryItemAdapter.OnItemClickListener listener) {
+    public ChatHistoryItemAdapter(Context context, List<HistoryItem> itemList, ChatHistoryItemAdapter.OnItemClickListener listener) {
         this.itemList.addAll(itemList);
         this.onItemClickListener = listener;
+        this.context = context;
     }
 
 
@@ -48,16 +50,10 @@ public class ChatHistoryItemAdapter extends RecyclerView.Adapter<ChatHistoryItem
     public void onBindViewHolder(final ChatHistoryItemViewHolder holder, int position) {
         HistoryItem item = itemList.get(position);
 
-        holder.mIdView.setText(item.getId());
-        holder.mContentView.setText(item.getContent());
-        // holder.mImageView.setImageResource(mValues.get(position).imageResourceId);
-        // String role = itemList.get(position).image;
-        // if (role.equals("Donald Trump")) {
-        //     holder.mImageView.setImageResource(R.drawable.donald_trump);
-        // } else if (role.equals("Mark Zuckerberg")) {
-        //     holder.mImageView.setImageResource(R.drawable.mark_zuckerberg);
-        // }
-        holder.bind(position, item, onItemClickListener);
+        holder.mIdView.setText(item.getRoomId());
+        holder.mContentView.setText(item.getLastMessage());
+        Glide.with(context).load(item.getImageUrl()).into(holder.mImageView);
+        holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(position, item));
 
 
     }
@@ -76,15 +72,10 @@ public class ChatHistoryItemAdapter extends RecyclerView.Adapter<ChatHistoryItem
         public ChatHistoryItemViewHolder(LayoutChatItemBinding binding) {
             super(binding.getRoot());
             mIdView = binding.itemNumber;
-            mContentView = binding.content;
+            mContentView = binding.textDescription;
             mImageView = binding.imageView;
-
         }
 
-        public void bind(int position, final HistoryItem item, final ChatHistoryItemAdapter.OnItemClickListener listener) {
-            // Bind data to the views...
-            itemView.setOnClickListener(v -> listener.onItemClick(position, item));
-        }
 
     }
 }

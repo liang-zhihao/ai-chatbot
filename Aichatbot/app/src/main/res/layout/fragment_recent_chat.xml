@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="com.unimelb.aichatbot.modules.chatHistory.fragment.ChatHistoryViewModel" />
+            type="com.unimelb.aichatbot.modules.chatHistory.ChatHistoryViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

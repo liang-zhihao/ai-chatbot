@@ -9,6 +9,11 @@ public class UserChatHistoryRequest {
     @SerializedName("chatbot_id")
     private String chatbotId;
 
+    public UserChatHistoryRequest(String userId, String chatbotId) {
+        this.userId = userId;
+        this.chatbotId = chatbotId;
+    }
+
     public String getUserId() {
         return userId;
     }
@@ -24,6 +29,6 @@ public class UserChatHistoryRequest {
     public void setChatbotId(String chatbotId) {
         this.chatbotId = chatbotId;
     }
- 
+
 }
 
