@@ -1,8 +1,9 @@
-package com.unimelb.aichatbot.modules.profile.activity;
+package com.unimelb.aichatbot.modules.profile.activity.Fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,20 +33,25 @@ public class InputPasswordBottomSheetDialogFragment extends BottomSheetDialogFra
         input = view.findViewById(R.id.edit_text_input_name);
         confirmButton = view.findViewById(R.id.button_confirm);
         cancelButton = view.findViewById(R.id.button_cancel);
+
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String newPassword = input.getText().toString();
+                Log.d("InputPasswordFragment", "Confirm button clicked with password: " + newPassword);
                 // 在这里处理用户输入的password
 
                 dismiss();
             }
         });
+
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("InputPasswordFragment", "Cancel button clicked");
                 dismiss();
             }
         });
     }
+
 }
