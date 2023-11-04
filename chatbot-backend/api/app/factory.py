@@ -8,6 +8,7 @@ from app.controllers.auth_controller import auth_bp
 from app.controllers.user_controller import user_bp
 from app.controllers.chatbot_controller import chatbot_bp
 from app.controllers.geo_controller import geo_bp
+from app.controllers.chat_controller import chat_bp
 
 
 from flask_jwt_extended import (
@@ -64,7 +65,7 @@ def create_app():
     app.register_blueprint(user_bp)
     app.register_blueprint(chatbot_bp)
     app.register_blueprint(geo_bp)
-
+    app.register_blueprint(chat_bp)
     return app
 
 

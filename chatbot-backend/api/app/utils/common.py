@@ -29,8 +29,16 @@ def get_config():
     return config
 
 
-def standard_response(status, message, success=True, data={}, http_status=200):
-    response = {"status": status, "message": message, "success": success, "data": data}
+def standard_response(status, message, success=True, data=None, http_status=200):
+    if data is None:
+        data = {}
+    response = {
+        "status": status,
+        "message": message,
+        "success": success,
+        "data": data,
+        "timestamp": get_time(),
+    }
     return jsonify(response), http_status
 
 

@@ -2,10 +2,11 @@ import pymongo
 import configparser
 import os
 from app.utils.common import get_config
+
 # uri = "mongodb://{}:{}@{}:{}/{}?authSource=admin".format(MONGO_USER, MONGO_PASS, MONGO_HOST, MONGO_PORT, MONGO_DB)
 
 # load configuration file
-config=get_config()
+config = get_config()
 host = config.get("mongodb", "host")
 port = config.getint("mongodb", "port")
 username = config.get("mongodb", "username")
@@ -37,10 +38,13 @@ class MongoDB:
         self.client = pymongo.MongoClient(self.uri)
 
     def create_user(self, user_id, username, password):
+        # TODO Hash password
         record1 = {
             "user_id": user_id,
             "username": username,
             "password": password,
+            "friends": [],
+            "avatar": "https://i.imgur.com/removed.png",
         }
         db = self.get_databse(self.USER_DB)
         collection = db[self.USER_COLLECTION]
@@ -139,8 +143,19 @@ class MongoDB:
             user_roles.append(record["chatbot_id"])
         return user_roles
 
-    def get_chat_history(self, user_id, chatbot_id):
-        query = {"$and": [{"user_id": user_id}, {"chatbot_id": chatbot_id}]}
+    # def get_chat_history(self, user_id, chatbot_id):
+    #     query = {"$and": [{"user_id": user_id}, {"chatbot_id": chatbot_id}]}
+    #     database = self.CHAT_DB
+    #     collection = self.CHAT_COLLECTION
+    #     db = self.get_databse(database)
+    #     record = db[collection].find_one(query)
+    #     if record == None:
+    #         return None
+    #     chat = record["messages"]
+    #     return chat
+
+    def get_chat_history(self, room_id):
+        query = {"id": room_id}
         database = self.CHAT_DB
         collection = self.CHAT_COLLECTION
         db = self.get_databse(database)
@@ -150,10 +165,10 @@ class MongoDB:
         chat = record["messages"]
         return chat
 
-    def update_chat_history(self, user_id, chatbot_id, message) -> bool:
+    def update_chat_history(self, room_id, message) -> bool:
         db = self.get_databse(self.CHAT_DB)
         collection = db[self.CHAT_COLLECTION]
-        query = {"$and": [{"user_id": user_id}, {"chatbot_id": chatbot_id}]}
+        query = {"id": room_id}
         return collection.update_one(
             query, {"$set": {"messages": message}}
         ).acknowledged
@@ -193,6 +208,18 @@ class MongoDB:
             query, {"$set": {"username": new_username}}
         ).acknowledged
 
+    def get_chat_by_room_id(self, room_id):
+        db = self.get_databse(self.CHAT_DB)
+        collection = db[self.CHAT_COLLECTION]
+        query = {"id": room_id}
+        return collection.find_one(query, {"_id": 0})
+
+    def get_collection(self, database, collection):
+        db = self.get_databse(database)
+        return db[collection]
+
+    def get_chat_collection(self):
+        return self.get_collection(self.CHAT_DB, self.CHAT_COLLECTION)
 
 db = MongoDB()
 # test cases
@@ -233,7 +260,7 @@ if __name__ == "__main__":
         {"role": "user", "content": "你好，我是Alice"},
         {"role": "user", "content": "XXXXXXXXXXXXXXXXXXXX"},
     ]
-    print(db.update_chat_history("Alice@gmail.com", "LIBAI", new_messages))
+    # print(db.update_chat_history("Alice@gmail.com", "LIBAI", new_messages))
 
     # create user
     # print(db.create_user(user_id='ml@student.unimelb.edu.au', username='min', password='12345678'))

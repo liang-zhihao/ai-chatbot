@@ -7,7 +7,7 @@ import os, json
 
 from app.utils.database import db
 from app.utils.chatbot import Chatbot
-from app.utils.common import get_roles, dir_path
+from app.utils.common import get_roles, dir_path, standard_response
 
 chatbot_bp = Blueprint("chatbot_bp", __name__)
 CHAT_LENGTH_LIMIT = 100
@@ -20,10 +20,10 @@ def send_message():
     # Send message to chatbot logic here
     try:
         user_id = request.json["user_id"]
+        room_id = request.json["room_id"]
         # match user_id with auth token
         if user_id != get_jwt_identity():
             return error_out("user_id not match with auth token", 401)
-        chatbot_id = request.json["chatbot_id"]
         message = {
             "role": "user",
             "content": request.json["message"],
@@ -41,7 +41,7 @@ def send_message():
 
         # check if user exists
         if db.user_exists(user_id):
-            chat_history = db.get_chat_history(user_id, chatbot_id)
+            chat_history = db.get_chat_history(room_id)
             if chat_history == None:
                 return error_out(
                     "user dont have this chatbot, chat history not exists", 401
@@ -50,18 +50,11 @@ def send_message():
             reply = chatbot.send_message(chat_history)
             time = get_time()
             chat_history.append({"role": "assistant", "content": reply, "time": time})
-            db.update_chat_history(user_id, chatbot_id, chat_history)
-            return (
-                jsonify(
-                    {
-                        "status": 200,
-                        "message": "send message successfully",
-                        "success": True,
-                        "data": {"time": time, "reply": reply},
-                    }
-                ),
-                200,
+            db.update_chat_history(room_id, chat_history)
+            return standard_response(
+                200, "Send message successfully", True, {"time": time, "reply": reply}
             )
+
         else:
             return error_out("user not exists", 401)
     except Exception as e:
@@ -97,42 +90,32 @@ def create_chatbot():
         "messages": [init_message],
     }
     if db.new_user_chatbot(record):
-        return (
-            jsonify(
-                {
-                    "status": 200,
-                    "message": "create chatbot successfully",
-                    "success": True,
-                    "data": {},
-                }
-            ),
-            200,
-        )
+        return standard_response(200, "Create chatbot successfully")
     return error_out("create chatbot failed, chatbot already exist", 401)
 
 
-@chatbot_bp.route("/api/chatbot/delete_chatbot", methods=["POST"])
-@jwt_required()
-def delete_chatbot():
-    # Delete chatbot logic here
-    try:
-        user_id = request.json["user_id"]
-        chatbot_id = request.json["chatbot_id"]
-        # match user_id with auth token
-        if user_id != get_jwt_identity():
-            return error_out("user_id not match with auth token", 401)
-        if db.delete_chat_history(user_id, chatbot_id):
-            return (
-                jsonify(
-                    {
-                        "status": 200,
-                        "message": "delete chatbot successfully",
-                        "success": True,
-                        "data": {},
-                    }
-                ),
-                200,
-            )
-        return error_out("delete chatbot failed", 401)
-    except Exception as e:
-        return error_out(str(e), 401)
+# @chatbot_bp.route("/api/chatbot/delete_chatbot", methods=["POST"])
+# @jwt_required()
+# def delete_chatbot():
+#     # Delete chatbot logic here
+#     try:
+#         user_id = request.json["user_id"]
+#         chatbot_id = request.json["chatbot_id"]
+#         # match user_id with auth token
+#         if user_id != get_jwt_identity():
+#             return error_out("user_id not match with auth token", 401)
+#         if db.delete_chat_history(user_id, chatbot_id):
+#             return (
+#                 jsonify(
+#                     {
+#                         "status": 200,
+#                         "message": "delete chatbot successfully",
+#                         "success": True,
+#                         "data": {},
+#                     }
+#                 ),
+#                 200,
+#             )
+#         return error_out("delete chatbot failed", 401)
+#     except Exception as e:
+#         return error_out(str(e), 401)

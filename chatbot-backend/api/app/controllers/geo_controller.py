@@ -1,11 +1,10 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required
-
+from flask_jwt_extended import jwt_required, get_jwt_identity
 # Add additional imports as needed
 
 from app.utils.geo import GeoLocation
 
-from app.utils.common import error_out, get_time, get_role
+from app.utils.common import error_out, get_time, get_role,standard_response
 
 import os, json
 
@@ -29,17 +28,8 @@ def get_nearby_restaurants():
         restaurants = geo.get_nearby_restaurants(latitude, longitude)
         if restaurants == None:
             return error_out("get restaurants failed", 401)
-        return (
-            jsonify(
-                {
-                    "status": 200,
-                    "message": "get restaurants successfully",
-                    "success": True,
-                    "data": restaurants,
-                }
-            ),
-            200,
-        )
+        return standard_response(200, "Get restaurants successfully", True, restaurants)
+
     except Exception as e:
         return error_out(str(e), 401)
 
@@ -53,17 +43,8 @@ def get_restaurant_details():
         details = geo.get_restaurant_details(place_id)
         if details == None:
             return error_out("get restaurant details failed", 401)
-        return (
-            jsonify(
-                {
-                    "status": 200,
-                    "message": "get restaurant details successfully",
-                    "success": True,
-                    "data": details,
-                }
-            ),
-            200,
-        )
+        return standard_response(200, "Get restaurant details successfully", True, details)
+
     except Exception as e:
         return error_out(str(e), 401)
 
@@ -104,16 +85,7 @@ def recommend_restaurants():
         reply = chatbot.send_message(question)
         time = get_time()
 
-        return (
-            jsonify(
-                {
-                    "status": 200,
-                    "message": "recommend restaurants successfully",
-                    "success": True,
-                    "data": {"time": time, "reply": reply},
-                }
-            ),
-            200,
-        )
+        return standard_response(200, "Recommend restaurants successfully", True, {"time": time, "reply": reply})
+
     except Exception as e:
         return error_out(str(e), 401)
