@@ -1,0 +1,40 @@
+// server side on data
+
+{
+  "event": "initialize_connection",
+  "data": {
+    "user_id": "user_name",
+  }
+}
+
+// send to server
+{
+  "event": "message_to_server",
+  "data": {
+    "room_id": "room_name",
+    "message": "message"
+  }
+}
+
+// send to client
+{
+  "event": "message_to_client",
+  "data": {
+    "from": "user_name",
+    "room_id": "room_name",
+    "message": "message"
+  }
+}
+
+{
+  "event": "join_room",
+  "data": {
+    "room_id": "room_name",
+  }
+}
+{
+  "event": "leave_room",
+  "data": {
+    "room_id": "room_name"
+  }
+}

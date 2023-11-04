@@ -1,8 +1,0 @@
-
-// server side on data
- 
-{ "event": "initialize_connection", "data": { "user_id": "user_name", } }
-
-{ "event": "message", "data": { "room_id": "room_name", "message": "message","from_user_id":"user_id" } }
-{ "event": "join_room", "data": { "room_id": "room_name",   } }
-{ "event": "leave_room", "data": { "room_id": "room_name" } }

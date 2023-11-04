@@ -1,15 +1,15 @@
 import os
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 from app.utils.common import error_out, get_config
-
 
 from app.controllers.auth_controller import auth_bp
 from app.controllers.user_controller import user_bp
 from app.controllers.chatbot_controller import chatbot_bp
 from app.controllers.geo_controller import geo_bp
 from app.controllers.chat_controller import chat_bp
-
+from flask_socketio import SocketIO, send, emit, join_room, leave_room
+from datetime import datetime
 
 from flask_jwt_extended import (
     JWTManager,
@@ -18,15 +18,21 @@ from flask_jwt_extended import (
 # from flask_socketio import SocketIO, send, emit
 
 
+socketio = SocketIO(cors_allowed_origins="*")
+# init socketio
+import app.events
+
+
 def create_app():
     app = Flask("app", instance_relative_config=True)
+    # socketio.init_app(app)
+    # socketio = SocketIO(app, cors_allowed_origins="*")
     config = get_config()
     # create the app
     JWT_SECRET_KEY = config.get("secret", "JWT_SECRET_KEY")
     CHAT_LENGTH_LIMIT = config.getint("openai", "CHAT_LENGTH_LIMIT")
     # configure the app
     app.config["JWT_SECRET_KEY"] = JWT_SECRET_KEY
-
     jwt = JWTManager(app)
     # socketio = SocketIO(app, cors_allowed_origins="*")
 
@@ -66,6 +72,8 @@ def create_app():
     app.register_blueprint(chatbot_bp)
     app.register_blueprint(geo_bp)
     app.register_blueprint(chat_bp)
+
+    socketio.init_app(app, logger=True, cors_allowed_origins="*")
     return app
 
 

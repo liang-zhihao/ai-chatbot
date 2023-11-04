@@ -1,8 +1,10 @@
-from flask import Flask, render_template, abort, jsonify
-from datetime import datetime
-import os, sys
 import configparser
 import json
+import os
+from datetime import datetime
+from typing import List
+
+from flask import jsonify, current_app
 
 file_path = os.path.abspath(__file__)
 dir_path = os.path.dirname(file_path)
@@ -21,6 +23,10 @@ def get_roles():
     roles = os.listdir(role_dir)
     roles = [r[:-5] for r in roles]
     return roles
+
+
+def get_logger():
+    return current_app.logger
 
 
 def get_config():
@@ -53,3 +59,7 @@ def get_role(role_id):
         return role
     except Exception as e:
         return error_out(str(e), 401)
+
+
+def intersection(lst1: List, lst2: List):
+    return list(set(lst1) & set(lst2))

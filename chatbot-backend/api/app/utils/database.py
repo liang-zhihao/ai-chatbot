@@ -20,7 +20,7 @@ real_uri = config.get("mongodb", "uri")
 
 class MongoDB:
     def __init__(
-        self, MONGO_HOST=host, MONGO_PORT=port, MONGO_USER=username, MONGO_PASS=password
+            self, MONGO_HOST=host, MONGO_PORT=port, MONGO_USER=username, MONGO_PASS=password
     ):
         self.MONGO_HOST = MONGO_HOST
         self.MONGO_PORT = MONGO_PORT
@@ -129,8 +129,8 @@ class MongoDB:
         }
         for user in collection.find(query):
             if (
-                user["user_id"] == record["user_id"]
-                and user["chatbot_id"] == record["chatbot_id"]
+                    user["user_id"] == record["user_id"]
+                    and user["chatbot_id"] == record["chatbot_id"]
             ):
                 return False
         return collection.insert_one(record).acknowledged
@@ -220,6 +220,11 @@ class MongoDB:
 
     def get_chat_collection(self):
         return self.get_collection(self.CHAT_DB, self.CHAT_COLLECTION)
+
+    def get_participants(self, room_id):
+        chat = self.get_chat_by_room_id(room_id)
+        return chat["participants"]
+
 
 db = MongoDB()
 # test cases

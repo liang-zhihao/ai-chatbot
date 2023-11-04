@@ -36,6 +36,10 @@ online_users = {}
 connected_users = {}
 
 
+def get_sid():
+    return request.sid
+
+
 # socketio
 @socketio.on("connect")
 def handle_connect():
@@ -45,13 +49,13 @@ def handle_connect():
     # connected_users[user_id] = request.sid
     print("User Connected", request.sid, flush=True)
     return_message = {
-        "status": 200,
-        "message": "connect successfully",
-        "sid": request.sid,
+        "status": 201,
+        "message": "connect successfully?",
+        "sid": get_sid(),
         "success": True,
         "data": {},
     }
-    emit("connect", return_message, room=request.sid)
+    emit("connect2", return_message, room=request.sid)
 
 
 # @socketio.on('change_status')
