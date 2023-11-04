@@ -7,5 +7,5 @@ COPY ./api .
 RUN pip install --upgrade pip --no-cache-dir -r requirements.txt
 
 # Deployment
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0","app:app"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0","manage:app"]
 

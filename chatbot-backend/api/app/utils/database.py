@@ -1,13 +1,11 @@
 import pymongo
 import configparser
 import os
-
+from app.utils.common import get_config
 # uri = "mongodb://{}:{}@{}:{}/{}?authSource=admin".format(MONGO_USER, MONGO_PASS, MONGO_HOST, MONGO_PORT, MONGO_DB)
 
 # load configuration file
-dir_path = os.path.dirname(os.path.abspath(__file__))
-config = configparser.ConfigParser()
-config.read(os.path.join(dir_path, "config.ini"))
+config=get_config()
 host = config.get("mongodb", "host")
 port = config.getint("mongodb", "port")
 username = config.get("mongodb", "username")
@@ -196,9 +194,9 @@ class MongoDB:
         ).acknowledged
 
 
+db = MongoDB()
 # test cases
 if __name__ == "__main__":
-    db = MongoDB()
     record1 = {
         "user_id": "Alice@gmail.com",
         "chatbot_id": "LIBAI",

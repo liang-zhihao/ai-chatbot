@@ -25,4 +25,5 @@ def connect_to_mongodb():
 
 
 if __name__ == "__main__":
-    connect_to_mongodb()
+    pass
+    # connect_to_mongodb()
