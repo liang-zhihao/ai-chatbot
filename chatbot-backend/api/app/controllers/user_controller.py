@@ -79,6 +79,10 @@ def add_friend():
     try:
         user_id = request.json["user_id"]
         friend_id = request.json["friend_id"]
+        # friend already exists
+        if db.check_friend(user_id, friend_id):
+            return error_out("friend already exists", 401)
+
         if db.add_friend(user_id, friend_id):
             return standard_response(200, "Add friend successfully")
         return error_out("add friend failed", 401)
@@ -97,3 +101,17 @@ def delete_friend():
         return error_out("delete friend failed", 401)
     except Exception as e:
         return error_out(str(e), 401)
+    
+# add avatar
+@user_bp.route("/api/user/add_avatar", methods=["POST"])
+@jwt_required()
+def add_avatar():
+    try:
+        user_id = request.json["user_id"]
+        avatar = request.json["avatar"]
+        if db.update_avatar(user_id, avatar):
+            return standard_response(200, "Add avatar successfully")
+        return error_out("add avatar failed", 401)
+    except Exception as e:
+        return error_out(str(e), 401)
+    

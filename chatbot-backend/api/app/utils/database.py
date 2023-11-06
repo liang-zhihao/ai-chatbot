@@ -78,7 +78,7 @@ class MongoDB:
         # validation check
         for user in collection.find({"user_id": user_id}):
             if user["user_id"] == user_id:
-                return {"user_id": user["user_id"], "username": user["username"]}
+                return {"user_id": user["user_id"], "username": user["username"], "friends": user["friends"], "avatar": user["avatar"]}
         return None
 
     def login(self, user_id, password):
@@ -237,11 +237,23 @@ class MongoDB:
         query = {"user_id": user_id}
         return collection.update_one(query, {"$pull": {"friends": friend_id}}).acknowledged
     
+    def check_friend(self, user_id, friend_id):
+        db = self.get_databse(self.USER_DB)
+        collection = db[self.USER_COLLECTION]
+        query = {"user_id": user_id}
+        return friend_id in collection.find_one(query)["friends"]
+
     def get_friends(self, user_id):
         db = self.get_databse(self.USER_DB)
         collection = db[self.USER_COLLECTION]
         query = {"user_id": user_id}
         return collection.find_one(query)["friends"]
+    
+    def update_avatar(self, user_id, avatar):
+        db = self.get_databse(self.USER_DB)
+        collection = db[self.USER_COLLECTION]
+        query = {"user_id": user_id}
+        return collection.update_one(query, {"$set": {"avatar": avatar}}).acknowledged
 
 db = MongoDB()
 # test cases
