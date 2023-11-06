@@ -55,6 +55,45 @@ def change_username():
     except Exception as e:
         return error_out(str(e), 401)
 
-# TODO get all users (search friends)
+# get all users (search friends)
+# get friends list
+@user_bp.route("/api/user/get_friends", methods=["POST"])
+@jwt_required()
+def get_friends():
+    try:
+        user_id = request.json["user_id"]
+        friends = db.get_friends(user_id)
+        if friends == None:
+            return error_out("user not exists", 401)
+        return standard_response(
+            200, "Get friends successfully", True, {"friends": friends}
+        )
+
+    except Exception as e:
+        return error_out(str(e), 401)
 
 # add friend to friend list
+@user_bp.route("/api/user/add_friend", methods=["POST"])
+@jwt_required()
+def add_friend():
+    try:
+        user_id = request.json["user_id"]
+        friend_id = request.json["friend_id"]
+        if db.add_friend(user_id, friend_id):
+            return standard_response(200, "Add friend successfully")
+        return error_out("add friend failed", 401)
+    except Exception as e:
+        return error_out(str(e), 401)
+    
+# delete friend from friend list
+@user_bp.route("/api/user/delete_friend", methods=["POST"])
+@jwt_required()
+def delete_friend():
+    try:
+        user_id = request.json["user_id"]
+        friend_id = request.json["friend_id"]
+        if db.delete_friend(user_id, friend_id):
+            return standard_response(200, "Delete friend successfully")
+        return error_out("delete friend failed", 401)
+    except Exception as e:
+        return error_out(str(e), 401)

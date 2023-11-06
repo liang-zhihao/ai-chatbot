@@ -243,6 +243,8 @@ def callback_message(event: str, data: dict):
         "timestamp": get_time(),
     }
     return response
+
+
 # @socketio.on('change_status')
 # def handle_change_status(data):
 #     try:

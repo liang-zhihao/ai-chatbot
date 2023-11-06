@@ -5,11 +5,17 @@ from pymongo.errors import ConnectionFailure
 def connect_to_mongodb():
     try:
         # Define the MongoDB URI with SSL enabled and X.509 for authentication
-        uri = f"mongodb+srv://cluster0.3qzbzga.mongodb.net/?authMechanism=MONGODB-X509&authSource=%24external&tls=true&tlsCertificateKeyFile=db.pem"
+        uri = f"mongodb+srv://cluster0.3qzbzga.mongodb.net/?authMechanism=MONGODB-X509&authSource=%24external&tls=true&tlsCertificateKeyFile=./api/db.pem"
 
         # Connect to MongoDB
         client = MongoClient(uri)
 
+        print(client.list_database_names())
+        for database in ["user_db"]:
+            print("current database: ", database)
+            for coll in client[database].list_collection_names():
+                print("current collection:",coll)
+                print(client[database][coll].find_one())
         # Access the 'test' database
         db = client["test"]
 
@@ -26,4 +32,5 @@ def connect_to_mongodb():
 
 if __name__ == "__main__":
     pass
-    # connect_to_mongodb()
+    connect_to_mongodb()
+    

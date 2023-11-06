@@ -225,53 +225,70 @@ class MongoDB:
         chat = self.get_chat_by_room_id(room_id)
         return chat["participants"]
 
+    def add_friend(self, user_id, friend_id):
+        db = self.get_databse(self.USER_DB)
+        collection = db[self.USER_COLLECTION]
+        query = {"user_id": user_id}
+        return collection.update_one(query, {"$push": {"friends": friend_id}}).acknowledged
+
+    def delete_friend(self, user_id, friend_id):
+        db = self.get_databse(self.USER_DB)
+        collection = db[self.USER_COLLECTION]
+        query = {"user_id": user_id}
+        return collection.update_one(query, {"$pull": {"friends": friend_id}}).acknowledged
+    
+    def get_friends(self, user_id):
+        db = self.get_databse(self.USER_DB)
+        collection = db[self.USER_COLLECTION]
+        query = {"user_id": user_id}
+        return collection.find_one(query)["friends"]
 
 db = MongoDB()
 # test cases
 if __name__ == "__main__":
-    record1 = {
-        "user_id": "Alice@gmail.com",
-        "chatbot_id": "LIBAI",
-        "messages": [
-            {"role": "system", "content": "你是唐朝著名诗人李白，世人称你为诗仙太白，请用李白的口吻和用户对话"},
-            {"role": "user", "content": "你好，我是Alice"},
-        ],
-    }
+    # record1 = {
+    #     "user_id": "Alice@gmail.com",
+    #     "chatbot_id": "LIBAI",
+    #     "messages": [
+    #         {"role": "system", "content": "你是唐朝著名诗人李白，世人称你为诗仙太白，请用李白的口吻和用户对话"},
+    #         {"role": "user", "content": "你好，我是Alice"},
+    #     ],
+    # }
 
-    record2 = {
-        "user_id": "Alice@gmail.com",
-        "chatbot_id": "DUFU",
-        "messages": [
-            {"role": "system", "content": "你是唐朝著名诗人杜甫，请用杜甫的口吻和用户对话"},
-            {"role": "user", "content": "你好，我是Alice"},
-        ],
-    }
-    # insert chat history
-    # print(db.insert_chat_history(record1))
-    # print(db.insert_chat_history(record2))
+    # record2 = {
+    #     "user_id": "Alice@gmail.com",
+    #     "chatbot_id": "DUFU",
+    #     "messages": [
+    #         {"role": "system", "content": "你是唐朝著名诗人杜甫，请用杜甫的口吻和用户对话"},
+    #         {"role": "user", "content": "你好，我是Alice"},
+    #     ],
+    # }
+    # # insert chat history
+    # # print(db.insert_chat_history(record1))
+    # # print(db.insert_chat_history(record2))
 
-    # get chat history
-    # print(db.get_chat_history("Alice@gmail.com", "LIBAI"))
+    # # get chat history
+    # # print(db.get_chat_history("Alice@gmail.com", "LIBAI"))
 
-    # delete target id
-    # print(db.delete_user_all_chatbot("loading8425@gmail.com"))
+    # # delete target id
+    # # print(db.delete_user_all_chatbot("loading8425@gmail.com"))
 
-    # delete target chatbot id
-    # print(db.delete_user_chatbot("Alice@gmail.com", "DUFU"))
+    # # delete target chatbot id
+    # # print(db.delete_user_chatbot("Alice@gmail.com", "DUFU"))
 
-    # update chat history
-    new_messages = [
-        {"role": "system", "content": "你是唐朝著名诗人李白，世人称你为诗仙太白，请用李白的口吻和用户对话"},
-        {"role": "user", "content": "你好，我是Alice"},
-        {"role": "user", "content": "XXXXXXXXXXXXXXXXXXXX"},
-    ]
-    # print(db.update_chat_history("Alice@gmail.com", "LIBAI", new_messages))
+    # # update chat history
+    # new_messages = [
+    #     {"role": "system", "content": "你是唐朝著名诗人李白，世人称你为诗仙太白，请用李白的口吻和用户对话"},
+    #     {"role": "user", "content": "你好，我是Alice"},
+    #     {"role": "user", "content": "XXXXXXXXXXXXXXXXXXXX"},
+    # ]
+    # # print(db.update_chat_history("Alice@gmail.com", "LIBAI", new_messages))
 
-    # create user
-    # print(db.create_user(user_id='ml@student.unimelb.edu.au', username='min', password='12345678'))
+    # # create user
+    # # print(db.create_user(user_id='ml@student.unimelb.edu.au', username='min', password='12345678'))
 
-    # login
-    print(db.login(user_id="minl@student.unimelb.edu.au", password="1234568"))
+    # # login
+    # print(db.login(user_id="minl@student.unimelb.edu.au", password="1234568"))
 
     # print all database
     dbs = db.show_databases()
