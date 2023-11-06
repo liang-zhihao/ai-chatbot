@@ -7,8 +7,12 @@ public class LoginManager {
     SharedPreferencesHelper sharedPreferencesHelper;
 
 
-    public LoginManager(Context context) {
-        sharedPreferencesHelper = new SharedPreferencesHelper(context);
+    public LoginManager(Context applicationContext) {
+        sharedPreferencesHelper = new SharedPreferencesHelper(applicationContext);
+    }
+
+    public static LoginManager getInstance(Context applicationContext) {
+        return new LoginManager(applicationContext);
     }
 
     public void saveLoginInfo(String userId, String username, String accessToken) {

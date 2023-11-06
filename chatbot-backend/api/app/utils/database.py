@@ -1,7 +1,9 @@
+from typing import List
+
 import pymongo
 import configparser
 import os
-from app.utils.common import get_config
+from app.utils.common import get_config, utcnow
 
 # uri = "mongodb://{}:{}@{}:{}/{}?authSource=admin".format(MONGO_USER, MONGO_PASS, MONGO_HOST, MONGO_PORT, MONGO_DB)
 
@@ -95,7 +97,7 @@ class MongoDB:
                 }
             if user["user_id"] == user_id and user["password"] != password:
                 return {"status": "error", "message": "password incorrect"}
-        return {"status": "error", "message": "user_id not exists??"}
+        return {"status": "error", "message": "user_id not exists?"}
 
     def user_exists(self, user_id):
         query = {"user_id": user_id}
@@ -154,12 +156,10 @@ class MongoDB:
     #     chat = record["messages"]
     #     return chat
 
-    def get_chat_history(self, room_id):
+    def get_chat_history(self, room_id) -> List[dict]:
         query = {"id": room_id}
-        database = self.CHAT_DB
-        collection = self.CHAT_COLLECTION
-        db = self.get_databse(database)
-        record = db[collection].find_one(query)
+
+        record = self.get_chat_collection().find_one(query)
         if record == None:
             return None
         chat = record["messages"]

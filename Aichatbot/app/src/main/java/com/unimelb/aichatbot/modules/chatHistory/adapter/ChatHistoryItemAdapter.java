@@ -50,12 +50,11 @@ public class ChatHistoryItemAdapter extends RecyclerView.Adapter<ChatHistoryItem
     public void onBindViewHolder(final ChatHistoryItemViewHolder holder, int position) {
         HistoryItem item = itemList.get(position);
 
-        holder.mIdView.setText(item.getRoomId());
+        holder.mIdView.setText(item.getRoomName());
         holder.mContentView.setText(item.getLastMessage());
         Glide.with(context).load(item.getImageUrl()).into(holder.mImageView);
         holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(position, item));
-
-
+        
     }
 
     @Override

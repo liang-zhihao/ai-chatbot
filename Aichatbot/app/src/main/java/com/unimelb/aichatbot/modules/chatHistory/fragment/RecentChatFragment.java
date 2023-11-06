@@ -2,6 +2,7 @@ package com.unimelb.aichatbot.modules.chatHistory.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,24 +19,36 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unimelb.aichatbot.CustomViewController;
-
 import com.unimelb.aichatbot.databinding.FragmentRecentChatBinding;
 import com.unimelb.aichatbot.modules.chatHistory.ChatHistoryViewModel;
+import com.unimelb.aichatbot.modules.chatHistory.HistoryItem;
 import com.unimelb.aichatbot.modules.chatHistory.adapter.ChatHistoryItemAdapter;
+import com.unimelb.aichatbot.modules.chatHistory.responsObject.RecentChatResponse;
+import com.unimelb.aichatbot.modules.chatHistory.service.ChatHistoryService;
 import com.unimelb.aichatbot.modules.chatroom.activity.MessageActivity;
 import com.unimelb.aichatbot.modules.newChat.NewChatActivity;
+import com.unimelb.aichatbot.network.BaseResponse;
+import com.unimelb.aichatbot.network.MyCallback;
+import com.unimelb.aichatbot.network.RetrofitFactory;
+import com.unimelb.aichatbot.network.dto.ErrorResponse;
+import com.unimelb.aichatbot.socketio.SocketClient;
+import com.unimelb.aichatbot.util.LoginManager;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /*
  *
  * Request recent chat
  * Render recent chat
  *
- * TODO improve chat history item UI
+ *
  * */
 
 public class RecentChatFragment extends Fragment implements CustomViewController {
 
-
+    private static final String TAG = "RecentChatFragment";
     private RecyclerView recyclerView;
     ProgressBar progressBar;
 
@@ -57,6 +70,11 @@ public class RecentChatFragment extends Fragment implements CustomViewController
         initializeActionBar();
         initializeListener();
         initializeViewModel();
+        loadUserRecentChat();
+        // init socket client
+        SocketClient.startConnection();
+
+        SocketClient.getInstance().emitInitializeConnection(LoginManager.getInstance(requireContext().getApplicationContext()).getUserId());
         return root;
     }
 
@@ -82,11 +100,10 @@ public class RecentChatFragment extends Fragment implements CustomViewController
     public void initializeViewModel() {
         ChatHistoryItemAdapter.OnItemClickListener listener = (pos, item) -> {
             // to do when click
-//                        TODO add intent to message activity and pass chatroom id
             Toast.makeText(getContext(), "Item clicked: " + item.getLastMessage(), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getActivity(), MessageActivity.class);
-            intent.putExtra("room_id", item.getRoomId());
-            intent.putExtra("room_name", item.getLastMessage());
+            intent.putExtra("roomId", item.getRoomId());
+            intent.putExtra("roomName", item.getRoomName());
             startActivity(intent);
 
         };
@@ -108,7 +125,6 @@ public class RecentChatFragment extends Fragment implements CustomViewController
     @Override
     public void initializeListener() {
         newChatBtn.setOnClickListener(v -> {
-            // TODO add intent to new chat activity
             Toast.makeText(getContext(), "New chat", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(getActivity(), NewChatActivity.class));
         });
@@ -124,4 +140,47 @@ public class RecentChatFragment extends Fragment implements CustomViewController
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
+
+
+    public void loadUserRecentChat() {
+
+        String userId = LoginManager.getInstance(requireContext().getApplicationContext()).getUserId();
+
+
+        ChatHistoryService chatHistoryService = RetrofitFactory.create(ChatHistoryService.class);
+        chatHistoryService.getUserChatList(userId).enqueue(new MyCallback<List<RecentChatResponse>>() {
+            @Override
+            public void onSuccess(BaseResponse<List<RecentChatResponse>> result) {
+                //  render chat list
+                List<RecentChatResponse> chats = result.getData();
+                for (RecentChatResponse chat : chats) {
+                    Log.i(TAG, "get room id: " + chat.getRoomId());
+                }
+                List<HistoryItem> historyItems = chats.stream()
+                        .map(chat -> new HistoryItem(chat.getRoomId(), chat.getLastMessage(), "https://dummyimage.com/300", chat.getName())).collect(Collectors.toList());
+                //     toast
+                historyViewModel.setHistoryItems(historyItems);
+                Toast.makeText(getContext(), "Load recent chat success", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onError(ErrorResponse error, Throwable t) {
+                if (error == null) {
+                    //     toast error
+                    Toast.makeText(getContext(), "Load failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    //     print throwable
+                    t.printStackTrace();
+                    return;
+                } else {
+                    //     toast error
+
+                    Toast.makeText(getContext(), "Load failed: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+    }
+
+
 }

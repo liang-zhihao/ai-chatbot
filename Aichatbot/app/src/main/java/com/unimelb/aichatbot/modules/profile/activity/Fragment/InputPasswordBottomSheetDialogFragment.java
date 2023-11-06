@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -29,6 +30,7 @@ public class InputPasswordBottomSheetDialogFragment extends BottomSheetDialogFra
     public interface OnPasswordUpdatedListener {
         void onPwdUpdated(String pwd);
     }
+
     private EditText oldPasswordInput;
     private EditText newPasswordInput;
     private Button confirmButton;
@@ -64,14 +66,14 @@ public class InputPasswordBottomSheetDialogFragment extends BottomSheetDialogFra
                 String newPassword = newPasswordInput.getText().toString();
 
                 String userId = "loading8425@gmail.com";
-                Log.d("InputPasswordFragment", "Old Password: " + oldPassword);
-                Log.d("InputPasswordFragment", "New Password: " + newPassword);
+                Log.i("InputPasswordFragment", "Old Password: " + oldPassword);
+                Log.i("InputPasswordFragment", "New Password: " + newPassword);
 
                 ChangePasswordRequest request = new ChangePasswordRequest();
                 request.setUser_id(userId);
                 request.setOld_password(oldPassword);
                 request.setNew_password(newPassword);
-                ApiService service = RetrofitFactory.createWithAuth(ApiService.class,getActivity());
+                ApiService service = RetrofitFactory.createWithAuth(ApiService.class, getActivity());
                 Call<Void> call = service.changePassword(request);
 
                 call.enqueue(new Callback<Void>() {
@@ -82,7 +84,7 @@ public class InputPasswordBottomSheetDialogFragment extends BottomSheetDialogFra
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if(response.isSuccessful()) {
+                                    if (response.isSuccessful()) {
                                         Toast.makeText(activity, "Pwd updated successfully!", Toast.LENGTH_SHORT).show();
                                         if (mListener != null) {
                                             mListener.onPwdUpdated(newPassword);
@@ -95,6 +97,7 @@ public class InputPasswordBottomSheetDialogFragment extends BottomSheetDialogFra
                             });
                         }
                     }
+
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
                         FragmentActivity activity = getActivity();
@@ -117,7 +120,7 @@ public class InputPasswordBottomSheetDialogFragment extends BottomSheetDialogFra
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("InputPasswordFragment", "Cancel button clicked");
+                Log.i("InputPasswordFragment", "Cancel button clicked");
                 dismiss();
             }
         });

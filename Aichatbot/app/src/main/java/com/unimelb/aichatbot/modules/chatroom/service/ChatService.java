@@ -17,10 +17,10 @@ public interface ChatService {
 
     // @GET("messages")
     // Call<List<Message>> getAllMessages();
-    @Headers("Content-Type:application/json")
-    @POST("api/chatbot/get_chat_history")
-    Call<BaseResponse<UserChatHistoryResponse>> getAllMessages(@Body UserChatHistoryRequest userChatHistoryRequest);
-    // TODO more endpoints
+
+    @GET("api/chat/get_chat_history")
+    Call<BaseResponse<UserChatHistoryResponse>> getAllMessages(@Query("room_id") String roomId);
+
 
     @POST("api/chatbot/send_message")
     Call<BaseResponse<ChatWithBotResponse>> sendMessage(@Body ChatWithBotRequest chatWithBotRequest);

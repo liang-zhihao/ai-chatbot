@@ -4,6 +4,15 @@ public class BaseEvent<T> {
     private String event;
     private T data;
 
+    public BaseEvent() {
+    }
+
+    public BaseEvent(String event, T data) {
+        this.event = event;
+        this.data = data;
+    }
+
+
     public String getEvent() {
         return event;
     }

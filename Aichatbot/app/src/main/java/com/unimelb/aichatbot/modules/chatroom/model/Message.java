@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.unimelb.aichatbot.modules.chatroom.model.type.MessageType;
 import com.unimelb.aichatbot.modules.chatroom.model.type.SenderType;
+import com.unimelb.aichatbot.util.DateParser;
 
 import java.util.Date;
 // UUID
@@ -19,6 +20,14 @@ public class Message {
 
     private String avatarUrl; // avatar of the sender
     private SenderType senderType; // to check if the message is sent by the user
+
+    public Message(String content, MessageType type, String sender, SenderType senderType, String timestampStr) {
+        this.content = content;
+        this.type = type;
+        this.sender = sender;
+        this.timestamp = DateParser.parse(timestampStr);
+        this.senderType = senderType;
+    }
 
     public Message(String content, MessageType type, String sender, SenderType senderType, Date timestamp) {
         this.content = content;

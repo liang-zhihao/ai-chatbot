@@ -45,7 +45,7 @@ public abstract class MyCallback<T> implements retrofit2.Callback<BaseResponse<T
 
     @Override
     public void onResponse(@NonNull retrofit2.Call<BaseResponse<T>> call, @NonNull retrofit2.Response<BaseResponse<T>> response) {
-        Log.d(TAG, "Sent a request: " + call.request());
+        Log.i(TAG, "Sent a request: " + call.request());
         if (response.isSuccessful()) {
             onSuccess(response.body());
         } else {

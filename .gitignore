@@ -23,5 +23,5 @@ TestResults.xml
 __pycache__/
 .idea/
 note.md
-chatbot-backend/api/db.pem
+
 chatbot-backend/im/db.pem

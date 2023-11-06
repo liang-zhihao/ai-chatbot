@@ -3,7 +3,7 @@ package com.unimelb.aichatbot.socketio.dto;
 public enum MessageEvents {
 
     INITIALIZE_CONNECTION("initialize_connection"),
-    MESSAGE("message"),
+    MESSAGE_TO_SERVER("message_to_server"),
     JOIN_ROOM("join_room"),
     LEAVE_ROOM("leave_room");
 

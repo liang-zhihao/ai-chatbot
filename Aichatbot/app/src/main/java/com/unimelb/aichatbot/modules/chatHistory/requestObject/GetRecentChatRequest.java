@@ -1,8 +1,8 @@
-package com.unimelb.aichatbot.socketio.dto;
+package com.unimelb.aichatbot.modules.chatHistory.requestObject;
 
 import com.google.gson.annotations.SerializedName;
 
-public class InitializeConnectionData {
+public class GetRecentChatRequest {
     @SerializedName("user_id")
     private String userId;
 
@@ -11,6 +11,10 @@ public class InitializeConnectionData {
     }
 
     public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public GetRecentChatRequest(String userId) {
         this.userId = userId;
     }
 }

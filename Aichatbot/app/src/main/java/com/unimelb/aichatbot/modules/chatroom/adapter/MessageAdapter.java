@@ -19,11 +19,13 @@ import com.unimelb.aichatbot.R;
 import com.unimelb.aichatbot.modules.chatroom.model.Message;
 import com.unimelb.aichatbot.modules.chatroom.model.type.MessageType;
 import com.unimelb.aichatbot.modules.chatroom.model.type.SenderType;
+import com.unimelb.aichatbot.util.ImgUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.noties.markwon.Markwon;
 
 public class MessageAdapter extends ListAdapter<Message, MessageAdapter.MessageViewHolder> {
@@ -73,17 +75,15 @@ public class MessageAdapter extends ListAdapter<Message, MessageAdapter.MessageV
         Message message = getItem(position); // Use getItem(position) instead of messageList.get(position)
 
         // Bind your views here
-        MessageViewHolder messageViewHolder = (MessageViewHolder) holder;
-        messageViewHolder.messageTextView.setText(message.getContent());
-        markwon.setMarkdown(messageViewHolder.messageTextView, message.getContent());
+        holder.messageTextView.setText(message.getContent());
+        markwon.setMarkdown(holder.messageTextView, message.getContent());
 //            messageViewHolder.avatarImageView.setImageURI(message.getAvatar());
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy h:mm a", Locale.getDefault());
         String formattedDate = sdf.format(message.getTimestamp());
         String senderAndTime = message.getSender() + " - " + formattedDate;
-        messageViewHolder.timeTextView.setText(senderAndTime);
-        // Handle other message and sender types
-
-        // Handle other binding logic...
+        holder.timeTextView.setText(senderAndTime);
+        // TODO real avatar
+        ImgUtil.setImgView(context, "https://api.horosama.com/random.php", holder.avatarImageView);
     }
 
     @Override
@@ -172,7 +172,7 @@ public class MessageAdapter extends ListAdapter<Message, MessageAdapter.MessageV
     static class MessageViewHolder extends RecyclerView.ViewHolder {
         final TextView messageTextView;
         final TextView timeTextView;
-        final ImageView avatarImageView;
+        final CircleImageView avatarImageView;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);

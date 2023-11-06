@@ -6,7 +6,7 @@ import logging
 from app.factory import socketio
 from app.utils.database import MongoDB
 from app.utils.message_queue import MessageQueue
-from app.utils.common import intersection, get_roles, get_logger
+from app.utils.common import intersection, get_roles, utcnow
 from app.utils.chatbot import Chatbot
 
 chatbot = Chatbot()
@@ -14,8 +14,6 @@ db = MongoDB()
 mq = MessageQueue()
 online_users = {}
 connected_users = {}
-
-logger = logging.getLogger("socketio")
 
 
 def get_sid():
@@ -30,7 +28,7 @@ def ack(message=None):
 
 
 def get_online_user_by_sid(sid):
-    return online_users[sid]
+    return online_users.get(sid, None)
 
 
 # socketio
@@ -54,15 +52,17 @@ def handle_connect():
 
 @socketio.event
 def initialize_connection(data):
-    try:
-        # TODO contain jwt token
-        user_id = data["user_id"]
-        sid = get_sid()
-        online_users[sid] = user_id
-        # callback
-        return ack()
-    except Exception as e:
-        print(e, flush=True)
+    # TODO contain jwt token
+
+    data = data['data']
+    user_id = data["user_id"]
+    sid = get_sid()
+    online_users[sid] = user_id
+
+    print("User Connected", user_id, "Online users: ", online_users, flush=True)
+
+    # callback
+    return ack("initialize_connection: " + user_id)
 
 
 @socketio.on("disconnect")
@@ -105,6 +105,7 @@ def handle_disconnect():
 
 @socketio.on("message_to_server")
 def handle_message(data):
+    print("message_to_server", data, flush=True)
     sid = get_sid()
     data = data['data']
     # get data
@@ -123,9 +124,25 @@ def handle_message(data):
     # save message to queue
     # for p in offline_participants:
     #     mq.enqueue_message(from_user_id, p, message)
-
-    data = standard_socket_message("message_to_client", {"from": from_user_id, "message": message, "room_id": room_id})
+    message_db = {
+        "role": "user",
+        "content": message,
+        "room_id": room_id,
+        "sender_id": from_user_id,
+        # json cannot serialize datetime.datetime.now()
+        "timestamp": utcnow(),
+        "read_by": [],
+        "attachments": [
+            # "url": String,
+            # "type": String
+        ]
+    }
+    data = standard_socket_message("message_to_client", message_db)
     emit("message_to_client", data, room=room_id)
+    messages = db.get_chat_history(room_id)
+    messages.append(message_db)
+
+    db.update_chat_history(room_id, messages)
 
     all_roles = get_roles()
     # if user is aibot
@@ -135,6 +152,21 @@ def handle_message(data):
         bot = bots[0]
         # get bot response
         bot_response = chatbot.send_message(message)
+        messages.append({
+            "role": "assistant",
+            "content": message,
+            "room_id": room_id,
+            "sender_id": from_user_id,
+            "message": message,
+            "timestamp": utcnow(),
+            "read_by": [],
+            "attachments": [
+                # "url": String,
+                # "type": String
+            ]
+
+        }
+        )
         # send bot response to user
         data = standard_socket_message("message", {"from": bot, "message": bot_response})
         emit("message", data, room=room_id)
@@ -146,6 +178,7 @@ def handle_message(data):
 
 @socketio.on("join_room")
 def on_join(data):
+    print("join_room", data, flush=True)
     data = data['data']
     user_id = get_online_user_by_sid(get_sid())
     room_id = data["room_id"]
@@ -153,25 +186,25 @@ def on_join(data):
     return ack(user_id + " has entered the room: " + room_id)
 
 
-@socketio.on("group_chat")
-def handle_group_chat(data):
-    room_id = data["room_id"]
-    message = data["message"]
-    user_id = data["user_id"]
-
-    data = {
-        "from_user_id": user_id,
-        "to_user_id": room_id,
-        "messages": [{"message": message, "timestamp": get_time()}],
-    }
-    return_message = {
-        "status": 200,
-        "message": "send message successfully",
-        "success": True,
-        "data": data,
-    }
-    print("group_chat", data, room_id, flush=True)
-    emit("group_chat", return_message, room=room_id)
+# @socketio.on("group_chat")
+# def handle_group_chat(data):
+#     room_id = data["room_id"]
+#     message = data["message"]
+#     user_id = data["user_id"]
+#
+#     data = {
+#         "from_user_id": user_id,
+#         "to_user_id": room_id,
+#         "messages": [{"message": message, "timestamp": get_time()}],
+#     }
+#     return_message = {
+#         "status": 200,
+#         "message": "send message successfully",
+#         "success": True,
+#         "data": data,
+#     }
+#     print("group_chat", data, room_id, flush=True)
+#     emit("group_chat", return_message, room=room_id)
 
 
 @socketio.on("leave")

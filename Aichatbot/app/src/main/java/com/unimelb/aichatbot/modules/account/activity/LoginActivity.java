@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton;
+import com.unimelb.aichatbot.MainActivity;
 import com.unimelb.aichatbot.R;
 import com.unimelb.aichatbot.network.BaseResponse;
 import com.unimelb.aichatbot.network.MyCallback;
@@ -50,15 +51,21 @@ public class LoginActivity extends AppCompatActivity {
                 //     Toast.makeText(LoginActivity.this, "Please enter your email and password", Toast.LENGTH_SHORT).show();
                 //     return;
                 // }
-
                 // TODO    Debug mode
-                userId = "loading8425@gmail.com";
-                password = "123456789";
+                if (userId.equals("a")) {
+                    userId = "amy1";
+
+                } else if (userId.equals("b")) {
+                    userId = "amy2";
+                } else {
+                    userId = "amy1";
+                }
+                password = "1234567890";
                 loginBtn.startAnimation();
                 //     send login request to server
 
                 Call<BaseResponse<LoginResponse>> call = accountService.login(new LoginRequest(userId, password));
-                String finalUserId = userId;
+
                 call.enqueue(new MyCallback<LoginResponse>() {
 
                     @Override
@@ -69,13 +76,13 @@ public class LoginActivity extends AppCompatActivity {
                         LoginResponse loginResponse = result.getData();
 
                         // Save user info to shared preferences
-                        LoginManager loginManager = new LoginManager(LoginActivity.this);
-                        loginManager.saveLoginInfo(finalUserId, finalUserId, loginResponse.getAccessToken());
 
+                        LoginManager loginManager = new LoginManager(getApplicationContext());
+                        loginManager.saveLoginInfo(loginResponse.getUserId(), loginManager.getUsername(), loginResponse.getAccessToken());
                         // Show success message
                         Toast.makeText(LoginActivity.this, "Welcome " + loginManager.getUserId(), Toast.LENGTH_SHORT).show();
                         // Optionally navigate to another activity
-                        Intent intent = new Intent(LoginActivity.this, ChooseBotActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();
                     }

@@ -18,8 +18,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public final class RetrofitFactory {
     private static final Map<String, Retrofit> OTHERS = new ConcurrentHashMap<>(2);
-    private static final String BASE_URL = BuildConfig.SERVER_URL;
     // private static final String BASE_URL = BuildConfig.SERVER_URL;
+    private static final String BASE_URL = BuildConfig.SERVER_LOCAL_URL;
 
     private RetrofitFactory() {
         OTHERS.put("default", buildRetrofit(new OkHttpClient.Builder()));
@@ -38,7 +38,7 @@ public final class RetrofitFactory {
         SharedPreferencesHelper sharePreferenceHelper = new SharedPreferencesHelper(context);
         Interceptor authorizationInterceptor = chain -> {
             Request original = chain.request();
-            LoginManager loginManager = new LoginManager(context);
+            LoginManager loginManager = LoginManager.getInstance(context.getApplicationContext());
             // Get the token dynamically from SharedPreferences
             String token = loginManager.getAccessToken();
             // Add Authorization header

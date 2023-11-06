@@ -12,7 +12,12 @@
   "event": "message_to_server",
   "data": {
     "room_id": "room_name",
-    "message": "message"
+    "message": "message",
+     "attachments": [
+            // "url": String,
+            // "type": String
+        ]
+
   }
 }
 
@@ -20,10 +25,17 @@
 {
   "event": "message_to_client",
   "data": {
-    "from": "user_name",
-    "room_id": "room_name",
-    "message": "message"
-  }
+        "role": "user",
+        "content": message,
+        "room_id": room_id,
+        "sender_id": from_user_id,
+        "timestamp": datetime.now(),
+        "read_by": [],
+        "attachments": [
+            # "url": String,
+            # "type": String
+        ]
+    }
 }
 
 {

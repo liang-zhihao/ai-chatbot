@@ -1,4 +1,4 @@
-package com.unimelb.aichatbot.modules.chatroom.model;
+package com.unimelb.aichatbot.modules.chatroom.fragment;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -83,14 +83,14 @@ public class BottomFragment extends Fragment {
             });
     OnSuccessListener<Location> locationSuccessListener = location -> {
         if (location == null) {
-            Log.d("LocationTest", "null");
+            Log.i("LocationTest", "null");
         } else {
-            Log.d("LocationTest", "Success");
+            Log.i("LocationTest", "Success");
             updateUI(location);     // if successful, update the UI
         }
     };
     OnFailureListener locationFailureListener = e -> {
-        Log.d("LocationTest", "Failed");
+        Log.i("LocationTest", "Failed");
         Toast.makeText(requireContext(), "Location Failed", Toast.LENGTH_SHORT).show();
     };
     // Declaring ImageButtons
@@ -154,7 +154,7 @@ public class BottomFragment extends Fragment {
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
                 super.onLocationResult(locationResult);
-                Log.d("LocationTest", "Location updates");
+                Log.i("LocationTest", "Location updates");
             }
         };
 //        init here as onAttach is called before onCreate and context is available here

@@ -1,8 +1,8 @@
-package com.unimelb.aichatbot.network.dto;
+package com.unimelb.aichatbot.socketio.dto;
 
 import com.google.gson.annotations.SerializedName;
 
-public class UserChatHistoryRequest {
+public class JoinRoomData {
     @SerializedName("room_id")
     private String roomId;
 
@@ -14,8 +14,7 @@ public class UserChatHistoryRequest {
         this.roomId = roomId;
     }
 
-    public UserChatHistoryRequest(String roomId) {
+    public JoinRoomData(String roomId) {
         this.roomId = roomId;
     }
 }
-

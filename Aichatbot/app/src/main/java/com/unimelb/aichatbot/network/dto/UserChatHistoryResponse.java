@@ -6,13 +6,13 @@ import java.util.List;
 
 public class UserChatHistoryResponse {
     @SerializedName("chat_history")
-    private List<ChatHistoryItem> chatHistoryItem;
+    private List<ChatHistoryItemDto> chatHistoryItem;
 
-    public List<ChatHistoryItem> getChatHistory() {
+    public List<ChatHistoryItemDto> getChatHistory() {
         return chatHistoryItem;
     }
 
-    public void setChatHistory(List<ChatHistoryItem> chatHistoryItem) {
+    public void setChatHistory(List<ChatHistoryItemDto> chatHistoryItem) {
         this.chatHistoryItem = chatHistoryItem;
     }
 

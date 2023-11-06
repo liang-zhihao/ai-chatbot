@@ -19,6 +19,9 @@ import com.unimelb.aichatbot.databinding.FragmentContactBinding;
 import com.unimelb.aichatbot.modules.contacts.ContactAdapter;
 import com.unimelb.aichatbot.modules.contacts.ContactViewModel;
 
+/*
+ * todo existing  friends and start a new chat or existing chat
+ * */
 public class ContactFragment extends Fragment implements CustomViewController {
 
     private FragmentContactBinding binding;

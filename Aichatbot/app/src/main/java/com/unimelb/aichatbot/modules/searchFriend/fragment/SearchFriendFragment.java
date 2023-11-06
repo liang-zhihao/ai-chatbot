@@ -23,6 +23,9 @@ import com.unimelb.aichatbot.modules.searchFriend.SearchViewModel;
 import com.unimelb.aichatbot.modules.searchFriend.adapter.FriendAdapter;
 import com.unimelb.aichatbot.modules.searchFriend.model.SearchFriendRequest;
 
+/*
+ *  todo test: search friend and start a new chat
+ * */
 public class SearchFriendFragment extends Fragment implements CustomViewController {
 
     private FragmentSearchBinding binding;

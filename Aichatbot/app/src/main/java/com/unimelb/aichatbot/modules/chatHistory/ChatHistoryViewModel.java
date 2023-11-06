@@ -45,5 +45,7 @@ public class ChatHistoryViewModel extends ViewModel {
         historyItems.setValue(historyItemList);
     }
 
-
+    public void setHistoryItems(List<HistoryItem> historyItems) {
+        this.historyItems.setValue(historyItems);
+    }
 }

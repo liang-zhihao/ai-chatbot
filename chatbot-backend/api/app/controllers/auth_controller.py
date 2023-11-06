@@ -37,11 +37,16 @@ def login():
         user_id = request.json["user_id"]
         password = request.json["password"]
         status = db.login(user_id, password)
-        print(status)
+       
         if status["status"] == "success":
             access_token = create_access_token(identity=user_id)
+
             return standard_response(
-                200, status["message"], True, {"access_token": access_token}
+                200, status["message"], True
+                , {"access_token": access_token,
+                   "user_id": status["user_info"]['user_id'],
+                   "username": status["user_info"]['username'],
+                   }
             )
 
     except Exception as e:

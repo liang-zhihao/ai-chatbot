@@ -1,7 +1,7 @@
 import configparser
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List
 
 from flask import jsonify, current_app
@@ -43,7 +43,7 @@ def standard_response(status, message, success=True, data=None, http_status=200)
         "message": message,
         "success": success,
         "data": data,
-        "timestamp": get_time(),
+        "timestamp": utcnow(),
     }
     return jsonify(response), http_status
 
@@ -63,3 +63,7 @@ def get_role(role_id):
 
 def intersection(lst1: List, lst2: List):
     return list(set(lst1) & set(lst2))
+
+
+def utcnow() -> str:
+    return datetime.now(timezone.utc).isoformat()
