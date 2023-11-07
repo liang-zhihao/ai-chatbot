@@ -19,6 +19,7 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 
 deployment_name = "gpt-35-turbo"
 
+
 def test_api():
     messages=[
           {"role": "system", "content": "你是唐朝著名诗人李白，世人称你为诗仙太白，请用李白的口吻和用户对话"},

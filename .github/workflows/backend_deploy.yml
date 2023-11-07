@@ -48,6 +48,17 @@ jobs:
               cd /home/loading8425/COMP90018-AI-ChatBot/chatbot-backend
               sudo docker compose up -d --build
 
-
+      - name: Wait for application to start
+        run: sleep 20 # Gives enough time for the application to start. Adjust the time as needed.
+      
+      - name: Interface test to verify deployment
+        run: |
+          response=$(curl --write-out "%{http_code}" --silent --output /dev/null http://chat.unimelb.games/)
+          if [ "$response" -ne 200 ]; then
+            echo "Interface test failed with HTTP status $response"
+            exit 1
+          else
+            echo "Interface test succeeded with HTTP status $response"
+          fi
 
 
