@@ -35,10 +35,7 @@ jobs:
               sudo docker rm  -f $(sudo docker ps -a --format "{{.ID}} {{.Image}}" | grep -v mongo | awk '{print $1}')
               sudo docker rmi -f $(sudo docker images --format "{{.ID}} {{.Repository}}" | grep -v mongo | awk '{print $1}')
               sudo echo "y" | sudo docker system prune
-      
-      - name: Sync files
-        run: |
-          rsync -avz ./chatbot-backend/ loading8425@${{ secrets.BACKEND_HOST }}:/home/loading8425/backend
+              git pull origin main
       
       - name: run docker compose
         uses: appleboy/ssh-action@master
@@ -48,7 +45,7 @@ jobs:
             key: ${{secrets.GOOGLE_SSH_KEY}}
             passphrase: ${{secrets.GOOGLE_SSH_PASSPHRASE}}
             script: | # run commands in sequence
-              cd /home/loading8425/chatbot-backend/
+              cd /home/loading8425/COMP90018-AI-ChatBot/chatbot-backend
               sudo docker compose up -d --build
 
 
