@@ -27,8 +27,9 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
             host: ${{secrets.BACKEND_HOST}}
-            username: ubuntu
+            username: loading8425
             key: ${{secrets.GOOGLE_SSH_KEY}}
+            passphrase: ${{secrets.GOOGLE_SSH_PASSPHRASE}}
             script: | # run commands in sequence
 
               sudo docker rm  -f $(sudo docker ps -a --format "{{.ID}} {{.Image}}" | grep -v mongo | awk '{print $1}')
@@ -39,12 +40,13 @@ jobs:
         run: |
           rsync -avz ./chatbot-backend/ loading8425@${{ secrets.BACKEND_HOST }}:/home/loading8425/backend
       
-      - name: Deploy to EC2
+      - name: run docker compose
         uses: appleboy/ssh-action@master
         with:
             host: ${{secrets.BACKEND_HOST}}
-            username: ubuntu
+            username: loading8425
             key: ${{secrets.GOOGLE_SSH_KEY}}
+            passphrase: ${{secrets.GOOGLE_SSH_PASSPHRASE}}
             script: | # run commands in sequence
               cd /home/loading8425/chatbot-backend/
               sudo docker compose up -d --build
