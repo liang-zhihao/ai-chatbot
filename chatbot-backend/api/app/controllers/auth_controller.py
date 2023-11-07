@@ -21,7 +21,7 @@ def register():
             return standard_response(
                 status=200,
                 message=status["message"],
-                success=True,
+                success=True, 
                 data={},
                 http_status=200,
             )

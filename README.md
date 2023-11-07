@@ -22,9 +22,8 @@ flask --app IMServer.src.app run
 
 ## Actural deployment (Production mode)
 1. install docker 
-2. build docker image `docker build -t chat-backend .`
-3. run container `docker run --net=host chat-backend`
-4. using nginx do reverse proxy to handle gunicorn server
+2. build docker image `docker compose up --build`
+3. using nginx do reverse proxy to handle gunicorn server
    
 # API Doc
 https://documenter.getpostman.com/view/17696381/2s9YC1XEqp

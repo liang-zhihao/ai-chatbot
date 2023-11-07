@@ -103,7 +103,7 @@ def delete_friend():
         return error_out(str(e), 401)
     
 # add avatar
-@user_bp.route("/api/user/add_avatar", methods=["POST"])
+@user_bp.route("/api/user/update_avatar", methods=["POST"])
 @jwt_required()
 def add_avatar():
     try:
