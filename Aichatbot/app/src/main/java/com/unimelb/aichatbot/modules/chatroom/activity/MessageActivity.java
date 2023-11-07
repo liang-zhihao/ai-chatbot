@@ -33,6 +33,7 @@ import com.unimelb.aichatbot.databinding.ActivityMessageBinding;
 import com.unimelb.aichatbot.modules.chatroom.MessageViewModel;
 import com.unimelb.aichatbot.modules.chatroom.adapter.MessageAdapter;
 import com.unimelb.aichatbot.modules.chatroom.fragment.BottomFragment;
+import com.unimelb.aichatbot.modules.chatroom.model.ChatDetailResponse;
 import com.unimelb.aichatbot.modules.chatroom.model.Message;
 import com.unimelb.aichatbot.modules.chatroom.model.type.MessageType;
 import com.unimelb.aichatbot.modules.chatroom.model.type.SenderType;
@@ -42,7 +43,6 @@ import com.unimelb.aichatbot.network.MyCallback;
 import com.unimelb.aichatbot.network.RetrofitFactory;
 import com.unimelb.aichatbot.network.dto.ChatHistoryItemDto;
 import com.unimelb.aichatbot.network.dto.ErrorResponse;
-import com.unimelb.aichatbot.network.dto.UserChatHistoryRequest;
 import com.unimelb.aichatbot.network.dto.UserChatHistoryResponse;
 import com.unimelb.aichatbot.socketio.BaseEvent;
 import com.unimelb.aichatbot.socketio.SocketClient;
@@ -91,9 +91,6 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
 
     private final SocketClient socketClient = SocketClient.getInstance();
 
-    private String roomId;
-
-    private String roomName;
 
     Map<String, SenderType> roleToSenderType = new HashMap<>();
 
@@ -116,10 +113,40 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
         initializeListener();
 
         loginManager = LoginManager.getInstance(getApplicationContext());
-
+        loadChatroomInfo();
         loadChatHistory();
-
         onReceiveMessage();
+    }
+
+    public void loadChatroomInfo() {
+        String roomId = getIntent().getStringExtra("roomId");
+        Log.i(TAG, "onSuccess: " + roomId);
+
+        RetrofitFactory.create(ChatService.class).getChatRoomDetails(roomId).enqueue(new MyCallback<ChatDetailResponse>() {
+            @Override
+            public void onSuccess(BaseResponse<ChatDetailResponse> result) {
+                // update chat room name
+                ChatDetailResponse chatDetailResponse = result.getData();
+
+                String roomName = chatDetailResponse.getName();
+                Log.i(TAG, "onSuccess: " + roomName);
+                actionBar.setTitle(roomName);
+            }
+
+            @Override
+            public void onError(ErrorResponse error, @NonNull Throwable t) {
+                // Your failure logic here
+                if (error != null) {
+                    // Handle server-defined error
+                    Log.i("error", error.getMessage());
+                    Toast.makeText(MessageActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                } else if (t != null) {
+                    // Handle other types of errors (like network issues)
+                    t.printStackTrace();
+                    Toast.makeText(MessageActivity.this, "Server is not available", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override
@@ -147,8 +174,6 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
         ChatService chatService = RetrofitFactory.createWithAuth(ChatService.class, MessageActivity.this);
 //       send request to get all messages
 
-        String roomName = getIntent().getStringExtra("roomName");
-        actionBar.setTitle(roomName);
         String roomId = getIntent().getStringExtra("roomId");
 
 
@@ -158,12 +183,15 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
             public void onSuccess(BaseResponse<UserChatHistoryResponse> result) {
                 // Your success logic here
                 UserChatHistoryResponse userChatHistoryResponse = result.getData();
+
                 List<ChatHistoryItemDto> chatHistoryItemList = userChatHistoryResponse.getChatHistory();
-                assert chatHistoryItemList != null;
-                if (chatHistoryItemList.isEmpty()) {
+
+
+                if (chatHistoryItemList == null || chatHistoryItemList.isEmpty()) {
                     Toast.makeText(MessageActivity.this, "No messages", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
                 // convert chatHistoryList to messages
                 List<Message> messages1 = new ArrayList<>();
                 for (ChatHistoryItemDto chatHistoryItem : chatHistoryItemList) {

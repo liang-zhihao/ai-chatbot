@@ -1,17 +1,17 @@
 package com.unimelb.aichatbot.modules.searchFriend.model;
 
 public class SearchFriendRequest {
-    private String name;
+    private String prefix;
 
-    public SearchFriendRequest(String name) {
-        this.name = name;
+    public SearchFriendRequest(String prefix) {
+        this.prefix = prefix;
     }
 
-    public String getName() {
-        return name;
+    public String getPrefix() {
+        return prefix;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
     }
 }

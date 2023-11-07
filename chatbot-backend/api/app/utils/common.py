@@ -22,7 +22,13 @@ def get_roles():
     role_dir = os.path.join(dir_path, "roles")
     roles = os.listdir(role_dir)
     roles = [r[:-5] for r in roles]
-    return roles
+    o = {}
+    for i in range(len(roles)):
+        name = roles[i]
+        id = "bot_" + name.replace(" ", "_")
+        o[id] = get_role(name)
+
+    return o
 
 
 def get_logger():
@@ -48,7 +54,7 @@ def standard_response(status, message, success=True, data=None, http_status=200)
     return jsonify(response), http_status
 
 
-def get_role(role_id):
+def get_role(role_id) -> dict:
     try:
         role = json.load(
             open(

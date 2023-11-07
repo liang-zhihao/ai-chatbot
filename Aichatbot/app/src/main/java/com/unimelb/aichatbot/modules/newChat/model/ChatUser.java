@@ -1,4 +1,4 @@
-package com.unimelb.aichatbot.modules.newChat;
+package com.unimelb.aichatbot.modules.newChat.model;
 
 import com.unimelb.aichatbot.modules.common.model.FriendListItem;
 
@@ -6,8 +6,8 @@ public class ChatUser extends FriendListItem {
 
     private boolean isSelected;
 
-    public ChatUser(String name, String avatarUrl, String desc) {
-        super(avatarUrl, name, desc);
+    public ChatUser(String name, String avatarUrl, String desc, String userId) {
+        super(avatarUrl, name, desc, userId);
         this.isSelected = false;
     }
 

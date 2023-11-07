@@ -44,23 +44,23 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AccountService accountService = RetrofitFactory.create(AccountService.class);
-                String userId = emailEt.getText().toString();
-                String password = passwordEt.getText().toString();
+                String userId = emailEt.getText().toString().trim();
+                String password = passwordEt.getText().toString().trim();
                 //                  check user input
                 // if (userId.isEmpty() || password.isEmpty()) {
                 //     Toast.makeText(LoginActivity.this, "Please enter your email and password", Toast.LENGTH_SHORT).show();
                 //     return;
                 // }
                 // TODO    Debug mode
-                if (userId.equals("a")) {
-                    userId = "amy1";
-
-                } else if (userId.equals("b")) {
-                    userId = "amy2";
-                } else {
-                    userId = "amy1";
-                }
-                password = "1234567890";
+                // if (userId.equals("a")) {
+                //     userId = "amy1.com";
+                //
+                // } else if (userId.equals("b")) {
+                //     userId = "amy2.com";
+                // } else {
+                //     userId = "amy1.com";
+                // }
+                // password = "1234567890";
                 loginBtn.startAnimation();
                 //     send login request to server
 
@@ -80,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
                         LoginManager loginManager = new LoginManager(getApplicationContext());
                         loginManager.saveLoginInfo(loginResponse.getUserId(), loginManager.getUsername(), loginResponse.getAccessToken());
                         // Show success message
-                        Toast.makeText(LoginActivity.this, "Welcome " + loginManager.getUserId(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Welcome " + loginManager.getUsername(), Toast.LENGTH_SHORT).show();
                         // Optionally navigate to another activity
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
@@ -106,13 +106,10 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
-        signUpTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-                startActivity(intent);
-                finish();
-            }
+        signUpTv.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+            startActivity(intent);
+            finish();
         });
     }
 }

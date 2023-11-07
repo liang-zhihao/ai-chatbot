@@ -12,6 +12,9 @@ import com.unimelb.aichatbot.R;
 import com.unimelb.aichatbot.databinding.RowItemFriendBinding;
 import com.unimelb.aichatbot.modules.common.model.FriendListItem;
 import com.unimelb.aichatbot.modules.searchFriend.adapter.FriendAdapter;
+import com.unimelb.aichatbot.util.ImgUtil;
+import com.unimelb.aichatbot.util.MD5Util;
+import com.unimelb.aichatbot.util.UIHelper;
 
 
 import java.util.List;
@@ -66,7 +69,9 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.FriendVi
         RowItemFriendBinding binding = holder.binding;
         binding.textName.setText(current.getName());
         binding.textDescription.setText(current.getDescription());
-        Glide.with(context).load(current.getAvatarUrl()).into(binding.imageAvatar);
+        binding.tvTag.setText(UIHelper.isBot(current.getUserId()) ? "Bot" : "Human");
+
+        ImgUtil.setImgView(context, current.getAvatarUrl(), binding.imageAvatar);
         holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(position, current));
 
     }

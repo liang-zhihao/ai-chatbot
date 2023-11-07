@@ -48,13 +48,13 @@ public class SignUpActivity extends AppCompatActivity {
                 // Check user input (TODO)
                 // Initialize Retrofit service
                 AccountService accountService = RetrofitFactory.create(AccountService.class);
-                String username = nameEt.getText().toString();
-                String userId = emailEt.getText().toString();
-                String password = passwordEt.getText().toString();
+                String username = nameEt.getText().toString().trim();
+                String userId = emailEt.getText().toString().trim();
+                String password = passwordEt.getText().toString().trim();
 
-                username = "loading842522";
-                userId = "1@22.comm";
-                password = "123456789";
+                // username = "loading842522";
+                // userId = "1@22.comm";
+                // password = "123456789";
                 // Create a sign-up request
                 SignUpRequest request = new SignUpRequest();
                 request.setUsername(username);

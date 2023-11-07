@@ -1,9 +1,8 @@
 from typing import List
 
-import pymongo
-import configparser
-import os
-from app.utils.common import get_config, utcnow
+import pymongo, re
+
+from app.utils.common import get_config
 
 # uri = "mongodb://{}:{}@{}:{}/{}?authSource=admin".format(MONGO_USER, MONGO_PASS, MONGO_HOST, MONGO_PORT, MONGO_DB)
 
@@ -35,8 +34,8 @@ class MongoDB:
         self.uri = "mongodb://{}:{}@{}:{}/?authSource=admin".format(
             MONGO_USER, MONGO_PASS, MONGO_HOST, MONGO_PORT
         )
-        self.uri = real_uri
-
+        # self.uri = real_uri
+        self.uri = "mongodb+srv://cluster0.3qzbzga.mongodb.net/?authMechanism=MONGODB-X509&authSource=$external&tls=true&tlsCertificateKeyFile=db.pem"
         self.client = pymongo.MongoClient(self.uri)
 
     def create_user(self, user_id, username, password):
@@ -46,7 +45,7 @@ class MongoDB:
             "username": username,
             "password": password,
             "friends": [],
-            "avatar": "https://i.imgur.com/removed.png",
+            "avatar": "default",
         }
         db = self.get_databse(self.USER_DB)
         collection = db[self.USER_COLLECTION]
@@ -78,7 +77,8 @@ class MongoDB:
         # validation check
         for user in collection.find({"user_id": user_id}):
             if user["user_id"] == user_id:
-                return {"user_id": user["user_id"], "username": user["username"], "friends": user["friends"], "avatar": user["avatar"]}
+                return {"user_id": user["user_id"], "username": user["username"], "friends": user["friends"],
+                        "avatar": user["avatar"]}
         return None
 
     def login(self, user_id, password):
@@ -236,7 +236,7 @@ class MongoDB:
         collection = db[self.USER_COLLECTION]
         query = {"user_id": user_id}
         return collection.update_one(query, {"$pull": {"friends": friend_id}}).acknowledged
-    
+
     def check_friend(self, user_id, friend_id):
         db = self.get_databse(self.USER_DB)
         collection = db[self.USER_COLLECTION]
@@ -247,15 +247,52 @@ class MongoDB:
         db = self.get_databse(self.USER_DB)
         collection = db[self.USER_COLLECTION]
         query = {"user_id": user_id}
-        return collection.find_one(query)["friends"]
-    
+        friends = collection.find_one(query)["friends"]
+        for i in range(len(friends)):
+            friends[i] = self.get_user_info(friends[i])
+        return friends
+
     def update_avatar(self, user_id, avatar):
         db = self.get_databse(self.USER_DB)
         collection = db[self.USER_COLLECTION]
         query = {"user_id": user_id}
         return collection.update_one(query, {"$set": {"avatar": avatar}}).acknowledged
 
+    def get_user_collection(self):
+        return self.get_collection(self.USER_DB, self.USER_COLLECTION)
+
+    def search_username_by_prefix(self, prefix):
+        """
+        Search for usernames that match a given prefix.
+        :param prefix: The prefix string to match the username
+        :return: A list of matching usernames
+        """
+        # Compile a regular expression pattern for case-insensitive prefix match
+        regex_pattern = f"^{re.escape(prefix)}"
+        regex = re.compile(regex_pattern, re.IGNORECASE)
+
+        # Perform the search query
+        matching_users = self.get_user_collection().find({"username": regex}, {"_id": 0})
+
+        # Convert the cursor to a list of users and return
+        return list(matching_users)
+
+
 db = MongoDB()
+
+
+def seed_bot():
+    # read roles folder
+
+    import os
+    names = os.listdir("roles")
+    for name in names:
+        # remove .json
+        name = name[:-5]
+        id = "bot_" + name.replace(" ", "_")
+        db.create_user(user_id=id, username=name, password="1234567890")
+
+
 # test cases
 if __name__ == "__main__":
     # record1 = {
@@ -266,7 +303,7 @@ if __name__ == "__main__":
     #         {"role": "user", "content": "你好，我是Alice"},
     #     ],
     # }
-
+    seed_bot()
     # record2 = {
     #     "user_id": "Alice@gmail.com",
     #     "chatbot_id": "DUFU",

@@ -38,9 +38,7 @@ public class ChatHistoryViewModel extends ViewModel {
         // This method should retrieve the recent history list from a local database or an API
         // Populate the history list with initial data
         List<HistoryItem> historyItemList = new ArrayList<>();
-        historyItemList.add(new HistoryItem("21", "Hello", "https://dummyimage.com/300", "Trump"));
-        historyItemList.add(new HistoryItem("321", "Hi", "https://dummyimage.com/300", "Trump"));
-        historyItemList.add(new HistoryItem("21", "How are you?", "https://dummyimage.com/300", "Trump"));
+
         //     to livedata
         historyItems.setValue(historyItemList);
     }

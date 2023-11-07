@@ -119,11 +119,6 @@ def handle_message(data):
     participants = db.get_participants(room_id)
     online_participants = intersection(participants, get_online_users())
     offline_participants = [x for x in participants if x not in online_participants]
-
-    # if user_id not in online_users:
-    # save message to queue
-    # for p in offline_participants:
-    #     mq.enqueue_message(from_user_id, p, message)
     message_db = {
         "role": "user",
         "content": message,
@@ -141,35 +136,36 @@ def handle_message(data):
     emit("message_to_client", data, room=room_id)
     messages = db.get_chat_history(room_id)
     messages.append(message_db)
-
     db.update_chat_history(room_id, messages)
 
-    all_roles = get_roles()
-    # if user is aibot
-    bots = intersection(participants, all_roles)
-    print("bots", bots, flush=True)
-    if len(bots) > 0:
-        bot = bots[0]
-        # get bot response
-        bot_response = chatbot.send_message(message)
-        messages.append({
-            "role": "assistant",
-            "content": message,
-            "room_id": room_id,
-            "sender_id": from_user_id,
-            "message": message,
-            "timestamp": utcnow(),
-            "read_by": [],
-            "attachments": [
-                # "url": String,
-                # "type": String
-            ]
-
-        }
-        )
-        # send bot response to user
-        data = standard_socket_message("message", {"from": bot, "message": bot_response})
-        emit("message", data, room=room_id)
+    # all_roles = get_roles()
+    # # if user is aibot
+    # bots = intersection(participants, all_roles)
+    # if len(bots) > 0:
+    #     bot = bots[0]
+    #     # get bot response
+    #     bot_response = chatbot.send_message({
+    #         "role": "user",
+    #         "content": message,
+    #     })
+    #     messages.append({
+    #         "role": "assistant",
+    #         "content": message,
+    #         "room_id": room_id,
+    #         "sender_id": from_user_id,
+    #         "message": message,
+    #         "timestamp": utcnow(),
+    #         "read_by": [],
+    #         "attachments": [
+    #             # "url": String,
+    #             # "type": String
+    #         ]
+    #     }
+    #     )
+    #     # send bot response to user
+    #     print("bot_response", bot_response, flush=True)
+    #     data = standard_socket_message("message", {"from": bot, "message": bot_response})
+    #     emit("message", data, room=room_id)
 
     # call chatbot
 
@@ -243,7 +239,6 @@ def callback_message(event: str, data: dict):
         "timestamp": get_time(),
     }
     return response
-
 
 # @socketio.on('change_status')
 # def handle_change_status(data):

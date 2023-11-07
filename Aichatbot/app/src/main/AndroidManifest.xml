@@ -88,7 +88,7 @@
 
         <activity android:name=".modules.account.activity.SignUpActivity" />
         <activity android:name=".modules.account.activity.ChooseBotActivity" />
-        <activity android:name=".modules.newChat.NewChatActivity" />
+        <activity android:name=".modules.newChat.activity.NewChatActivity" />
     </application>
 
 </manifest>

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
- 
+
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 # Add additional imports as needed
@@ -55,6 +55,7 @@ def change_username():
     except Exception as e:
         return error_out(str(e), 401)
 
+
 # get all users (search friends)
 # get friends list
 @user_bp.route("/api/user/get_friends", methods=["POST"])
@@ -63,7 +64,7 @@ def get_friends():
     try:
         user_id = request.json["user_id"]
         friends = db.get_friends(user_id)
-        if friends == None:
+        if friends is None:
             return error_out("user not exists", 401)
         return standard_response(
             200, "Get friends successfully", True, {"friends": friends}
@@ -71,6 +72,7 @@ def get_friends():
 
     except Exception as e:
         return error_out(str(e), 401)
+
 
 # add friend to friend list
 @user_bp.route("/api/user/add_friend", methods=["POST"])
@@ -88,7 +90,8 @@ def add_friend():
         return error_out("add friend failed", 401)
     except Exception as e:
         return error_out(str(e), 401)
-    
+
+
 # delete friend from friend list
 @user_bp.route("/api/user/delete_friend", methods=["POST"])
 @jwt_required()
@@ -101,7 +104,8 @@ def delete_friend():
         return error_out("delete friend failed", 401)
     except Exception as e:
         return error_out(str(e), 401)
-    
+
+
 # add avatar
 @user_bp.route("/api/user/update_avatar", methods=["POST"])
 @jwt_required()
@@ -114,4 +118,18 @@ def add_avatar():
         return error_out("add avatar failed", 401)
     except Exception as e:
         return error_out(str(e), 401)
-    
+
+
+@user_bp.route("/api/user/search_user", methods=["POST"])
+# @jwt_required()
+def search_user():
+    try:
+        prefix = request.json["prefix"]
+        users = db.search_username_by_prefix(prefix)
+        if users is None:
+            return error_out("user not exists", 401)
+        return standard_response(
+            200, "Search user successfully", True, {"users": users}
+        )
+    except Exception as e:
+        return error_out(str(e), 401)

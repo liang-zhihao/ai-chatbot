@@ -1,11 +1,13 @@
 package com.unimelb.aichatbot.modules.chatHistory.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,9 +16,15 @@ import com.unimelb.aichatbot.R;
 
 import com.unimelb.aichatbot.databinding.LayoutChatItemBinding;
 import com.unimelb.aichatbot.modules.chatHistory.HistoryItem;
+import com.unimelb.aichatbot.util.ImgUtil;
+import com.unimelb.aichatbot.util.MD5Util;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class ChatHistoryItemAdapter extends RecyclerView.Adapter<ChatHistoryItemAdapter.ChatHistoryItemViewHolder> {
@@ -52,9 +60,11 @@ public class ChatHistoryItemAdapter extends RecyclerView.Adapter<ChatHistoryItem
 
         holder.mIdView.setText(item.getRoomName());
         holder.mContentView.setText(item.getLastMessage());
-        Glide.with(context).load(item.getImageUrl()).into(holder.mImageView);
+
+        String in = String.join(",", item.getParticipants());
+        ImgUtil.setImgView(context, in, holder.mImageView);
         holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(position, item));
-        
+
     }
 
     @Override

@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unimelb.aichatbot.CustomViewController;
+import com.unimelb.aichatbot.MainActivity;
 import com.unimelb.aichatbot.databinding.FragmentRecentChatBinding;
 import com.unimelb.aichatbot.modules.chatHistory.ChatHistoryViewModel;
 import com.unimelb.aichatbot.modules.chatHistory.HistoryItem;
@@ -26,7 +27,7 @@ import com.unimelb.aichatbot.modules.chatHistory.adapter.ChatHistoryItemAdapter;
 import com.unimelb.aichatbot.modules.chatHistory.responsObject.RecentChatResponse;
 import com.unimelb.aichatbot.modules.chatHistory.service.ChatHistoryService;
 import com.unimelb.aichatbot.modules.chatroom.activity.MessageActivity;
-import com.unimelb.aichatbot.modules.newChat.NewChatActivity;
+import com.unimelb.aichatbot.modules.newChat.activity.NewChatActivity;
 import com.unimelb.aichatbot.network.BaseResponse;
 import com.unimelb.aichatbot.network.MyCallback;
 import com.unimelb.aichatbot.network.RetrofitFactory;
@@ -34,8 +35,8 @@ import com.unimelb.aichatbot.network.dto.ErrorResponse;
 import com.unimelb.aichatbot.socketio.SocketClient;
 import com.unimelb.aichatbot.util.LoginManager;
 
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /*
@@ -57,6 +58,8 @@ public class RecentChatFragment extends Fragment implements CustomViewController
 
     private ChatHistoryViewModel historyViewModel;
 
+    List<RecentChatResponse> chats;
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -68,15 +71,17 @@ public class RecentChatFragment extends Fragment implements CustomViewController
         initializeView();
         initializeRecyclerView();
         initializeActionBar();
-        initializeListener();
         initializeViewModel();
         loadUserRecentChat();
+        initializeListener();
+
         // init socket client
         SocketClient.startConnection();
 
         SocketClient.getInstance().emitInitializeConnection(LoginManager.getInstance(requireContext().getApplicationContext()).getUserId());
         return root;
     }
+
 
     @Override
     public void onDestroyView() {
@@ -100,7 +105,6 @@ public class RecentChatFragment extends Fragment implements CustomViewController
     public void initializeViewModel() {
         ChatHistoryItemAdapter.OnItemClickListener listener = (pos, item) -> {
             // to do when click
-            Toast.makeText(getContext(), "Item clicked: " + item.getLastMessage(), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getActivity(), MessageActivity.class);
             intent.putExtra("roomId", item.getRoomId());
             intent.putExtra("roomName", item.getRoomName());
@@ -125,7 +129,6 @@ public class RecentChatFragment extends Fragment implements CustomViewController
     @Override
     public void initializeListener() {
         newChatBtn.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "New chat", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(getActivity(), NewChatActivity.class));
         });
     }
@@ -141,6 +144,15 @@ public class RecentChatFragment extends Fragment implements CustomViewController
         }
     }
 
+    public boolean containsParticipant(List<String> participants, String userId) {
+        for (String participant : participants) {
+            if (participant.equals(userId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public void loadUserRecentChat() {
 
@@ -153,14 +165,23 @@ public class RecentChatFragment extends Fragment implements CustomViewController
             public void onSuccess(BaseResponse<List<RecentChatResponse>> result) {
                 //  render chat list
                 List<RecentChatResponse> chats = result.getData();
+                RecentChatFragment.this.chats = chats;
                 for (RecentChatResponse chat : chats) {
+
                     Log.i(TAG, "get room id: " + chat.getRoomId());
                 }
+
                 List<HistoryItem> historyItems = chats.stream()
-                        .map(chat -> new HistoryItem(chat.getRoomId(), chat.getLastMessage(), "https://dummyimage.com/300", chat.getName())).collect(Collectors.toList());
+                        .map(chat -> {
+                            List<String> participants = chat.getParticipants().stream()
+                                    .filter(participant -> !participant.equals(userId))
+                                    .collect(Collectors.toList());
+                            return new HistoryItem(chat.getRoomId(), chat.getLastMessage(), "https://dummyimage.com/300", chat.getName(), participants);
+                        }).collect(Collectors.toList());
+
                 //     toast
                 historyViewModel.setHistoryItems(historyItems);
-                Toast.makeText(getContext(), "Load recent chat success", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getContext(), "Load recent chat success", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -174,13 +195,26 @@ public class RecentChatFragment extends Fragment implements CustomViewController
                     return;
                 } else {
                     //     toast error
-
                     Toast.makeText(getContext(), "Load failed: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
     }
+
+    @Override
+    public void onResume() {
+        // Log.e("DEBUG", "onResume of HomeFragment");
+        loadUserRecentChat();
+        super.onResume();
+
+    }
+
+    // @Override
+    // public void onPause() {
+    //     Log.e("DEBUG", "OnPause of HomeFragment");
+    //     super.onPause();
+    // }
 
 
 }

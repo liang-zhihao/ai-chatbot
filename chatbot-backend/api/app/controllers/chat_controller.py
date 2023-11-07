@@ -31,7 +31,7 @@ def create_chat_room():
     data = request.get_json()
     participants = data.get("participants", [])
     chat_name = data.get("chat_name", "")
-    current_user_id = data.get("current_user_id", "")
+    current_user_id = data.get("created_by", "")
 
     # is private and no duplicate chatroom
     new_chat = {
@@ -57,6 +57,7 @@ def chat_room_details():
     room_id = request.args.get("room_id")
     chat = db.get_chat_by_room_id(room_id)
     # Insert logic to get chat room details
+    print(1)
     print(chat)
     return standard_response(200, "Chat room details", data=chat)
 
@@ -101,6 +102,25 @@ def get_chat_history():
     return standard_response(200, "Chat history", data={
         "chat_history": chat["messages"]
     })
+
+
+@chat_bp.route("/api/chat/find_chatroom_by_friend_id", methods=["GET"])
+def get_chatroom_by_user_id():
+    user_id = request.args.get("user_id")
+    friend_id = request.args.get("friend_id")
+
+    chatroom = db.get_chat_collection().find_one({"participants": {"$all": [user_id, friend_id], "$size": 2}})
+
+    # Convert the result to a JSON-friendly format using dumps from bson.json_util if a chatroom is found
+    if chatroom:
+        return standard_response(200, "Chatroom found", data={
+            "id": chatroom["id"],
+            "is_group_chat": chatroom["is_group_chat"],
+            "name": chatroom["name"],
+        })
+    else:
+        # If no chatroom found, you can return a suitable response
+        return error_out("Chatroom not found", 404)
 
 # @chat_bp.route("/api/chat/add_user_to_room", methods=["POST"])
 # def add_user_to_room():

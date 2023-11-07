@@ -61,7 +61,6 @@ public class LandingActivity extends AppCompatActivity {
 
     private void handleGetStartedClick() {
         // For simplicity, showing a toast. You can navigate to a login activity or perform other actions.
-        Toast.makeText(this, "Login clicked!", Toast.LENGTH_SHORT).show();
     }
 
 

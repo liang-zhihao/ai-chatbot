@@ -12,6 +12,9 @@ import com.bumptech.glide.Glide;
 import com.unimelb.aichatbot.R;
 import com.unimelb.aichatbot.databinding.RowItemFriendBinding;
 import com.unimelb.aichatbot.modules.common.model.FriendListItem;
+import com.unimelb.aichatbot.util.ImgUtil;
+import com.unimelb.aichatbot.util.MD5Util;
+import com.unimelb.aichatbot.util.UIHelper;
 
 import java.util.List;
 
@@ -54,8 +57,10 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
         RowItemFriendBinding binding = holder.binding;
         binding.textName.setText(current.getName());
         binding.textDescription.setText(current.getDescription());
+
+        binding.tvTag.setText(UIHelper.isBot(current.getUserId()) ? "Bot" : "Human");
         holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(position, current));
-        Glide.with(context).load(current.getAvatarUrl()).into(binding.imageAvatar);
+        ImgUtil.setImgView(context, current.getAvatarUrl(), binding.imageAvatar);
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -75,7 +80,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
             v = binding.getRoot();
         }
 
-     
+
     }
 
 }

@@ -2,14 +2,15 @@ package com.unimelb.aichatbot.network.dto;
 
 import com.google.gson.annotations.SerializedName;
 
-class UserInfo {
+public class UserInfoResponse {
     @SerializedName("user_id")
     private String userId;
 
     @SerializedName("username")
     private String username;
 
-    // Constructors, getters, and setters for UserInfo
+    @SerializedName("avatar")
+    private String avatar;
 
     public String getUserId() {
         return userId;
@@ -25,5 +26,13 @@ class UserInfo {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

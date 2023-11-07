@@ -3,8 +3,8 @@ package com.unimelb.aichatbot.modules.searchFriend.model;
 import com.unimelb.aichatbot.modules.common.model.FriendListItem;
 
 public class NewFriendListItem extends FriendListItem {
-    public NewFriendListItem(String avatarUrl, String name) {
-        super(avatarUrl, name);
+    public NewFriendListItem(String avatarUrl, String name, String userId) {
+        super(avatarUrl, name, userId);
     }
 
     // public View getView(View convertView, ViewGroup parent, Context mContext) {

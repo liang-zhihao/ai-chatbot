@@ -33,4 +33,13 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setElevation(0);
 
     }
+
+    // @Override
+    // protected void onRestart() {
+    //     super.onRestart();
+    //     finish();
+    //     overridePendingTransition(0, 0);
+    //     startActivity(getIntent());
+    //     overridePendingTransition(0, 0);
+    // }
 }

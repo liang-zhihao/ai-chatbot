@@ -9,15 +9,19 @@
 
 
         <androidx.appcompat.widget.SearchView
+            android:clickable="true"
             android:id="@+id/search_text_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:iconifiedByDefault="false"
+
+            app:iconifiedByDefault="false"
             android:imeOptions="actionSearch"
             android:queryBackground="@drawable/bg_search_view"
             android:queryHint="Find People"
             android:submitBackground="@drawable/bg_search_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:theme="@style/Widget.AppCompat.SearchView" />
 

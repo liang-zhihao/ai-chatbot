@@ -1,17 +1,30 @@
 package com.unimelb.aichatbot.modules.chatHistory;
 
+import java.util.List;
+
 public class HistoryItem {
     private String roomId;
     private String lastMessage;
     private String imageUrl; // Drawable resource ID
 
+    private List<String> participants;
     private String roomName;
 
-    public HistoryItem(String roomId, String lastMessage, String imageUrl, String roomName) {
+    public List<String> getParticipants() {
+        return participants;
+    }
+
+
+    public void setParticipants(List<String> participants) {
+        this.participants = participants;
+    }
+
+    public HistoryItem(String roomId, String lastMessage, String imageUrl, String roomName, List<String> participants) {
         this.roomId = roomId;
         this.lastMessage = lastMessage;
         this.imageUrl = imageUrl;
         this.roomName = roomName;
+        this.participants = participants;
     }
 
     public String getRoomName() {

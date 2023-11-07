@@ -2,6 +2,7 @@ package com.unimelb.aichatbot.modules.searchFriend.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +17,27 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.unimelb.aichatbot.CustomViewController;
 import com.unimelb.aichatbot.databinding.FragmentSearchBinding;
-import com.unimelb.aichatbot.modules.chatHistory.HistoryItem;
 import com.unimelb.aichatbot.modules.chatroom.activity.MessageActivity;
 import com.unimelb.aichatbot.modules.common.model.FriendListItem;
+import com.unimelb.aichatbot.modules.newChat.model.NewChatRoomRequest;
+import com.unimelb.aichatbot.modules.newChat.model.NewChatRoomResponse;
+import com.unimelb.aichatbot.modules.newChat.service.NewChatService;
 import com.unimelb.aichatbot.modules.searchFriend.SearchViewModel;
 import com.unimelb.aichatbot.modules.searchFriend.adapter.FriendAdapter;
+import com.unimelb.aichatbot.modules.searchFriend.model.AddFriendRequest;
 import com.unimelb.aichatbot.modules.searchFriend.model.SearchFriendRequest;
+import com.unimelb.aichatbot.modules.searchFriend.model.SearchFriendResponse;
+import com.unimelb.aichatbot.modules.searchFriend.service.SearchFriendService;
+import com.unimelb.aichatbot.network.BaseResponse;
+import com.unimelb.aichatbot.network.MyCallback;
+import com.unimelb.aichatbot.network.RetrofitFactory;
+import com.unimelb.aichatbot.network.dto.ErrorResponse;
+import com.unimelb.aichatbot.network.dto.UserInfoResponse;
+import com.unimelb.aichatbot.util.LoginManager;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /*
  *  todo test: search friend and start a new chat
@@ -34,7 +50,7 @@ public class SearchFriendFragment extends Fragment implements CustomViewControll
     private SearchViewModel searchViewModel;
 
     private SearchView searchView;
-
+    private static final String TAG = "SearchFriendFragment";
     private RecyclerView recyclerView;
 
 
@@ -68,44 +84,85 @@ public class SearchFriendFragment extends Fragment implements CustomViewControll
         });
     }
 
-    public void loadFriends() {
-        //     TODO api call to get friends
-
-    }
 
     public void searchFriends(String query) {
-        String name = "1";
-        name = query;
-        SearchFriendRequest request = new SearchFriendRequest(name);
+
+        SearchFriendRequest request = new SearchFriendRequest(query);
         // TODO api call to search friends and with auth token
-        // SearchFriendService apiService = RetrofitFactory.create(SearchFriendService.class);
-        // Call<BaseResponse<SearchFriendResponse>> call = apiService.searchFriendByName(request);
-        // call.enqueue(new MyCallback<SearchFriendResponse>() {
-        //     @Override
-        //     public void onSuccess(BaseResponse<SearchFriendResponse> result) {
-        //         // TODO show result
-        //     }
-        //
-        //     @Override
-        //     public void onError(BaseResponse error, @NonNull Throwable t) {
-        //         // TODO show error message
-        //     }
-        // });
+        RetrofitFactory.create(SearchFriendService.class).searchFriendByName(request).enqueue(new MyCallback<SearchFriendResponse>() {
+            @Override
+            public void onSuccess(BaseResponse<SearchFriendResponse> result) {
+                List<UserInfoResponse> users = result.getData().getUsers();
+                List<FriendListItem> friends = users.stream().map(user -> new FriendListItem(user.getAvatar(), user.getUsername(), user.getUserId())).collect(Collectors.toList());
+                searchViewModel.setFriends(friends);
+            }
 
-        //    TODO render search result
-        searchViewModel.addFriend(new FriendListItem("https://api.horosama.com/random.php", "2123Bonelwa", "Are You Ready To Buy A Home Theater Audio…"));
-
-
+            @Override
+            public void onError(ErrorResponse error, @NonNull Throwable t) {
+                if (error != null) {
+                    Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.i(TAG, "onError: " + error.getMessage());
+                }
+                if (t != null) {
+                    Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.i(TAG, "onError: " + t.getMessage());
+                    t.printStackTrace();
+                }
+            }
+        });
     }
 
 
-    public void startChat() {
+    public void startNewChatRequest(FriendListItem item) {
         // TODO onclick item lister: api request and start chat with friend
+        SearchFriendService searchFriendService = RetrofitFactory.create(SearchFriendService.class);
+        String friendId = item.getUserId();
+        String userId = LoginManager.getInstance(requireContext().getApplicationContext()).getUserId();
 
-        // Intent intent = new Intent(getActivity(), MessageActivity.class);
-        // intent.putExtra("room_id", item.getRoomId());
-        // intent.putExtra("room_name", item.getLastMessage());
-        // startActivity(intent);
+        searchFriendService.addFriend(new AddFriendRequest(userId, friendId)).enqueue(new MyCallback() {
+            @Override
+            public void onSuccess(BaseResponse result) {
+                Toast.makeText(getContext(), "Add friend success", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(ErrorResponse error, Throwable t) {
+                if (error != null) {
+                    Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+                if (t != null) {
+                    Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                    t.printStackTrace();
+                }
+            }
+        });
+        String username = LoginManager.getInstance(requireContext().getApplicationContext()).getUsername();
+        String friendName = item.getName();
+
+        List<String> participants = new ArrayList<>();
+        participants.add(userId);
+        participants.add(friendId);
+        String chatName = username + ", " + friendName;
+        RetrofitFactory.create(NewChatService.class).createChatroom(new NewChatRoomRequest(participants, chatName, userId)).enqueue(new MyCallback<NewChatRoomResponse>() {
+            @Override
+            public void onSuccess(BaseResponse<NewChatRoomResponse> result) {
+                Toast.makeText(getContext(), "Create room success", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), MessageActivity.class);
+                intent.putExtra("roomId", result.getData().getChatRoomId());
+                startActivity(intent);
+            }
+
+            @Override
+            public void onError(ErrorResponse error, Throwable t) {
+                if (error != null) {
+                    Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+                if (t != null) {
+                    Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                    t.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
@@ -117,7 +174,6 @@ public class SearchFriendFragment extends Fragment implements CustomViewControll
     @Override
     public void initializeView() {
         searchView = binding.searchTextSearch;
-
     }
 
     @Override
@@ -135,14 +191,10 @@ public class SearchFriendFragment extends Fragment implements CustomViewControll
         FriendAdapter.OnItemClickListener onItemClickListener = new FriendAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position, FriendListItem item) {
-                Toast.makeText(getContext(), "Clicked: " + position, Toast.LENGTH_SHORT).show();
-                // TODO create a new room and  chat with friend
-                // Intent intent = new Intent(getContext(), ChatActivity.class);
-                // intent.putExtra("historyItem", historyItem);
-                // startActivity(intent);
+
+                startNewChatRequest(item);
             }
         };
-
         searchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
         searchViewModel.getFriends().observe(getViewLifecycleOwner(), friends -> {
             // When data changes, update the adapter's data set

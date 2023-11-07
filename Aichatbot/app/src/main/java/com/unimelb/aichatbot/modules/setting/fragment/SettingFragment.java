@@ -37,6 +37,7 @@ public class SettingFragment extends Fragment implements CustomViewController {
 
             Intent intent = new Intent(getActivity(), ProfileActivity.class);
             startActivity(intent);
+
         });
 
         editCharacterButton.setOnClickListener(view -> {

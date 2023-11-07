@@ -25,12 +25,11 @@ public class SearchViewModel extends ViewModel {
 
     private void initFriends() {
         List<FriendListItem> friendListItems = new LinkedList<>();
-        friendListItems.add(new FriendListItem("https://api.horosama.com/random.php", "Beth Murphy"));
-        friendListItems.add(new FriendListItem("https://api.horosama.com/random.php", "Bonelwa"));
-        friendListItems.add(new FriendListItem("https://api.horosama.com/random.php", "Leonardo Oliveira"));
-        friendListItems.add(new FriendListItem("https://api.horosama.com/random.php", "Bonelwa", "Are You Ready To Buy A Home Theater Audio…"));
-        friendListItems.add(new FriendListItem("https://api.horosama.com/random.php", "Leonardo Oliveira", "29 Motivational Quotes For Business And "));
-
+        // friendListItems.add(new FriendListItem("https://api.horosama.com/random.php", "Beth Murphy", ""));
+        // friendListItems.add(new FriendListItem("https://api.horosama.com/random.php", "Bonelwa", ""));
+        // friendListItems.add(new FriendListItem("https://api.horosama.com/random.php", "Leonardo Oliveira", ""));
+        // friendListItems.add(new FriendListItem("https://api.horosama.com/random.php", "Bonelwa", "Are You Ready To Buy A Home Theater Audio…", ""));
+        // friendListItems.add(new FriendListItem("https://api.horosama.com/random.php", "Leonardo Oliveira", "29 Motivational Quotes For Business And ", ""));
         mFriends.setValue(friendListItems);
     }
 
@@ -38,6 +37,12 @@ public class SearchViewModel extends ViewModel {
         List<FriendListItem> friendListItems = mFriends.getValue();
         assert friendListItems != null;
         friendListItems.add(friendListItem);
+        mFriends.setValue(friendListItems);
+    }
+
+    public void setFriends(List<FriendListItem> friendListItems) {
+        if (mFriends == null)
+            mFriends = new MutableLiveData<>();
         mFriends.setValue(friendListItems);
     }
 }

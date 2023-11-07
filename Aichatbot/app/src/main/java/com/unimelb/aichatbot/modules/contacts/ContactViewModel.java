@@ -27,13 +27,21 @@ public class ContactViewModel extends ViewModel {
         return mFriends;
     }
 
+    public void setFriends(List<FriendListItem> friends) {
+        if (mFriends == null) {
+            mFriends = new MutableLiveData<>();
+        }
+        mFriends.setValue(friends);
+
+    }
+
     private void initFriends() {
         List<FriendListItem> friendListItems = new LinkedList<>();
-        friendListItems.add(new FriendListItem("https://api.horosama.com/random.php", "Beth Murphy"));
-        friendListItems.add(new FriendListItem("https://api.horosama.com/random.php", "Bonelwa"));
-        friendListItems.add(new FriendListItem("https://api.horosama.com/random.php", "Leonardo Oliveira"));
-        friendListItems.add(new FriendListItem("https://api.horosama.com/random.php", "Bonelwa", "Are You Ready To Buy A Home Theater Audio…"));
-        friendListItems.add(new FriendListItem("https://api.horosama.com/random.php", "Leonardo Oliveira", "29 Motivational Quotes For Business And "));
+        // friendListItems.add(new FriendListItem("https://api.horosama.com/random.php", "Beth Murphy", ""));
+        // friendListItems.add(new FriendListItem("https://api.horosama.com/random.php", "Bonelwa", ""));
+        // friendListItems.add(new FriendListItem("https://api.horosama.com/random.php", "Leonardo Oliveira", ""));
+        // friendListItems.add(new FriendListItem("https://api.horosama.com/random.php", "Bonelwa", "Are You Ready To Buy A Home Theater Audio…", ""));
+        // friendListItems.add(new FriendListItem("https://api.horosama.com/random.php", "Leonardo Oliveira", "29 Motivational Quotes For Business And ", ""));
 
         mFriends.setValue(friendListItems);
     }

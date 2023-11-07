@@ -18,4 +18,8 @@ public class UIHelper {
 
         onBackPressedDispatcher.addCallback(onBackPressedCallback);
     }
+
+    public static boolean isBot(String userId) {
+        return userId.startsWith("bot_");
+    }
 }
