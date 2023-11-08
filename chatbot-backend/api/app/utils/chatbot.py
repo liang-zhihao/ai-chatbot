@@ -1,7 +1,7 @@
 import os
 import openai
 from datetime import datetime
-from app.utils.common import get_config, get_roles
+from app.utils.common import get_config
 
 # load configuration file
 config = get_config()
@@ -25,7 +25,6 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 class Chatbot:
     def __init__(self):
         self.deployment_name = "gpt-35-turbo"
-        self.roles = get_roles()
 
     def send_message(self, messages: list):
         """
