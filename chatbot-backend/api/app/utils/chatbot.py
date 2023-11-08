@@ -1,7 +1,7 @@
 import os
 import openai
 from datetime import datetime
-from app.utils.common import get_config
+from app.utils.common import get_config, get_roles
 
 # load configuration file
 config = get_config()
@@ -25,18 +25,29 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 class Chatbot:
     def __init__(self):
         self.deployment_name = "gpt-35-turbo"
+        self.roles = get_roles()
 
-    def send_message(self, messages):
+    def send_message(self, messages: list):
+        """
+        param: 
+            messages: list of message dictionary (history of chat)
+            example: messages = [{"role": "system", "content": "..."},{"role": "user","content": "..."}]
+        """
         chat = []
         print(messages, flush=True)
         # get latest messages
+        # append chatbot initial prompt to messages (defined role for chatbot)
         if len(messages) > MAX_CHAT_LENGTH:
             chat.append(
                 {"role": messages[0]["role"], "content": messages[0]["content"]}
             )
+        
+        # MAXCHATLENGTH limited, cut off old messages
         for message in messages[-MAX_CHAT_LENGTH:]:
             chat.append({"role": message["role"], "content": message["content"]})
         print(chat, flush=True)
+
+        # Call ChatGPT API
         response = openai.ChatCompletion.create(
             engine=self.deployment_name,
             messages=chat,
@@ -48,6 +59,7 @@ class Chatbot:
             stop=None,
         )
 
+        # return reply only
         reply = response["choices"][0]["message"]["content"]
         usage = response["usage"]
         print(usage, flush=True)

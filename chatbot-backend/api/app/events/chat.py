@@ -138,34 +138,39 @@ def handle_message(data):
     messages.append(message_db)
     db.update_chat_history(room_id, messages)
 
-    # all_roles = get_roles()
-    # # if user is aibot
-    # bots = intersection(participants, all_roles)
-    # if len(bots) > 0:
-    #     bot = bots[0]
-    #     # get bot response
-    #     bot_response = chatbot.send_message({
-    #         "role": "user",
-    #         "content": message,
-    #     })
-    #     messages.append({
-    #         "role": "assistant",
-    #         "content": message,
-    #         "room_id": room_id,
-    #         "sender_id": from_user_id,
-    #         "message": message,
-    #         "timestamp": utcnow(),
-    #         "read_by": [],
-    #         "attachments": [
-    #             # "url": String,
-    #             # "type": String
-    #         ]
-    #     }
-    #     )
-    #     # send bot response to user
-    #     print("bot_response", bot_response, flush=True)
-    #     data = standard_socket_message("message", {"from": bot, "message": bot_response})
-    #     emit("message", data, room=room_id)
+
+    all_roles = get_roles()
+    # if user is aibot
+    bots = intersection(participants, all_roles)
+    if len(bots) > 0:
+        bot = bots[0]
+        # get bot response
+        # TODO need full chat history to get bot response
+        botchat_history = [{
+            "role": "user",
+            "content": message,
+        }]
+
+        bot_response = chatbot.send_message(botchat_history)
+
+        messages.append({
+            "role": "assistant",
+            "content": message,
+            "room_id": room_id,
+            "sender_id": from_user_id,
+            "message": message,
+            "timestamp": utcnow(),
+            "read_by": [],
+            "attachments": [
+                # "url": String,
+                # "type": String
+            ]
+        }
+        )
+        # send bot response to user
+        print("bot_response", bot_response, flush=True)
+        data = standard_socket_message("message", {"from": bot, "message": bot_response})
+        emit("message", data, room=room_id)
 
     # call chatbot
 
