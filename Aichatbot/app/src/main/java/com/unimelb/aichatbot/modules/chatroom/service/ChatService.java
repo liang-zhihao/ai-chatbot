@@ -1,6 +1,8 @@
 package com.unimelb.aichatbot.modules.chatroom.service;
 
 import com.unimelb.aichatbot.modules.chatroom.model.ChatDetailResponse;
+import com.unimelb.aichatbot.modules.chatroom.model.RecommendRestaurantRequest;
+import com.unimelb.aichatbot.modules.chatroom.model.RecommendRestaurantResponse;
 import com.unimelb.aichatbot.network.BaseResponse;
 import com.unimelb.aichatbot.network.dto.ChatWithBotRequest;
 import com.unimelb.aichatbot.network.dto.ChatWithBotResponse;
@@ -30,5 +32,9 @@ public interface ChatService {
     //     api/chat/find_chatroom_by_friend_id
     @GET("api/chat/find_chatroom_by_friend_id")
     Call<BaseResponse<ChatDetailResponse>> getChatRoomDetailsByFriendId(@Query("friend_id") String friendId, @Query("user_id") String userId);
+
+    //     api/geo/recommend_restaurants
+    @POST("api/geo/recommend_restaurants")
+    Call<BaseResponse<RecommendRestaurantResponse>> getRecommendRestaurants(@Body RecommendRestaurantRequest recommendRestaurantRequest);
 }
 

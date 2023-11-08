@@ -15,26 +15,37 @@ public class Message {
     private String id = UUID.randomUUID().toString();
     private String content; // content of the message
     private MessageType type; // type of the message
-    private String sender; // sender of the message
+    private String senderId; // sender of the message
     private Date timestamp; // timestamp of the message
 
+    public String getSenderName() {
+        return senderName;
+    }
+
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
+    }
+
+    private String senderName; // name of the sender
     private String avatarUrl; // avatar of the sender
     private SenderType senderType; // to check if the message is sent by the user
 
-    public Message(String content, MessageType type, String sender, SenderType senderType, String timestampStr) {
+    public Message(String content, MessageType type, String senderId, SenderType senderType, String timestampStr, String senderName) {
         this.content = content;
         this.type = type;
-        this.sender = sender;
+        this.senderId = senderId;
         this.timestamp = DateParser.parse(timestampStr);
         this.senderType = senderType;
+        this.senderName = senderName;
     }
 
-    public Message(String content, MessageType type, String sender, SenderType senderType, Date timestamp) {
+    public Message(String content, MessageType type, String senderId, SenderType senderType, Date timestamp, String senderName) {
         this.content = content;
         this.type = type;
-        this.sender = sender;
+        this.senderId = senderId;
         this.timestamp = timestamp;
         this.senderType = senderType;
+        this.senderName = senderName;
     }
 
     // Getters and Setters for the fields
@@ -54,12 +65,12 @@ public class Message {
         this.type = type;
     }
 
-    public String getSender() {
-        return sender;
+    public String getSenderId() {
+        return senderId;
     }
 
-    public void setSender(String sender) {
-        this.sender = sender;
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
     }
 
 
@@ -112,7 +123,7 @@ public class Message {
                 "id='" + id + '\'' +
                 ", content='" + content + '\'' +
                 ", type=" + type +
-                ", sender='" + sender + '\'' +
+                ", sender='" + senderId + '\'' +
                 ", timestamp=" + timestamp +
                 ", avatarUrl='" + avatarUrl + '\'' +
                 ", senderType=" + senderType +

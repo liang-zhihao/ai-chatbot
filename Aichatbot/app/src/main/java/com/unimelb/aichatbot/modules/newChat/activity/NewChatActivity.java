@@ -63,11 +63,8 @@ public class NewChatActivity extends AppCompatActivity implements CustomViewCont
         setContentView(R.layout.activity_new_chat);
         loadUserRecentChat();
 
-        recyclerView = findViewById(R.id.recyclerView);
+        initializeRecyclerView();
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        adapter = new ChooseUserAdapter(new ArrayList<>(), this);
         initializeActionBar();
         loadFriends();
     }
@@ -114,12 +111,13 @@ public class NewChatActivity extends AppCompatActivity implements CustomViewCont
         newChatService.getFriends(friendListRequest).enqueue(new MyCallback<FriendListResponse>() {
             @Override
             public void onSuccess(BaseResponse<FriendListResponse> result) {
-                Log.i(TAG, "onSuccess: " + result);
+
+
                 // Using Stream (requires API level 24 or higher) to convert and collect in one line.
                 List<ChatUser> users = result.getData().getFriends().stream()
                         .map(friend -> new ChatUser(friend.getUsername(), friend.getAvatar(), "", friend.getUserId()))
                         .collect(Collectors.toList());
-
+                Log.i(TAG, "onSuccess: " + users);
                 adapter.setChatUsers(users);
                 adapter.notifyDataSetChanged();
             }
@@ -170,6 +168,11 @@ public class NewChatActivity extends AppCompatActivity implements CustomViewCont
             if (user.isSelected()) {
                 selectedUsers.add(user);
             }
+        }
+        // select more than one user
+        if (selectedUsers.isEmpty()) {
+            Toast.makeText(this, "Please select at least one user", Toast.LENGTH_SHORT).show();
+            return;
         }
         Log.i(TAG, "Selected Users: " + selectedUsers);
         // Here, you can do whatever you want with the selected users.
@@ -276,6 +279,9 @@ public class NewChatActivity extends AppCompatActivity implements CustomViewCont
 
     @Override
     public void initializeRecyclerView() {
-
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new ChooseUserAdapter(new ArrayList<>(), this);
+        recyclerView.setAdapter(adapter);
     }
 }

@@ -29,17 +29,120 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.unimelb.aichatbot.CustomViewController;
 import com.unimelb.aichatbot.R;
 import com.google.android.gms.location.LocationResult;
+import com.unimelb.aichatbot.modules.chatroom.model.Message;
+import com.unimelb.aichatbot.modules.chatroom.model.RecommendRestaurantRequest;
+import com.unimelb.aichatbot.modules.chatroom.model.RecommendRestaurantResponse;
+import com.unimelb.aichatbot.modules.chatroom.model.type.MessageType;
+import com.unimelb.aichatbot.modules.chatroom.model.type.SenderType;
+import com.unimelb.aichatbot.modules.chatroom.service.ChatService;
+import com.unimelb.aichatbot.network.BaseResponse;
+import com.unimelb.aichatbot.network.MyCallback;
+import com.unimelb.aichatbot.network.RetrofitFactory;
+import com.unimelb.aichatbot.network.dto.ErrorResponse;
 import com.unimelb.aichatbot.util.CameraUtil;
 import com.unimelb.aichatbot.util.LocationUtil;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.Objects;
 
-public class BottomFragment extends Fragment {
+public class BottomFragment extends Fragment implements CustomViewController {
+
+
+    private View rootView;
+    private ImageButton btnAddImage, btnMap, btnQuestion, btnCamera;
+    private LocationUtil locationUtil;
+
+    // Define the interface as an inner type of the Fragment
+    public interface OnMessageListener {
+        void appendMessageToUI(Message message);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+
+        rootView = inflater.inflate(R.layout.fragment_msg_bottom_sheet, container, false);
+
+        initializeView();
+
+        initializeListener();
+        initLocationUtil();
+        return rootView;
+    }
+
+    // Use a member variable for the listener
+    private OnMessageListener messageListener;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            messageListener = (OnMessageListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnMessageListener");
+        }
+
+//        init here as onAttach is called before onCreate and context is available here
+
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+    }
+
+    public void initLocationUtil() {
+        OnSuccessListener<Location> locationSuccessListener = location -> {
+            if (location == null) {
+                Log.i("LocationTest", "null");
+            } else {
+                Log.i("LocationTest", "Success");
+                updateUI(location);     // if successful, update the UI
+            }
+        };
+        OnFailureListener locationFailureListener = e -> {
+            Log.i("LocationTest", "Failed");
+            Toast.makeText(requireContext(), "Location Failed", Toast.LENGTH_SHORT).show();
+        };
+        LocationCallback locationCallBack = new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                Log.i("LocationTest", "Location updates");
+            }
+        };
+        ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                result -> {
+                    if (result) {
+                        // PERMISSION GRANTED
+                        updateLocation();
+                        Log.i("LocationTest", "Permission granted");
+                    } else {
+                        // PERMISSION NOT GRANTED
+                        Log.i("LocationTest", "Permission not granted");
+                    }
+                }
+        );
+        locationUtil = new LocationUtil(this, locationSuccessListener, locationFailureListener, locationCallBack, requestPermissionLauncher);
+    }
+
+    private void updateUI(Location location) {
+        // update the UI according to the GPS information
+        Toast.makeText(getContext(), "Location: " + location.getLatitude() + " " + location.getLongitude(), Toast.LENGTH_SHORT).show();
+        recommendRestaurant(location);
+    }
 
     private static final int SELECT_IMAGE_REQUEST_CODE = 1;
     // TODO  handle senor button. dod is select image (compress) then convert to base64 and send request to server and get response
@@ -81,32 +184,8 @@ public class BottomFragment extends Fragment {
                     Toast.makeText(getContext(), "Image Selected", Toast.LENGTH_SHORT).show();
                 }
             });
-    OnSuccessListener<Location> locationSuccessListener = location -> {
-        if (location == null) {
-            Log.i("LocationTest", "null");
-        } else {
-            Log.i("LocationTest", "Success");
-            updateUI(location);     // if successful, update the UI
-        }
-    };
-    OnFailureListener locationFailureListener = e -> {
-        Log.i("LocationTest", "Failed");
-        Toast.makeText(requireContext(), "Location Failed", Toast.LENGTH_SHORT).show();
-    };
+
     // Declaring ImageButtons
-    private ImageButton btnAddImage, btnMap, btnQuestion, btnCamera;
-    private LocationUtil locationUtil;
-    private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
-            new ActivityResultContracts.RequestPermission(),
-            result -> {
-                if (result) {
-                    // PERMISSION GRANTED
-                    updateLocation();
-                } else {
-                    // PERMISSION NOT GRANTED
-                }
-            }
-    );
 
 
 //    ----------------------------------------
@@ -147,64 +226,6 @@ public class BottomFragment extends Fragment {
                 }
             });
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        LocationCallback locationCallBack = new LocationCallback() {
-            @Override
-            public void onLocationResult(@NonNull LocationResult locationResult) {
-                super.onLocationResult(locationResult);
-                Log.i("LocationTest", "Location updates");
-            }
-        };
-//        init here as onAttach is called before onCreate and context is available here
-        locationUtil = new LocationUtil(this, locationSuccessListener, locationFailureListener, locationCallBack, requestPermissionLauncher);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_msg_bottom_sheet, container, false);
-
-        // Initializing ImageButtons
-        btnAddImage = view.findViewById(R.id.btn_msg__add_image);
-        btnMap = view.findViewById(R.id.btn_msg__map);
-        btnQuestion = view.findViewById(R.id.message_question_button);
-        btnCamera = view.findViewById(R.id.btn_msg__camera);
-
-        // Set onClickListener to the ImageButtons if needed
-        btnAddImage.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Add Image", Toast.LENGTH_SHORT).show();
-            // Handle btnAddImage click
-            accessGalleryAndSelectImage();
-        });
-        btnMap.setOnClickListener(v -> {
-            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
-            updateLocation();
-        });
-
-        btnQuestion.setOnClickListener(v -> {
-            // Handle btnQuestion click
-        });
-
-        btnCamera.setOnClickListener(v -> {
-            // Handle btnCamera click
-            Toast.makeText(getContext(), "Camera", Toast.LENGTH_SHORT).show();
-//            openCameraAndTakeImage();
-            cameraUtil = new CameraUtil(this, takePictureLauncher);
-            cameraUtil.openCameraAndTakeImage("11");
-        });
-
-        return view;
-    }
 
     public void accessGalleryAndSelectImage() {
         // Check for permission
@@ -246,8 +267,72 @@ public class BottomFragment extends Fragment {
 //
 //    Use Retrofit or another library to send the captured image to the server.
 
-    private void updateUI(Location location) {
-        Toast.makeText(requireContext(), "Location: " + location.getLatitude() + " " + location.getLongitude(), Toast.LENGTH_SHORT).show();
+
+    @Override
+    public void initializeView() {
+        // Initializing ImageButtons
+        btnAddImage = rootView.findViewById(R.id.btn_msg__add_image);
+        btnMap = rootView.findViewById(R.id.btn_msg__map);
+        btnQuestion = rootView.findViewById(R.id.message_question_button);
+        btnCamera = rootView.findViewById(R.id.btn_msg__camera);
+    }
+
+    @Override
+    public void initializeListener() {
+        // Set onClickListener to the ImageButtons if needed
+        btnAddImage.setOnClickListener(v -> {
+            Toast.makeText(getContext(), "Add Image", Toast.LENGTH_SHORT).show();
+            // Handle btnAddImage click
+            accessGalleryAndSelectImage();
+        });
+        btnMap.setOnClickListener(v -> {
+            // requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+            updateLocation();
+        });
+
+        btnQuestion.setOnClickListener(v -> {
+            // Handle btnQuestion click
+        });
+
+        btnCamera.setOnClickListener(v -> {
+            // Handle btnCamera click
+            Toast.makeText(getContext(), "Camera", Toast.LENGTH_SHORT).show();
+//            openCameraAndTakeImage();
+            cameraUtil = new CameraUtil(this, takePictureLauncher);
+            cameraUtil.openCameraAndTakeImage("11");
+        });
+    }
+
+    public void recommendRestaurant(Location location) {
+
+        RetrofitFactory.createWithAuth(ChatService.class, requireContext().getApplicationContext()).getRecommendRestaurants(new RecommendRestaurantRequest(location.getLatitude(), location.getLongitude())).enqueue(new MyCallback<RecommendRestaurantResponse>() {
+            @Override
+            public void onSuccess(BaseResponse<RecommendRestaurantResponse> result) {
+                Toast.makeText(getContext(), result.getData().getReply(), Toast.LENGTH_SHORT).show();
+                RecommendRestaurantResponse recommendRestaurantResponse = result.getData();
+                messageListener.appendMessageToUI(new Message(recommendRestaurantResponse.getReply(), MessageType.TEXT, "11", SenderType.ME, new Date(), "OOO"));
+            }
+
+            @Override
+            public void onError(ErrorResponse error, @NonNull Throwable t) {
+                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void initializeActionBar() {
+
+    }
+
+    @Override
+    public void initializeViewModel() {
+
+    }
+
+    @Override
+    public void initializeRecyclerView() {
+
     }
 
 

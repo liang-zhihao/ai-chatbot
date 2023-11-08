@@ -54,11 +54,11 @@ def standard_response(status, message, success=True, data=None, http_status=200)
     return jsonify(response), http_status
 
 
-def get_role(role_id) -> dict:
+def get_role(role_name: str) -> dict:
     try:
         role = json.load(
             open(
-                os.path.join(dir_path, "roles", role_id + ".json"),
+                os.path.join(dir_path, "roles", role_name + ".json"),
                 encoding="utf-8",
             )
         )

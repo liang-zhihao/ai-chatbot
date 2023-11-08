@@ -109,7 +109,6 @@ public class RecentChatFragment extends Fragment implements CustomViewController
             intent.putExtra("roomId", item.getRoomId());
             intent.putExtra("roomName", item.getRoomName());
             startActivity(intent);
-
         };
 
         historyViewModel = new ViewModelProvider(this).get(ChatHistoryViewModel.class);
@@ -137,10 +136,13 @@ public class RecentChatFragment extends Fragment implements CustomViewController
     public void initializeActionBar() {
         // OnBackPressed is different from the back button in the action bar
         ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
+        String username = LoginManager.getInstance(requireContext().getApplicationContext()).getUsername();
+
         if (actionBar != null) {
             actionBar.show();
-            actionBar.setTitle("Recent Chat");
-            actionBar.setDisplayHomeAsUpEnabled(true);
+            // actionBar.setTitle("Recent Chat: " + username);
+            // hide back button
+            actionBar.setDisplayHomeAsUpEnabled(false);
         }
     }
 

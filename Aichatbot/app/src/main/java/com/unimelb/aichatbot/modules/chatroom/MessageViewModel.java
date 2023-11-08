@@ -27,6 +27,9 @@ public class MessageViewModel extends ViewModel {
         messagesLiveData.setValue(currentMessages);
     }
 
+    public void setMessages(List<Message> messages) {
+        messagesLiveData.setValue(messages);
+    }
     // Other logic related to messages and UI state
 //    send message
 //    request message

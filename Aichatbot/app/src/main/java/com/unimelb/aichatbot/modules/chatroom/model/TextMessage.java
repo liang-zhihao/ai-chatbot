@@ -8,8 +8,13 @@ import java.util.Date;
 public class TextMessage extends Message {
     private String markdownText;
 
-    public TextMessage(String content, String sender, SenderType senderType, Date timestamp, String markdownText) {
-        super(content, MessageType.TEXT, sender, senderType, timestamp);
+    public TextMessage(String content, MessageType type, String senderId, SenderType senderType, String timestampStr, String senderName, String markdownText) {
+        super(content, type, senderId, senderType, timestampStr, senderName);
+        this.markdownText = markdownText;
+    }
+
+    public TextMessage(String content, MessageType type, String senderId, SenderType senderType, Date timestamp, String senderName, String markdownText) {
+        super(content, type, senderId, senderType, timestamp, senderName);
         this.markdownText = markdownText;
     }
 

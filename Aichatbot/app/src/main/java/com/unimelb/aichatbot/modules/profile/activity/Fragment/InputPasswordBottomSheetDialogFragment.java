@@ -20,8 +20,7 @@ import retrofit2.Response;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.unimelb.aichatbot.R;
 import com.unimelb.aichatbot.modules.profile.activity.request.ChangePasswordRequest;
-import com.unimelb.aichatbot.modules.profile.activity.request.ChangeUsernameRequest;
-import com.unimelb.aichatbot.modules.profile.activity.server.ApiService;
+import com.unimelb.aichatbot.modules.profile.activity.server.ProfileService;
 import com.unimelb.aichatbot.network.RetrofitFactory;
 
 public class InputPasswordBottomSheetDialogFragment extends BottomSheetDialogFragment {
@@ -56,8 +55,8 @@ public class InputPasswordBottomSheetDialogFragment extends BottomSheetDialogFra
 
         oldPasswordInput = view.findViewById(R.id.edit_text_old_password);
         newPasswordInput = view.findViewById(R.id.edit_text_new_password);
-        confirmButton = view.findViewById(R.id.button_confirm);
-        cancelButton = view.findViewById(R.id.button_cancel);
+        // confirmButton = view.findViewById(R.id.button_confirm);
+        // cancelButton = view.findViewById(R.id.button_cancel);
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +72,7 @@ public class InputPasswordBottomSheetDialogFragment extends BottomSheetDialogFra
                 request.setUser_id(userId);
                 request.setOld_password(oldPassword);
                 request.setNew_password(newPassword);
-                ApiService service = RetrofitFactory.createWithAuth(ApiService.class, getActivity());
+                ProfileService service = RetrofitFactory.createWithAuth(ProfileService.class, getActivity());
                 Call<Void> call = service.changePassword(request);
 
                 call.enqueue(new Callback<Void>() {
