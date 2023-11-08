@@ -277,6 +277,11 @@ class MongoDB:
         # Convert the cursor to a list of users and return
         return list(matching_users)
 
+    def get_user_name(self, from_user_id):
+        collection = self.get_user_collection()
+        query = {"user_id": from_user_id}
+        return collection.find_one(query)["username"]
+
 
 db = MongoDB()
 

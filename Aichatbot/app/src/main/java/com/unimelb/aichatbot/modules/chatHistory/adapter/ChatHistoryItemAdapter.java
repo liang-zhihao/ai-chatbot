@@ -61,8 +61,7 @@ public class ChatHistoryItemAdapter extends RecyclerView.Adapter<ChatHistoryItem
         holder.mIdView.setText(item.getRoomName());
         holder.mContentView.setText(item.getLastMessage());
 
-        String in = String.join(",", item.getParticipants());
-        ImgUtil.setImgView(context, in, holder.mImageView);
+        ImgUtil.setImgView(context, item.getRoomId(), holder.mImageView);
         holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(position, item));
 
     }

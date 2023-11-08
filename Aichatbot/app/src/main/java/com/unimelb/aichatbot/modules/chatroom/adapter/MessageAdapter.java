@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -80,10 +79,10 @@ public class MessageAdapter extends ListAdapter<Message, MessageAdapter.MessageV
 //            messageViewHolder.avatarImageView.setImageURI(message.getAvatar());
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy h:mm a", Locale.getDefault());
         String formattedDate = sdf.format(message.getTimestamp());
-        String senderAndTime = message.getSender() + " - " + formattedDate;
+        String senderAndTime = message.getSenderName() + " - " + formattedDate;
         holder.timeTextView.setText(senderAndTime);
         // TODO real avatar
-        ImgUtil.setImgView(context, "https://api.horosama.com/random.php", holder.avatarImageView);
+        ImgUtil.setImgView(context, message.getSenderId(), holder.avatarImageView);
     }
 
     @Override

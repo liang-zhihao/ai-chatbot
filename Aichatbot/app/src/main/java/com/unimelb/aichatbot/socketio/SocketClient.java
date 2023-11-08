@@ -30,6 +30,10 @@ public class SocketClient {
     private final Emitter.Listener onConnectError = args -> Log.i(TAG, "onConnectError");
     private final Emitter.Listener onDisconnect = args -> Log.i(TAG, "onDisconnect");
     private Socket socket;
+    // debug mode
+    // private final String URL = BuildConfig.SERVER_LOCAL_URL;
+    //
+    private final String URL = BuildConfig.SERVER_URL;
 
     private SocketClient() {
         initializeSocket();
@@ -58,7 +62,7 @@ public class SocketClient {
         options.reconnectionDelayMax = 5000;
 
         try {
-            socket = IO.socket(BuildConfig.SERVER_LOCAL_URL);
+            socket = IO.socket(URL);
             socket.on(Socket.EVENT_CONNECT, onConnect);
             socket.on(Socket.EVENT_CONNECT_ERROR, onConnectError);
             socket.on(Socket.EVENT_DISCONNECT, onDisconnect);

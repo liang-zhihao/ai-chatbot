@@ -21,8 +21,10 @@ def register():
             return standard_response(
                 status=200,
                 message=status["message"],
-                success=True, 
-                data={},
+                success=True,
+                data={
+                    "access_token": create_access_token(identity=user_id),
+                },
                 http_status=200,
             )
     except Exception as e:
@@ -37,7 +39,7 @@ def login():
         user_id = request.json["user_id"]
         password = request.json["password"]
         status = db.login(user_id, password)
-       
+
         if status["status"] == "success":
             access_token = create_access_token(identity=user_id)
 

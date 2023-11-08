@@ -11,6 +11,13 @@ public class FriendListResponse {
         return friends;
     }
 
+    @Override
+    public String toString() {
+        return "FriendListResponse{" +
+                "friends=" + friends +
+                '}';
+    }
+
     public void setFriends(List<UserInfoResponse> friends) {
         this.friends = friends;
     }

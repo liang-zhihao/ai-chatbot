@@ -1,6 +1,5 @@
 package com.unimelb.aichatbot.modules.profile.activity.Fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.unimelb.aichatbot.R;
 import com.unimelb.aichatbot.modules.profile.activity.request.ChangeUsernameRequest;
-import com.unimelb.aichatbot.modules.profile.activity.server.ApiService;
+import com.unimelb.aichatbot.modules.profile.activity.server.ProfileService;
 import com.unimelb.aichatbot.network.RetrofitFactory;
 
 import retrofit2.Call;
@@ -33,7 +32,7 @@ public class InputNameBottomSheetDialogFragment extends BottomSheetDialogFragmen
     private EditText input;
     private Button confirmButton;
     private Button cancelButton;
-    private ApiService service = RetrofitFactory.create(ApiService.class);
+    private ProfileService service = RetrofitFactory.create(ProfileService.class);
 
     @Nullable
     @Override
@@ -51,8 +50,8 @@ public class InputNameBottomSheetDialogFragment extends BottomSheetDialogFragmen
         super.onViewCreated(view, savedInstanceState);
 
         input = view.findViewById(R.id.edit_text_input_name);
-        confirmButton = view.findViewById(R.id.button_confirm);
-        cancelButton = view.findViewById(R.id.button_cancel);
+        // confirmButton = view.findViewById(R.id.button_confirm);
+        // cancelButton = view.findViewById(R.id.button_cancel);
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,7 +60,7 @@ public class InputNameBottomSheetDialogFragment extends BottomSheetDialogFragmen
                 String userId = "loading8425@gmail.com";
 
                 ChangeUsernameRequest nameRequest = new ChangeUsernameRequest(userId, newName);
-                service = RetrofitFactory.createWithAuth(ApiService.class,getActivity());
+                service = RetrofitFactory.createWithAuth(ProfileService.class, getActivity());
                 Call<Void> call = service.changeUsername(nameRequest);
 
                 call.enqueue(new Callback<Void>() {
@@ -72,7 +71,7 @@ public class InputNameBottomSheetDialogFragment extends BottomSheetDialogFragmen
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if(response.isSuccessful()) {
+                                    if (response.isSuccessful()) {
                                         Toast.makeText(activity, "Name updated successfully!", Toast.LENGTH_SHORT).show();
                                         if (mListener != null) {
                                             mListener.onNameUpdated(newName);

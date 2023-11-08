@@ -37,6 +37,7 @@ import com.unimelb.aichatbot.util.LoginManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /*
@@ -115,13 +116,14 @@ public class SearchFriendFragment extends Fragment implements CustomViewControll
 
     public void startNewChatRequest(FriendListItem item) {
         // TODO onclick item lister: api request and start chat with friend
-        SearchFriendService searchFriendService = RetrofitFactory.create(SearchFriendService.class);
+        SearchFriendService searchFriendService = RetrofitFactory.createWithAuth(SearchFriendService.class, Objects.requireNonNull(getContext()).getApplicationContext());
         String friendId = item.getUserId();
         String userId = LoginManager.getInstance(requireContext().getApplicationContext()).getUserId();
 
         searchFriendService.addFriend(new AddFriendRequest(userId, friendId)).enqueue(new MyCallback() {
             @Override
             public void onSuccess(BaseResponse result) {
+                Log.i(TAG, "onSuccess: " + result.toString());
                 Toast.makeText(getContext(), "Add friend success", Toast.LENGTH_SHORT).show();
             }
 

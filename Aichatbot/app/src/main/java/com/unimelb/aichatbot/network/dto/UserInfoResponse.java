@@ -35,4 +35,13 @@ public class UserInfoResponse {
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
+
+    @Override
+    public String toString() {
+        return "UserInfoResponse{" +
+                "userId='" + userId + '\'' +
+                ", username='" + username + '\'' +
+                ", avatar='" + avatar + '\'' +
+                '}';
+    }
 }

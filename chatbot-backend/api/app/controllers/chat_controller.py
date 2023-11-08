@@ -99,8 +99,23 @@ def get_chat_history():
         return standard_response(404, "Chat not found")
     # Insert logic to get chat room history
     # return jsonify({"room_id": room_id, "messages": chat["messages"]}), 200
+
+    # add sender name to messages
+    messages = [
+        {
+            "role": message["role"],
+            "content": message["content"],
+            "sender_name": db.get_user_name(message["sender_id"]),
+            "timestamp": message["timestamp"],
+            "read_by": message["read_by"],
+            "sender_id": message["sender_id"],
+            "attachments": message["attachments"]
+        }
+        for message in chat["messages"]
+    ]
+
     return standard_response(200, "Chat history", data={
-        "chat_history": chat["messages"]
+        "chat_history": messages
     })
 
 

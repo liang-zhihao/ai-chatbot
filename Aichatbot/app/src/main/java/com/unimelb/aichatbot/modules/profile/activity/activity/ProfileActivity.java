@@ -1,18 +1,20 @@
 package com.unimelb.aichatbot.modules.profile.activity.activity;
 
 import android.os.Bundle;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
 import com.unimelb.aichatbot.R;
 import com.unimelb.aichatbot.modules.profile.activity.Fragment.InputNameBottomSheetDialogFragment;
 import com.unimelb.aichatbot.modules.profile.activity.Fragment.InputPasswordBottomSheetDialogFragment;
 
 public class ProfileActivity extends AppCompatActivity
-        implements InputNameBottomSheetDialogFragment.OnNameUpdatedListener , InputPasswordBottomSheetDialogFragment.OnPasswordUpdatedListener { // 实现接口
+        implements InputNameBottomSheetDialogFragment.OnNameUpdatedListener, InputPasswordBottomSheetDialogFragment.OnPasswordUpdatedListener { // 实现接口
 
     private TextView nameButton;
 
@@ -29,13 +31,10 @@ public class ProfileActivity extends AppCompatActivity
 
         nameButton = findViewById(R.id.buttonName);
 
-        nameButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                InputNameBottomSheetDialogFragment bottomSheetDialogFragment = new InputNameBottomSheetDialogFragment();
-                bottomSheetDialogFragment.setOnNameUpdatedListener(ProfileActivity.this);
-                bottomSheetDialogFragment.show(getSupportFragmentManager(), "InputNameBottomSheetDialogFragment");
-            }
+        nameButton.setOnClickListener(v -> {
+            InputNameBottomSheetDialogFragment bottomSheetDialogFragment = new InputNameBottomSheetDialogFragment();
+            bottomSheetDialogFragment.setOnNameUpdatedListener(ProfileActivity.this);
+            bottomSheetDialogFragment.show(getSupportFragmentManager(), "InputNameBottomSheetDialogFragment");
         });
         TextView buttonPassword = findViewById(R.id.buttonPassword);
         buttonPassword.setOnClickListener(new View.OnClickListener() {
@@ -56,7 +55,7 @@ public class ProfileActivity extends AppCompatActivity
 
     @Override
     public void onNameUpdated(String newName) {
-        if(nameButton != null) {
+        if (nameButton != null) {
             nameButton.setText(newName);
         }
     }

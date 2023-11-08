@@ -17,7 +17,8 @@ public class ChatHistoryItemDto {
 
     @SerializedName("sender_id")
     private String senderId;
-
+    @SerializedName("sender_name")
+    private String senderName;
     // List type for read_by to store multiple UUIDs if necessary, assuming read_by is an array of user IDs.
     @SerializedName("read_by")
     private List<String> readBy;
@@ -72,6 +73,14 @@ public class ChatHistoryItemDto {
 
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getSenderName() {
+        return senderName;
+    }
+
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
     }
 
     @Override

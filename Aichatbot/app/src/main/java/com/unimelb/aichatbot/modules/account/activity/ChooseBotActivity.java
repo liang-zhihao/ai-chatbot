@@ -21,13 +21,10 @@ public class ChooseBotActivity extends AppCompatActivity {
         setContentView(R.layout.choose_charas);
         UIHelper.hideActionBar(this);
         chooseBtn = findViewById(R.id.chooseBt);
-        chooseBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ChooseBotActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
+        chooseBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(ChooseBotActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
         });
     }
 }

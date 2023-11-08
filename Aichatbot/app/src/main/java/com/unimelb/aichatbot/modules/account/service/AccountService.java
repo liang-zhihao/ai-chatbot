@@ -38,7 +38,7 @@ public interface AccountService {
 
     // Register a user
     @POST("api/register")
-    Call<BaseResponse<Void>> register(@Body SignUpRequest registerRequest);
+    Call<BaseResponse<RegisterResponse>> register(@Body SignUpRequest registerRequest);
 
     // Authenticate and login a user
     @POST("api/login")

@@ -11,13 +11,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.unimelb.aichatbot.MainActivity;
 import com.unimelb.aichatbot.R;
+import com.unimelb.aichatbot.modules.account.service.RegisterResponse;
 import com.unimelb.aichatbot.network.BaseResponse;
 import com.unimelb.aichatbot.network.MyCallback;
 import com.unimelb.aichatbot.network.dto.ErrorResponse;
 import com.unimelb.aichatbot.network.dto.SignUpRequest;
 import com.unimelb.aichatbot.modules.account.service.AccountService;
 import com.unimelb.aichatbot.network.RetrofitFactory;
+import com.unimelb.aichatbot.util.LoginManager;
 import com.unimelb.aichatbot.util.UIHelper;
 
 public class SignUpActivity extends AppCompatActivity {
@@ -63,13 +66,13 @@ public class SignUpActivity extends AppCompatActivity {
 
                 // Asynchronously send the sign-up request
 
-                accountService.register(request).enqueue(new MyCallback<Void>() {
+                accountService.register(request).enqueue(new MyCallback<RegisterResponse>() {
                     @Override
-                    public void onSuccess(BaseResponse<Void> result) {
+                    public void onSuccess(BaseResponse<RegisterResponse> result) {
                         // Successfully signed up
                         Toast.makeText(SignUpActivity.this, "Successfully signed up!", Toast.LENGTH_SHORT).show();
-                        // Navigate to ChooseBotActivity (or any other activity you want to go to upon successful registration)
-                        Intent intent = new Intent(SignUpActivity.this, ChooseBotActivity.class);
+                        LoginManager.getInstance(getApplicationContext()).saveLoginInfo(userId, username, result.getData().getAccessToken());
+                        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();
                     }

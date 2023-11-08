@@ -8,8 +8,13 @@ import java.util.Date;
 public class VoiceMessage extends Message {
     private String voiceUrl;
 
-    public VoiceMessage(String content, String sender, SenderType senderType, Date timestamp, String voiceUrl) {
-        super(content, MessageType.VOICE, sender, senderType, timestamp);
+    public VoiceMessage(String content, MessageType type, String senderId, SenderType senderType, String timestampStr, String senderName, String voiceUrl) {
+        super(content, type, senderId, senderType, timestampStr, senderName);
+        this.voiceUrl = voiceUrl;
+    }
+
+    public VoiceMessage(String content, MessageType type, String senderId, SenderType senderType, Date timestamp, String senderName, String voiceUrl) {
+        super(content, type, senderId, senderType, timestamp, senderName);
         this.voiceUrl = voiceUrl;
     }
 

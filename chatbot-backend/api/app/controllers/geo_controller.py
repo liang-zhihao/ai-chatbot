@@ -4,14 +4,13 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from app.utils.geo import GeoLocation
 
-from app.utils.common import error_out, get_time, get_role,standard_response
+from app.utils.common import error_out, get_time, get_role, standard_response
 
 import os, json
 
 import random
 
 from app.utils.chatbot import Chatbot
-
 
 geo_bp = Blueprint("geo_bp", __name__)
 geo = GeoLocation()
@@ -56,8 +55,8 @@ def recommend_restaurants():
     try:
         latitude = request.json["latitude"]
         longitude = request.json["longitude"]
-        init_message = get_role("GordonRamsay")
-
+        init_message = get_role("Gordon Ramsay")
+        print(init_message, flush=True)
         # random choose 5 restaurants
         restaurants = geo.get_nearby_restaurants(latitude, longitude)
         if restaurants == None:
@@ -74,8 +73,8 @@ def recommend_restaurants():
 
         restaurants = json.dumps(restaurants)
         restaurants = (
-            "According to below information, give me some advice on which restaurant I should go"
-            + restaurants
+                "According to below information, give me some advice on which restaurant I should go"
+                + restaurants
         )
 
         question = [init_message, {"role": "user", "content": restaurants}]
@@ -88,4 +87,5 @@ def recommend_restaurants():
         return standard_response(200, "Recommend restaurants successfully", True, {"time": time, "reply": reply})
 
     except Exception as e:
+        print(e.with_traceback(), flush=True)
         return error_out(str(e), 401)

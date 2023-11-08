@@ -74,7 +74,7 @@ import java.util.Random;
  *
  * */
 
-public class MessageActivity extends AppCompatActivity implements CustomViewController {
+public class MessageActivity extends AppCompatActivity implements CustomViewController, BottomFragment.OnMessageListener {
 
     private static final String TAG = "MessageActivity";
     private RecyclerView messageRecyclerView;
@@ -196,7 +196,6 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
                 List<Message> messages1 = new ArrayList<>();
                 for (ChatHistoryItemDto chatHistoryItem : chatHistoryItemList) {
                     // Get the sender type based on the role from the map
-                    // Log.w(TAG, " chat " + chatHistoryItem.toString());
                     SenderType senderType = roleToSenderType.get(chatHistoryItem.getRole());
                     if (!Objects.equals(chatHistoryItem.getSenderId(), loginManager.getUserId())) {
                         senderType = SenderType.OTHER;
@@ -205,14 +204,13 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
                     messages1.add(new Message(
                             chatHistoryItem.getContent(),
                             MessageType.TEXT,
-                            chatHistoryItem.getRole(),
+                            chatHistoryItem.getSenderId(),
                             senderType,
-                            chatHistoryItem.getTimestamp()
+                            chatHistoryItem.getTimestamp(),
+                            chatHistoryItem.getSenderName()
                     ));
                 }
-
-                messageAdapter.submitList(messages1);
-
+                messageViewModel.setMessages(messages1);
             }
 
             @Override
@@ -290,7 +288,7 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
         Random random = new Random();
         messageContent = "Hello" + random.nextInt(10000);
         //   add message to UI
-        appendMessageToUI(new Message(messageContent, MessageType.TEXT, loginManager.getUsername(), SenderType.ME, new Date()));
+        appendMessageToUI(new Message(messageContent, MessageType.TEXT, loginManager.getUserId(), SenderType.ME, new Date(), loginManager.getUsername()));
 
         messageEditText.setText("");
 
@@ -316,13 +314,11 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
                 // TODO hard code date
                 runOnUiThread(() -> {
                     Toast.makeText(MessageActivity.this, "New message received!", Toast.LENGTH_SHORT).show();
-                    Message newMessage = new Message(chatHistoryItemDto.getContent(), MessageType.TEXT, chatHistoryItemDto.getSenderId(), SenderType.OTHER, new Date());
+                    Message newMessage = new Message(chatHistoryItemDto.getContent(), MessageType.TEXT, chatHistoryItemDto.getSenderId(), SenderType.OTHER, new Date(), chatHistoryItemDto.getSenderName());
                     appendMessageToUI(newMessage);
                 });
 
             }
-
-
         });
 
     }
@@ -331,42 +327,6 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
         String roomId = getIntent().getStringExtra("roomId");
 
         socketClient.emitSendMessage(roomId, messageContent);
-
-
-        // ChatService chatService = RetrofitFactory.createWithAuth(ChatService.class, MessageActivity.this);
-        // ChatWithBotRequest chatWithBotRequest = new ChatWithBotRequest();
-        // chatWithBotRequest.setChatbotId("Einstein");
-        // chatWithBotRequest.setUserId(loginManager.getUserId());
-        // chatWithBotRequest.setMessage(messageContent);
-        //
-        // chatService.sendMessage(chatWithBotRequest).enqueue(new MyCallback<ChatWithBotResponse>() {
-        //     @Override
-        //     public void onSuccess(BaseResponse<ChatWithBotResponse> result) {
-        //         // Your success logic here
-        //         ChatWithBotResponse chatWithBotResponse = result.getData();
-        //         Toast.makeText(MessageActivity.this, "Successfully sent message!", Toast.LENGTH_SHORT).show();
-
-        //         Message newMessage = new Message(chatWithBotResponse.getReply(), MessageType.TEXT, "Edie", SenderType.OTHER, new Date());
-        //         appendMessageToUI(newMessage);
-        //
-        //         Log.i("messages", messageViewModel.getMessages().getValue().toString());
-        //
-        //     }
-        //
-        //     @Override
-        //     public void onError(ErrorResponse error, Throwable t) {
-        //         // Your failure logic here
-        //         if (error != null) {
-        //             // Handle server-defined error
-        //             Toast.makeText(MessageActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-        //             Log.i("error", error.getMessage());
-        //         } else if (t != null) {
-        //             // Handle other types of errors (like network issues)
-        //             t.printStackTrace();
-        //             Toast.makeText(MessageActivity.this, "Server is not available", Toast.LENGTH_SHORT).show();
-        //         }
-        //     }
-        // });
     }
 
     private void handleGroupButtonBtn() {
@@ -421,21 +381,10 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
                 .commit();
     }
 
-    private void appendMessageToUI(Message message) {
+    @Override
+    public void appendMessageToUI(Message message) {
         messageViewModel.addMessage(message);
-        messageAdapter.notifyDataSetChanged();
     }
 
-    private void initializeSocketListener() {
-        SocketClient.getInstance().on(MessageEvents.MESSAGE_TO_SERVER.getStr(), args -> {
-            Gson gson = new Gson();
-            String json = (String) args[0];
-            BaseEvent<MessageToServerData> event = gson.fromJson(json, BaseEvent.class);
-            System.out.println("Message received: " + event.getData().getMessage());
-            //     Update UI
-            Message newMessage = new Message(event.getData().getMessage(), MessageType.TEXT, "Edie", SenderType.OTHER, new Date());
-            appendMessageToUI(newMessage);
-        });
-    }
 
 }

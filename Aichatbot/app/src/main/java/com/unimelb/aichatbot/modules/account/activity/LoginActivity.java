@@ -2,6 +2,7 @@ package com.unimelb.aichatbot.modules.account.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -51,16 +52,16 @@ public class LoginActivity extends AppCompatActivity {
                 //     Toast.makeText(LoginActivity.this, "Please enter your email and password", Toast.LENGTH_SHORT).show();
                 //     return;
                 // }
-                // TODO    Debug mode
-                // if (userId.equals("a")) {
-                //     userId = "amy1.com";
-                //
-                // } else if (userId.equals("b")) {
-                //     userId = "amy2.com";
-                // } else {
-                //     userId = "amy1.com";
-                // }
-                // password = "1234567890";
+                // TODO  Debug mode
+                if (userId.equals("a")) {
+                    userId = "amy1.com";
+                    password = "1234567890";
+
+                } else if (userId.equals("b")) {
+                    userId = "amy2.com";
+                    password = "1234567890";
+
+                }
                 loginBtn.startAnimation();
                 //     send login request to server
 
@@ -78,7 +79,8 @@ public class LoginActivity extends AppCompatActivity {
                         // Save user info to shared preferences
 
                         LoginManager loginManager = new LoginManager(getApplicationContext());
-                        loginManager.saveLoginInfo(loginResponse.getUserId(), loginManager.getUsername(), loginResponse.getAccessToken());
+                        loginManager.saveLoginInfo(loginResponse.getUserId(), loginResponse.getUsername(), loginResponse.getAccessToken());
+
                         // Show success message
                         Toast.makeText(LoginActivity.this, "Welcome " + loginManager.getUsername(), Toast.LENGTH_SHORT).show();
                         // Optionally navigate to another activity

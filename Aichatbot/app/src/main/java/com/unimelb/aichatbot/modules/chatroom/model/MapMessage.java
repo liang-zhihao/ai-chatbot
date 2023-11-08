@@ -9,10 +9,14 @@ public class MapMessage extends Message {
     private double latitude;
     private double longitude;
 
-    public MapMessage(String content, String sender, SenderType senderType, Date timestamp, double latitude, double longitude) {
-        super(content, MessageType.MAP, sender, senderType, timestamp);
+    public MapMessage(String content, MessageType type, String senderId, SenderType senderType, String timestampStr, String senderName, double latitude) {
+        super(content, type, senderId, senderType, timestampStr, senderName);
         this.latitude = latitude;
-        this.longitude = longitude;
+    }
+
+    public MapMessage(String content, MessageType type, String senderId, SenderType senderType, Date timestamp, String senderName, double latitude) {
+        super(content, type, senderId, senderType, timestamp, senderName);
+        this.latitude = latitude;
     }
 
     // Getters and Setters for latitude and longitude
