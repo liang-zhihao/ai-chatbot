@@ -285,8 +285,8 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
         //     return;
         // }
         // TODO DEBUG hard code
-        Random random = new Random();
-        messageContent = "Hello" + random.nextInt(10000);
+        // Random random = new Random();
+        // messageContent = "Hello" + random.nextInt(10000);
         //   add message to UI
         appendMessageToUI(new Message(messageContent, MessageType.TEXT, loginManager.getUserId(), SenderType.ME, new Date(), loginManager.getUsername()));
 
