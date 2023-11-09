@@ -1,7 +1,15 @@
 package com.unimelb.aichatbot.modules.chatHistory.fragment;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +31,7 @@ import com.unimelb.aichatbot.MainActivity;
 import com.unimelb.aichatbot.databinding.FragmentRecentChatBinding;
 import com.unimelb.aichatbot.modules.chatHistory.ChatHistoryViewModel;
 import com.unimelb.aichatbot.modules.chatHistory.HistoryItem;
+import com.unimelb.aichatbot.modules.chatHistory.activity.RecommendationActivity;
 import com.unimelb.aichatbot.modules.chatHistory.adapter.ChatHistoryItemAdapter;
 import com.unimelb.aichatbot.modules.chatHistory.responsObject.RecentChatResponse;
 import com.unimelb.aichatbot.modules.chatHistory.service.ChatHistoryService;
@@ -47,7 +56,7 @@ import java.util.stream.Collectors;
  *
  * */
 
-public class RecentChatFragment extends Fragment implements CustomViewController {
+public class RecentChatFragment extends Fragment implements CustomViewController, SensorEventListener {
 
     private static final String TAG = "RecentChatFragment";
     private RecyclerView recyclerView;
@@ -59,7 +68,11 @@ public class RecentChatFragment extends Fragment implements CustomViewController
     private ChatHistoryViewModel historyViewModel;
 
     List<RecentChatResponse> chats;
+    private SensorManager mSensorManager;
+    private Vibrator mVibrator;
 
+    private static final long SHAKE_COOLDOWN_TIME = 2000; // shake CD
+    private long lastShakeTime = 0;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -100,6 +113,8 @@ public class RecentChatFragment extends Fragment implements CustomViewController
     public void initializeView() {
 
         newChatBtn = binding.button;
+        mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        mVibrator = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     public void initializeViewModel() {
@@ -209,6 +224,38 @@ public class RecentChatFragment extends Fragment implements CustomViewController
         // Log.e("DEBUG", "onResume of HomeFragment");
         loadUserRecentChat();
         super.onResume();
+        mSensorManager.registerListener(this,
+                mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_NORMAL);
+
+    }
+
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            // ... 检测摇一摇逻辑 ...
+            float[] values = sensorEvent.values;
+            if ((Math.abs(values[0]) > 15) || Math.abs(values[1]) > 15 || Math.abs(values[2]) > 15) {
+                long now = System.currentTimeMillis();
+                // 只有当上次摇动的时间与现在的时间差超过冷却时间时，才执行操作
+                if ((now - lastShakeTime) > SHAKE_COOLDOWN_TIME) {
+                    Toast.makeText(getContext(), "shake！", Toast.LENGTH_SHORT).show();
+
+                    // 创建一个Intent并启动新的Activity
+                    Intent intent = new Intent(getContext(), RecommendationActivity.class);
+                    startActivity(intent);
+
+                    mVibrator.vibrate(500);
+
+                    lastShakeTime = now; // 更新最后一次摇动的时间
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
 
     }
 

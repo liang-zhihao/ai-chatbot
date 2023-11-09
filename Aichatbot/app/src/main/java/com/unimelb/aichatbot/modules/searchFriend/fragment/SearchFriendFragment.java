@@ -138,33 +138,33 @@ public class SearchFriendFragment extends Fragment implements CustomViewControll
                 }
             }
         });
-        String username = LoginManager.getInstance(requireContext().getApplicationContext()).getUsername();
-        String friendName = item.getName();
-
-        List<String> participants = new ArrayList<>();
-        participants.add(userId);
-        participants.add(friendId);
-        String chatName = username + ", " + friendName;
-        RetrofitFactory.create(NewChatService.class).createChatroom(new NewChatRoomRequest(participants, chatName, userId)).enqueue(new MyCallback<NewChatRoomResponse>() {
-            @Override
-            public void onSuccess(BaseResponse<NewChatRoomResponse> result) {
-                Toast.makeText(getContext(), "Create room success", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getContext(), MessageActivity.class);
-                intent.putExtra("roomId", result.getData().getChatRoomId());
-                startActivity(intent);
-            }
-
-            @Override
-            public void onError(ErrorResponse error, Throwable t) {
-                if (error != null) {
-                    Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-                if (t != null) {
-                    Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
-                    t.printStackTrace();
-                }
-            }
-        });
+//        String username = LoginManager.getInstance(requireContext().getApplicationContext()).getUsername();
+//        String friendName = item.getName();
+//
+//        List<String> participants = new ArrayList<>();
+//        participants.add(userId);
+//        participants.add(friendId);
+//        String chatName = username + ", " + friendName;
+//        RetrofitFactory.create(NewChatService.class).createChatroom(new NewChatRoomRequest(participants, chatName, userId)).enqueue(new MyCallback<NewChatRoomResponse>() {
+//            @Override
+//            public void onSuccess(BaseResponse<NewChatRoomResponse> result) {
+//                Toast.makeText(getContext(), "Create room success", Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent(getContext(), MessageActivity.class);
+//                intent.putExtra("roomId", result.getData().getChatRoomId());
+//                startActivity(intent);
+//            }
+//
+//            @Override
+//            public void onError(ErrorResponse error, Throwable t) {
+//                if (error != null) {
+//                    Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+//                }
+//                if (t != null) {
+//                    Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+//                    t.printStackTrace();
+//                }
+//            }
+//        });
     }
 
     @Override
