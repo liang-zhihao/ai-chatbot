@@ -86,7 +86,7 @@ public class SignUpActivity extends AppCompatActivity {
                         } else if (t != null) {
                             // Handle other types of errors (e.g., network errors)
                             t.printStackTrace();
-                            Toast.makeText(SignUpActivity.this, "Server is not available", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(SignUpActivity.this, "Server is not available", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

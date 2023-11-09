@@ -101,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
                             if (t != null) {
                                 t.printStackTrace();
                             }
-                            Toast.makeText(LoginActivity.this, "Server is not available", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(LoginActivity.this, "Server is not available", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

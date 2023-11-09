@@ -143,7 +143,7 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
                 } else if (t != null) {
                     // Handle other types of errors (like network issues)
                     t.printStackTrace();
-                    Toast.makeText(MessageActivity.this, "Server is not available", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MessageActivity.this, "Server is not available", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -223,7 +223,7 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
                 } else if (t != null) {
                     // Handle other types of errors (like network issues)
                     t.printStackTrace();
-                    Toast.makeText(MessageActivity.this, "Server is not available", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MessageActivity.this, "Server is not available", Toast.LENGTH_SHORT).show();
                 }
             }
         });
