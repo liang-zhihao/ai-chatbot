@@ -11,10 +11,11 @@ def connect_to_mongodb():
         client = MongoClient(uri)
 
         print(client.list_database_names())
-        for database in ["user_db"]:
+        for database in ["user_db",'chat_history_db']:
             print("current database: ", database)
             for coll in client[database].list_collection_names():
                 print("current collection:",coll)
+                print(client[database][coll].find_one({"user_id": "loading0"}))
                 print(client[database][coll].find_one())
         # Access the 'test' database
         db = client["test"]
@@ -33,4 +34,5 @@ def connect_to_mongodb():
 if __name__ == "__main__":
     pass
     connect_to_mongodb()
-    
+    bot_id = "Bot_Li_Bai"
+    print(bot_id[4:].replace("_", " "))

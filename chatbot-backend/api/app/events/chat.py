@@ -6,7 +6,7 @@ import logging
 from app.factory import socketio
 from app.utils.database import MongoDB
 from app.utils.message_queue import MessageQueue
-from app.utils.common import intersection, get_roles, utcnow
+from app.utils.common import intersection, get_roles, utcnow, get_role
 from app.utils.chatbot import Chatbot
 
 chatbot = Chatbot()
@@ -147,8 +147,12 @@ def handle_message(data):
     if len(bots) > 0:
         bot_id = bots[0]
         # get bot response
-
-        reply = chatbot.send_message([{"role": s['role'], "content": s["content"]} for s in messages])
+        # get bot name from "bot_Li_Bai" to "Li Bai"
+        bot_name = bot_id[4:].replace("_", " ")
+        init_prompt = get_role(bot_name)
+        prompts = [init_prompt]
+        prompts.append([{"role": s['role'], "content": s["content"]} for s in messages])
+        reply = chatbot.send_message(prompts)
         reply_json = {
             "role": "assistant",
             "content": reply,
