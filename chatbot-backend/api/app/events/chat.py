@@ -151,7 +151,7 @@ def handle_message(data):
         bot_name = bot_id[4:].replace("_", " ")
         init_prompt = get_role(bot_name)
         prompts = [init_prompt]
-        prompts.append([{"role": s['role'], "content": s["content"]} for s in messages])
+        prompts.append({"role": s['role'], "content": s["content"]} for s in messages)
         reply = chatbot.send_message(prompts)
         reply_json = {
             "role": "assistant",

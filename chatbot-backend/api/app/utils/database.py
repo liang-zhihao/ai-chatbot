@@ -44,7 +44,7 @@ class MongoDB:
             "user_id": user_id,
             "username": username,
             "password": password,
-            "friends": ["Bot_Li_Bai", "Bot_Einstein","Bot_Gordon_Ramsay"],
+            "friends": ["bot_Li_Bai", "bot_Einstein","bot_Gordon_Ramsay"],
             "avatar": "default",
         }
         db = self.get_databse(self.USER_DB)

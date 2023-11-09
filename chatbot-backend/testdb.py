@@ -15,7 +15,7 @@ def connect_to_mongodb():
             print("current database: ", database)
             for coll in client[database].list_collection_names():
                 print("current collection:",coll)
-                print(client[database][coll].find_one({"user_id": "loading0"}))
+                print(client[database][coll].find_one({"user_id": "test100"}))
                 print(client[database][coll].find_one())
         # Access the 'test' database
         db = client["test"]
