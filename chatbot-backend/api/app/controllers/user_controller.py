@@ -133,3 +133,15 @@ def search_user():
         )
     except Exception as e:
         return error_out(str(e), 401)
+
+
+@user_bp.route("/api/delete_user", methods=["POST"])
+def delete_user():
+    try:
+        user_id = request.json["user_id"]
+        print(user_id, flush=True)
+        if db.delete_user(user_id):
+            return standard_response(200, "Delete user successfully")
+        return error_out("delete user failed", 401)
+    except Exception as e:
+        return error_out(str(e), 401)

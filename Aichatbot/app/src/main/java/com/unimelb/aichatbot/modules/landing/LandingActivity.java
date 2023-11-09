@@ -52,7 +52,7 @@ public class LandingActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(), "Shake detected!", Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(getApplicationContext(), "Shake detected!", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

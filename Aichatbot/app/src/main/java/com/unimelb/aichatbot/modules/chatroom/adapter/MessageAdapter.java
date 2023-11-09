@@ -82,7 +82,7 @@ public class MessageAdapter extends ListAdapter<Message, MessageAdapter.MessageV
         String senderAndTime = message.getSenderName() + " - " + formattedDate;
         holder.timeTextView.setText(senderAndTime);
         // TODO real avatar
-        ImgUtil.setImgView(context, message.getSenderId(), holder.avatarImageView);
+        ImgUtil.setImgView(context, message.getAvatarUrl(), holder.avatarImageView);
     }
 
     @Override

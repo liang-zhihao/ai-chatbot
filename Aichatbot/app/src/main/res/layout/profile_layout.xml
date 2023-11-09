@@ -13,7 +13,7 @@
         android:text="Name"
         android:textColor="#787575"
         android:textFontWeight="500"
-        android:textSize="22sp"
+        android:textSize="20dp"
         android:textStyle="normal"
 
         android:typeface="normal"
@@ -32,7 +32,7 @@
         android:text="Email"
         android:textColor="#787575"
         android:textFontWeight="500"
-        android:textSize="22sp"
+        android:textSize="20dp"
         android:textStyle="normal"
 
         android:typeface="normal"
@@ -51,7 +51,7 @@
         android:text="Password"
         android:textColor="#787575"
         android:textFontWeight="500"
-        android:textSize="22sp"
+        android:textSize="20dp"
         android:textStyle="normal"
 
         android:typeface="normal"
@@ -122,6 +122,7 @@
         android:gravity="end|center_vertical"
         android:text="123@.com"
         android:textColor="#808080"
+        
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.595"

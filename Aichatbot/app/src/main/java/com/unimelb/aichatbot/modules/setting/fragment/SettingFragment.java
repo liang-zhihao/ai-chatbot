@@ -97,7 +97,7 @@ public class SettingFragment extends Fragment implements CustomViewController, I
     private void openInputNameBottomSheet() {
         View view = LayoutInflater.from(requireActivity()).inflate(R.layout.fragment_input_name_bottom_sheet_dialog, null);
 
-        showInputDialog(view, "Please enter your name", new DialogInterface.OnClickListener() {
+        showInputDialog(view, "Change username", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String newName = ((TextView) view.findViewById(R.id.edit_text_input_name)).getText().toString();
@@ -155,7 +155,7 @@ public class SettingFragment extends Fragment implements CustomViewController, I
         View view = LayoutInflater.from(requireActivity()).inflate(R.layout.fragment_input_password_bottom_sheet_dialog, null);
         TextView textViewOld = view.findViewById(R.id.edit_text_old_password);
         TextView textViewNew = view.findViewById(R.id.edit_text_new_password);
-        showInputDialog(view, "Please enter your old password and new password", new DialogInterface.OnClickListener() {
+        showInputDialog(view, "Change password", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String oldPwd = textViewOld.getText().toString();

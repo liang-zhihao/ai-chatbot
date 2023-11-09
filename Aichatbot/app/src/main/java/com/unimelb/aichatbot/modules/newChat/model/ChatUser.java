@@ -22,11 +22,11 @@ public class ChatUser extends FriendListItem {
 
     @Override
     public String toString() {
-        return "ChatUser{" +
-                "name='" + getName() + '\'' +
-                ", isSelected=" + isSelected +
+        return super.toString() + "ChatUser{" +
+                "isSelected=" + isSelected +
                 '}';
     }
+
     // Getters, setters omitted for brevity
 }
 

@@ -21,7 +21,7 @@ real_uri = config.get("mongodb", "uri")
 
 class MongoDB:
     def __init__(
-            self, MONGO_HOST=host, MONGO_PORT=port, MONGO_USER=username, MONGO_PASS=password
+        self, MONGO_HOST=host, MONGO_PORT=port, MONGO_USER=username, MONGO_PASS=password
     ):
         self.MONGO_HOST = MONGO_HOST
         self.MONGO_PORT = MONGO_PORT
@@ -44,8 +44,8 @@ class MongoDB:
             "user_id": user_id,
             "username": username,
             "password": password,
-            "friends": ["bot_Li_Bai", "bot_Einstein","bot_Gordon_Ramsay"],
-            "avatar": "default",
+            "friends": ["bot_Li_Bai", "bot_Einstein", "bot_Gordon_Ramsay"],
+            "avatar": user_id,
         }
         db = self.get_databse(self.USER_DB)
         collection = db[self.USER_COLLECTION]
@@ -77,8 +77,12 @@ class MongoDB:
         # validation check
         for user in collection.find({"user_id": user_id}):
             if user["user_id"] == user_id:
-                return {"user_id": user["user_id"], "username": user["username"], "friends": user["friends"],
-                        "avatar": user["avatar"]}
+                return {
+                    "user_id": user["user_id"],
+                    "username": user["username"],
+                    "friends": user["friends"],
+                    "avatar": user["avatar"],
+                }
         return None
 
     def login(self, user_id, password):
@@ -131,8 +135,8 @@ class MongoDB:
         }
         for user in collection.find(query):
             if (
-                    user["user_id"] == record["user_id"]
-                    and user["chatbot_id"] == record["chatbot_id"]
+                user["user_id"] == record["user_id"]
+                and user["chatbot_id"] == record["chatbot_id"]
             ):
                 return False
         return collection.insert_one(record).acknowledged
@@ -229,13 +233,17 @@ class MongoDB:
         db = self.get_databse(self.USER_DB)
         collection = db[self.USER_COLLECTION]
         query = {"user_id": user_id}
-        return collection.update_one(query, {"$push": {"friends": friend_id}}).acknowledged
+        return collection.update_one(
+            query, {"$push": {"friends": friend_id}}
+        ).acknowledged
 
     def delete_friend(self, user_id, friend_id):
         db = self.get_databse(self.USER_DB)
         collection = db[self.USER_COLLECTION]
         query = {"user_id": user_id}
-        return collection.update_one(query, {"$pull": {"friends": friend_id}}).acknowledged
+        return collection.update_one(
+            query, {"$pull": {"friends": friend_id}}
+        ).acknowledged
 
     def check_friend(self, user_id, friend_id):
         db = self.get_databse(self.USER_DB)
@@ -272,7 +280,9 @@ class MongoDB:
         regex = re.compile(regex_pattern, re.IGNORECASE)
 
         # Perform the search query
-        matching_users = self.get_user_collection().find({"username": regex}, {"_id": 0})
+        matching_users = self.get_user_collection().find(
+            {"username": regex}, {"_id": 0}
+        )
 
         # Convert the cursor to a list of users and return
         return list(matching_users)
@@ -282,6 +292,16 @@ class MongoDB:
         query = {"user_id": from_user_id}
         return collection.find_one(query)["username"]
 
+    def delete_user(self, user_id):
+        # delete user from user_db
+        db.get_user_collection().delete_one({"user_id": user_id})
+        # delete chat from chat_history_db when participants has the user_id
+        return (
+            db.get_chat_collection()
+            .delete_many({"participants": {"$in": [user_id]}})
+            .acknowledged
+        )
+
 
 db = MongoDB()
 
@@ -290,6 +310,7 @@ def seed_bot():
     # read roles folder
 
     import os
+
     names = os.listdir("roles")
     for name in names:
         # remove .json

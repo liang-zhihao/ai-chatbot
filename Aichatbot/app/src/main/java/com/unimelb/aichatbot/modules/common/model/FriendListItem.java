@@ -52,4 +52,14 @@ public class FriendListItem {
     public void setUserId(String userId) {
         this.userId = userId;
     }
+
+    @Override
+    public String toString() {
+        return "FriendListItem{" +
+                "avatarUrl='" + avatarUrl + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", userId='" + userId + '\'' +
+                '}';
+    }
 }

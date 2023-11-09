@@ -23,6 +23,7 @@ public class LoginManager {
     }
 
     public void logout() {
+        // todo clear all data logout
         sharedPreferencesHelper.remove(SharedPreferencesHelper.KEY_USER_ID);
         sharedPreferencesHelper.remove(SharedPreferencesHelper.KEY_USERNAME);
         sharedPreferencesHelper.remove(SharedPreferencesHelper.KEY_JWT_TOKEN);

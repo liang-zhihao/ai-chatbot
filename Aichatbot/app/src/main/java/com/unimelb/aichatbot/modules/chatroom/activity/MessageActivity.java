@@ -129,8 +129,14 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
                 ChatDetailResponse chatDetailResponse = result.getData();
 
                 String roomName = chatDetailResponse.getName();
-                Log.i(TAG, "onSuccess: " + roomName);
-                actionBar.setTitle(roomName);
+                // Log.i(TAG, "onSuccess: " + roomName);
+                runOnUiThread(() -> {
+
+                    Objects.requireNonNull(getSupportActionBar()).setTitle(roomName);
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+                });
+
             }
 
             @Override
@@ -223,7 +229,7 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
                 } else if (t != null) {
                     // Handle other types of errors (like network issues)
                     t.printStackTrace();
-                    //Toast.makeText(MessageActivity.this, "Server is not available", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(MessageActivity.this, "Server is not available", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -288,6 +294,11 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
         // Random random = new Random();
         // messageContent = "Hello" + random.nextInt(10000);
         //   add message to UI
+        // check input
+        if (messageContent.isEmpty()) {
+            Toast.makeText(this, "Message cannot be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
         appendMessageToUI(new Message(messageContent, MessageType.TEXT, loginManager.getUserId(), SenderType.ME, new Date(), loginManager.getUsername()));
 
         messageEditText.setText("");

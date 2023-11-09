@@ -177,12 +177,13 @@ public class NewChatActivity extends AppCompatActivity implements CustomViewCont
         Log.i(TAG, "Selected Users: " + selectedUsers);
         // Here, you can do whatever you want with the selected users.
         // For example, starting a group chat, or displaying their names.
-        // todo select users
-        // todo check if chatroom exists
-        String roomId = containsParticipant(selectedUsers.stream().map(ChatUser::getUserId).collect(Collectors.toList()));
+
+        //   check if chatroom exists
+        List<String> userIds = selectedUsers.stream().map(ChatUser::getUserId).collect(Collectors.toList());
+        userIds.add(LoginManager.getInstance(getApplicationContext()).getUserId());
+        String roomId = containsParticipant(userIds);
         Intent intent = new Intent(NewChatActivity.this, MessageActivity.class);
         if (roomId != null) {
-            // todo go to chatroom
             intent.putExtra("roomId", roomId);
             intent.putExtra("roomName", Objects.requireNonNull(chats.get(roomId)).getName());
             startActivity(intent);
