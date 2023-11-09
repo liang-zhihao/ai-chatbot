@@ -234,15 +234,15 @@ public class RecentChatFragment extends Fragment implements CustomViewController
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            // ... 检测摇一摇逻辑 ...
+
             float[] values = sensorEvent.values;
-            if ((Math.abs(values[0]) > 15) || Math.abs(values[1]) > 15 || Math.abs(values[2]) > 15) {
+            if ((Math.abs(values[0]) > 20) || Math.abs(values[1]) > 20 || Math.abs(values[2]) > 20) {
                 long now = System.currentTimeMillis();
-                // 只有当上次摇动的时间与现在的时间差超过冷却时间时，才执行操作
+                // shake CD
                 if ((now - lastShakeTime) > SHAKE_COOLDOWN_TIME) {
                     Toast.makeText(getContext(), "shake！", Toast.LENGTH_SHORT).show();
 
-                    // 创建一个Intent并启动新的Activity
+                    // to do
                     Intent intent = new Intent(getContext(), RecommendationActivity.class);
                     startActivity(intent);
 
