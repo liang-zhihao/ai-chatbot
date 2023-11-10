@@ -1,6 +1,7 @@
+import json
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
-
+from bson.json_util import dumps
 
 def connect_to_mongodb():
     try:
@@ -11,12 +12,15 @@ def connect_to_mongodb():
         client = MongoClient(uri)
 
         print(client.list_database_names())
-        for database in ["user_db",'chat_history_db']:
+        for database in ["user_db"]:
             print("current database: ", database)
             for coll in client[database].list_collection_names():
                 print("current collection:",coll)
                 print(client[database][coll].find_one({"user_id": "test100"}))
-                print(client[database][coll].find_one())
+                collection = client[database][coll]
+                query = {"user_id": "test1111"}
+                friends = collection.find_one(query)
+                print(friends==None, type(friends))
         # Access the 'test' database
         db = client["test"]
 
@@ -34,5 +38,3 @@ def connect_to_mongodb():
 if __name__ == "__main__":
     pass
     connect_to_mongodb()
-    bot_id = "Bot_Li_Bai"
-    print(bot_id[4:].replace("_", " "))

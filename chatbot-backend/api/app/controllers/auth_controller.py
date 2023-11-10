@@ -32,6 +32,7 @@ def register():
     return error_out(status["message"], 401)
 
 
+
 @auth_bp.route("/api/login", methods=["POST"])
 def login():
     # Login logic here

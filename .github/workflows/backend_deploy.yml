@@ -7,11 +7,13 @@ on:
       - 'chatbot-backend/**'
     branches:
       - main
+      - backend_test
   pull_request:
     paths:
       - 'chatbot-backend/**'
     branches:
       - main
+      - backend_test
 # Test purpose
 #on: [push]
 
@@ -35,7 +37,9 @@ jobs:
               sudo docker rm  -f $(sudo docker ps -a --format "{{.ID}} {{.Image}}" | grep -v mongo | awk '{print $1}')
               sudo docker rmi -f $(sudo docker images --format "{{.ID}} {{.Repository}}" | grep -v mongo | awk '{print $1}')
               sudo echo "y" | sudo docker system prune
-              cd /home/loading8425/COMP90018-AI-ChatBot && git pull origin main
+              cd /home/loading8425/COMP90018-AI-ChatBot 
+              git checkout ${{ env.BRANCH_NAME }}
+              git pull origin ${{ env.BRANCH_NAME }}
       
       - name: run docker compose
         uses: appleboy/ssh-action@master
