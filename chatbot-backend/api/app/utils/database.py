@@ -2,7 +2,7 @@ from typing import List
 
 import pymongo, re
 
-from app.utils.common import get_config
+from app.utils.common import get_config, get_roles
 
 # uri = "mongodb://{}:{}@{}:{}/{}?authSource=admin".format(MONGO_USER, MONGO_PASS, MONGO_HOST, MONGO_PORT, MONGO_DB)
 
@@ -244,8 +244,13 @@ class MongoDB:
         return friend_id in collection.find_one(query)["friends"]
 
     def get_friends(self, user_id):
+        # check user_id exists
         db = self.get_databse(self.USER_DB)
         collection = db[self.USER_COLLECTION]
+        # validation check
+
+        if collection.find_one({"user_id": user_id})==None:
+            return None
         query = {"user_id": user_id}
         friends = collection.find_one(query)["friends"]
         for i in range(len(friends)):
@@ -282,7 +287,17 @@ class MongoDB:
         query = {"user_id": from_user_id}
         return collection.find_one(query)["username"]
 
-
+    # random recommend a user
+    def recommend_user(self, user_id):
+        query = {"user_id": user_id}
+        collection = self.get_user_collection()
+        friends = collection.find_one(query)["friends"]
+        random_user = collection.aggregate([
+            {'$match': {'user_id': {'$nin': friends }}},
+            {'$sample': {'size': 1}}
+        ])
+        user = random_user.next()['user_id']
+        return {"user_id":user}
 db = MongoDB()
 
 

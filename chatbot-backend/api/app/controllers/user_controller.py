@@ -133,3 +133,18 @@ def search_user():
         )
     except Exception as e:
         return error_out(str(e), 401)
+
+# random recommend a user
+@user_bp.route("/api/user/recommend_user", methods=["POST"])
+# @jwt_required()
+def recommend_user():
+    try:
+        user_id = request.json["user_id"]
+        users = db.recommend_user(user_id)
+        if users is None:
+            return error_out("user not exists", 401)
+        return standard_response(
+            200, "Recommend user successfully", True, users
+        )
+    except Exception as e:
+        return error_out(str(e), 401)

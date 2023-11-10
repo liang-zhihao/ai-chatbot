@@ -44,7 +44,6 @@ def create_chat_room():
         "created_at": utcnow()
     }
     # TODO all user in participants should be in the database
-
     db.get_chat_collection().insert_one(new_chat)
     # Insert logic to create a chat room using received data
     # Return response with appropriate status code
