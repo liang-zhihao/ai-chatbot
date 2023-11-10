@@ -31,7 +31,6 @@ public class SocketClient {
     private final Emitter.Listener onDisconnect = args -> Log.i(TAG, "onDisconnect");
     private Socket socket;
     // debug mode
-    // private final String URL = BuildConfig.SERVER_LOCAL_URL;
     //
     private final String URL = BuildConfig.SERVER_URL;
 

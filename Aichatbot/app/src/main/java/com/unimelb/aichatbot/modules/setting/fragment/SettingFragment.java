@@ -3,14 +3,12 @@ package com.unimelb.aichatbot.modules.setting.fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -18,28 +16,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.input.DialogInputExtKt;
+import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton;
 import com.unimelb.aichatbot.CustomViewController;
+import com.unimelb.aichatbot.MainActivity;
 import com.unimelb.aichatbot.R;
-import com.unimelb.aichatbot.SettingsActivity;
-import com.unimelb.aichatbot.databinding.FragmentSettingBinding;
-import com.unimelb.aichatbot.modules.account.activity.ChooseBotActivity;
 import com.unimelb.aichatbot.modules.profile.activity.Fragment.InputNameBottomSheetDialogFragment;
 import com.unimelb.aichatbot.modules.profile.activity.Fragment.InputPasswordBottomSheetDialogFragment;
-import com.unimelb.aichatbot.modules.profile.activity.activity.ProfileActivity;
 import com.unimelb.aichatbot.modules.profile.activity.request.ChangePasswordRequest;
 import com.unimelb.aichatbot.modules.profile.activity.request.ChangeUsernameRequest;
 import com.unimelb.aichatbot.modules.profile.activity.server.ProfileService;
-import com.unimelb.aichatbot.network.MyCallback;
 import com.unimelb.aichatbot.network.RetrofitFactory;
 import com.unimelb.aichatbot.util.LoginManager;
 
-import java.util.Objects;
-
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
-import kotlin.jvm.functions.Function2;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,6 +39,10 @@ public class SettingFragment extends Fragment implements CustomViewController, I
     private TextView passwordButton;
     private TextView emailButton;
 
+    private static final String TAG = "SettingFragment";
+
+    CircularProgressButton logoutBtn;
+
     @NonNull
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,6 +51,7 @@ public class SettingFragment extends Fragment implements CustomViewController, I
         emailButton = root.findViewById(R.id.buttonMail);
         nameButton = root.findViewById(R.id.buttonName);
         passwordButton = root.findViewById(R.id.buttonPassword);
+        logoutBtn = root.findViewById(R.id.logoutBtn);
         String username = LoginManager.getInstance(requireContext().getApplicationContext()).getUsername();
         nameButton.setText(username);
         emailButton.setText(LoginManager.getInstance(requireContext().getApplicationContext()).getUserId());
@@ -80,6 +73,29 @@ public class SettingFragment extends Fragment implements CustomViewController, I
         // Using method reference for cleaner event handling
         nameButton.setOnClickListener(v -> openInputNameBottomSheet());
         passwordButton.setOnClickListener(v -> openInputPasswordBottomSheet());
+        logoutBtn.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+            // Set the message show for the Alert time
+            builder.setMessage("Do you want to logout?");
+            builder.setTitle("Logout");
+            builder.setPositiveButton("Yes", (DialogInterface.OnClickListener) (dialog, which) -> {
+                LoginManager.getInstance(requireContext().getApplicationContext()).logout();
+                // to landing page
+                Intent intent = new Intent(requireActivity(), com.unimelb.aichatbot.modules.account.activity.LoginActivity.class);
+                startActivity(intent);
+                requireActivity().finish();
+            });
+
+            builder.setNegativeButton("No", (DialogInterface.OnClickListener) (dialog, which) -> {
+                dialog.cancel();
+            });
+
+            // Create the Alert dialog
+            AlertDialog alertDialog = builder.create();
+            // Show the Alert Dialog box
+            alertDialog.show();
+
+        });
     }
 
     private void showInputDialog(View view, String title, DialogInterface.OnClickListener posListener, DialogInterface.OnClickListener nagListener) {
@@ -116,7 +132,7 @@ public class SettingFragment extends Fragment implements CustomViewController, I
                                 @Override
                                 public void run() {
                                     if (response.isSuccessful()) {
-                                        Toast.makeText(activity, "Name updated successfully!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(activity, "Your name has been updated successfully.\n", Toast.LENGTH_SHORT).show();
                                         nameButton.setText(newName);
                                     } else {
                                         Toast.makeText(activity, "Update failed: " + response.code(), Toast.LENGTH_SHORT).show();
@@ -178,7 +194,7 @@ public class SettingFragment extends Fragment implements CustomViewController, I
                                 @Override
                                 public void run() {
                                     if (response.isSuccessful()) {
-                                        Toast.makeText(activity, "Pwd updated successfully!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(activity, "Password changed successfully! Keep your new password secure.", Toast.LENGTH_SHORT).show();
                                     } else {
                                         Toast.makeText(activity, "Update failed: " + response.code(), Toast.LENGTH_SHORT).show();
                                     }

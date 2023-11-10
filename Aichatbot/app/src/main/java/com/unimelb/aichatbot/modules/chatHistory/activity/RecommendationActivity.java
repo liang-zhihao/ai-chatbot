@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.unimelb.aichatbot.MainActivity;
@@ -28,6 +29,7 @@ import com.unimelb.aichatbot.network.BaseResponse;
 import com.unimelb.aichatbot.network.MyCallback;
 import com.unimelb.aichatbot.network.RetrofitFactory;
 import com.unimelb.aichatbot.network.dto.ErrorResponse;
+import com.unimelb.aichatbot.network.dto.UserInfoResponse;
 import com.unimelb.aichatbot.util.ImgUtil;
 import com.unimelb.aichatbot.util.LoginManager;
 
@@ -44,6 +46,9 @@ import retrofit2.Response;
 public class RecommendationActivity extends AppCompatActivity {
 
     String friendName;
+    TextView friendNameTextView;
+    private static final String TAG = "RecommendationActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,9 +56,10 @@ public class RecommendationActivity extends AppCompatActivity {
         requestRecommendation();
         Button cancelButton = findViewById(R.id.cancel_button);
         Button startButton = findViewById(R.id.start_button);
+        friendNameTextView = findViewById(R.id.name);
 
-        //random set avatar
-        int[] imageResources = new int[] {
+        // random set avatar
+        int[] imageResources = new int[]{
                 R.drawable.troye_sivan,
                 R.drawable.donald_trump,
                 R.drawable.einstein,
@@ -62,8 +68,6 @@ public class RecommendationActivity extends AppCompatActivity {
                 R.drawable.mark_zuckerberg,
                 R.drawable.steve_jobs,
                 R.drawable.troye_sivan
-
-
         };
         Random random = new Random();
         int randomImageIndex = random.nextInt(imageResources.length);
@@ -89,45 +93,40 @@ public class RecommendationActivity extends AppCompatActivity {
         });
     }
 
-    public void requestRecommendation(){
+    public void requestRecommendation() {
 
-        // Toast.makeText(RecommendationActivity.this, "点击了", Toast.LENGTH_SHORT).show();
-        //finish();
-        String userId = LoginManager.getInstance(RecommendationActivity.this.getApplicationContext()).getUserId();
+
+        String userId = LoginManager.getInstance(getApplicationContext()).getUserId();
 
         ChatHistoryService chatHistoryService = RetrofitFactory.create(ChatHistoryService.class);
         RecommendUserRequest request = new RecommendUserRequest(userId);
-        Call<RecommendUserResponse> call = chatHistoryService.getRecommendUser(request);
-        call.enqueue(new Callback<RecommendUserResponse>() {
+        chatHistoryService.getRecommendUser(request).enqueue(new MyCallback<UserInfoResponse>() {
             @Override
-            public void onResponse(Call<RecommendUserResponse> call, Response<RecommendUserResponse> response) {
-                if (response.isSuccessful()) {
-                    // 处理成功的响应
-                    RecommendUserResponse userInfo = response.body();
-
-                    TextView textView = findViewById(R.id.name);
-                    textView.setText(userInfo.getData().getUserId());
-                    Log.d("11", userInfo.getData().getUserId());
-                    friendName=userInfo.getData().getUserId();
-                    //ImgUtil.setImgView(RecommendationActivity.this, current.getAvatarUrl(), binding.imageAvatar);
-
-                } else {
-
-                }
+            public void onSuccess(BaseResponse<UserInfoResponse> result) {
+                UserInfoResponse userInfoResponse = result.getData();
+                Log.i(TAG, userInfoResponse.toString());
+                friendName = userInfoResponse.getUsername();
+                ImgUtil.setImgView(RecommendationActivity.this, userInfoResponse.getAvatar(), findViewById(R.id.recommend_avatar));
+                Toast.makeText(RecommendationActivity.this, "Recommendation :" + friendName, Toast.LENGTH_SHORT).show();
+                friendNameTextView.setText(friendName);
             }
 
             @Override
-            public void onFailure(Call<RecommendUserResponse> call, Throwable t) {
-
+            public void onError(ErrorResponse error, Throwable t) {
+                if (error != null) {
+                    Toast.makeText(RecommendationActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+                if (t != null) {
+                    Toast.makeText(RecommendationActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    t.printStackTrace();
+                }
             }
         });
 
 
-
-
     }
 
-    public void startChat(){
+    public void startChat() {
 
         String userId = LoginManager.getInstance(RecommendationActivity.this.getApplicationContext()).getUserId();
         List<String> participants = new ArrayList<>();
@@ -137,7 +136,7 @@ public class RecommendationActivity extends AppCompatActivity {
         RetrofitFactory.create(NewChatService.class).createChatroom(new NewChatRoomRequest(participants, chatName, userId)).enqueue(new MyCallback<NewChatRoomResponse>() {
             @Override
             public void onSuccess(BaseResponse<NewChatRoomResponse> result) {
-                Toast.makeText(RecommendationActivity.this, "Create room success", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RecommendationActivity.this, "Your chat room has been created. Start inviting friends now!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(RecommendationActivity.this, MessageActivity.class);
                 intent.putExtra("roomId", result.getData().getChatRoomId());
                 startActivity(intent);

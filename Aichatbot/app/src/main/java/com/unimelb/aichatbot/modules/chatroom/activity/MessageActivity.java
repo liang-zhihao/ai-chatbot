@@ -127,14 +127,13 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
             public void onSuccess(BaseResponse<ChatDetailResponse> result) {
                 // update chat room name
                 ChatDetailResponse chatDetailResponse = result.getData();
-
                 String roomName = chatDetailResponse.getName();
+                Toast.makeText(MessageActivity.this, "Welcome to " + roomName, Toast.LENGTH_SHORT).show();
+
                 // Log.i(TAG, "onSuccess: " + roomName);
                 runOnUiThread(() -> {
-
-                    Objects.requireNonNull(getSupportActionBar()).setTitle(roomName);
-                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+                    actionBar.setTitle(roomName);
+                    actionBar.setDisplayHomeAsUpEnabled(true);
                 });
 
             }
@@ -194,7 +193,7 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
 
 
                 if (chatHistoryItemList == null || chatHistoryItemList.isEmpty()) {
-                    Toast.makeText(MessageActivity.this, "No messages", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(MessageActivity.this, "No messages", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -248,7 +247,7 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
         // OnBackPressed is different from the back button in the action bar
         actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle("Chat");
+            actionBar.setTitle("Chat room");
             actionBar.setDisplayHomeAsUpEnabled(true);
 
             this.addMenuProvider(new MenuProvider() {
@@ -296,7 +295,7 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
         //   add message to UI
         // check input
         if (messageContent.isEmpty()) {
-            Toast.makeText(this, "Message cannot be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please type a message before sending.\n", Toast.LENGTH_SHORT).show();
             return;
         }
         appendMessageToUI(new Message(messageContent, MessageType.TEXT, loginManager.getUserId(), SenderType.ME, new Date(), loginManager.getUsername()));
@@ -324,7 +323,7 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
             if (!chatHistoryItemDto.getSenderId().equals(loginManager.getUserId())) {
                 // TODO hard code date
                 runOnUiThread(() -> {
-                    Toast.makeText(MessageActivity.this, "New message received!", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(MessageActivity.this, "New message received!", Toast.LENGTH_SHORT).show();
                     Message newMessage = new Message(chatHistoryItemDto.getContent(), MessageType.TEXT, chatHistoryItemDto.getSenderId(), SenderType.OTHER, new Date(), chatHistoryItemDto.getSenderName());
                     appendMessageToUI(newMessage);
                 });
@@ -386,6 +385,7 @@ public class MessageActivity extends AppCompatActivity implements CustomViewCont
         if (hasPopupBottomSheet()) {
             return;
         }
+
         BottomFragment bottomFragment = new BottomFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.message_bottom_layout, bottomFragment)

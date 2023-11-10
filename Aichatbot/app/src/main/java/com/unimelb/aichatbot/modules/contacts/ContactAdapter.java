@@ -68,7 +68,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.FriendVi
         FriendListItem current = mData.get(position);
         RowItemFriendBinding binding = holder.binding;
         binding.textName.setText(current.getName());
-        binding.textDescription.setText(current.getDescription());
         binding.tvTag.setText(UIHelper.isBot(current.getUserId()) ? "Bot" : "Human");
 
         ImgUtil.setImgView(context, current.getAvatarUrl(), binding.imageAvatar);

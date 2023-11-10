@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Connect with our amazing  chat bot today!"
+            android:text="Connect with our amazing chat bot today!"
             android:textAlignment="center"
 
             />
@@ -95,12 +95,12 @@
 
             />
 
-        <Button
+        <com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
             android:id="@+id/signup_btn"
             android:layout_width="match_parent"
             android:layout_height="59dp"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="64dp"
             android:layout_marginEnd="32dp"
             android:background="@drawable/btn_round_style"
             android:backgroundTint="#17CD91"

@@ -14,8 +14,8 @@ android {
         versionCode 1
         versionName "1.0"
         buildConfigField "String", "SERVER_URL", '"http://chat.unimelb.games/"'
-        buildConfigField "String", "SOCKET_URI", '"http://10.0.2.2:8001/"'
-        buildConfigField "String", "SERVER_LOCAL_URL", '"http://10.0.2.2:8000/"'
+//        buildConfigField "String", "SERVER_URL", '"http://10.0.2.2:8000/"'
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
@@ -33,12 +33,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        debug {
-            buildConfigField "String", "SERVER_URL", '"http://chat.unimelb.games/"'
-            buildConfigField "String", "SOCKET_URI", '"http://10.0.2.2:8001/"'
-            buildConfigField "String", "SERVER_LOCAL_URL", '"http://10.0.2.2:8000/"'
 
-        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

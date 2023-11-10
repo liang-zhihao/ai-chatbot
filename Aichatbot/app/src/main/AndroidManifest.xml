@@ -45,10 +45,7 @@
             android:exported="false"
             android:label="@string/title_activity_main"
             android:theme="@style/Theme.Aichatbot" />
-        <activity
-            android:name=".SettingsActivity"
-            android:exported="false"
-            android:label="@string/title_activity_settings" />
+
         <activity
             android:name=".modules.profile.activity.activity.ProfileActivity"
             android:exported="false" />

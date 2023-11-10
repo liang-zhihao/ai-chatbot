@@ -4,6 +4,7 @@ import com.unimelb.aichatbot.modules.chatHistory.RecommendUserRequest;
 import com.unimelb.aichatbot.modules.chatHistory.RecommendUserResponse;
 import com.unimelb.aichatbot.modules.chatHistory.responsObject.RecentChatResponse;
 import com.unimelb.aichatbot.network.BaseResponse;
+import com.unimelb.aichatbot.network.dto.UserInfoResponse;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface ChatHistoryService {
     Call<BaseResponse<List<RecentChatResponse>>> getUserChatList(@Query("user_id") String userId);
 
     @POST("api/user/recommend_user")
-    Call<RecommendUserResponse> getRecommendUser(@Body RecommendUserRequest request);
+    Call<BaseResponse<UserInfoResponse>> getRecommendUser(@Body RecommendUserRequest request);
 
 
 }

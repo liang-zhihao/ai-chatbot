@@ -11,14 +11,11 @@ public class ChatDetailResponse {
     @SerializedName("created_by")
     private String createdBy;
 
-    @SerializedName("id")
     private String id;
 
     @SerializedName("is_group_chat")
     private boolean isGroupChat;
 
-    @SerializedName("messages")
-    private List<String> messages;
 
     @SerializedName("name")
     private String name;
@@ -58,13 +55,6 @@ public class ChatDetailResponse {
         isGroupChat = groupChat;
     }
 
-    public List<String> getMessages() {
-        return messages;
-    }
-
-    public void setMessages(List<String> messages) {
-        this.messages = messages;
-    }
 
     public String getName() {
         return name;

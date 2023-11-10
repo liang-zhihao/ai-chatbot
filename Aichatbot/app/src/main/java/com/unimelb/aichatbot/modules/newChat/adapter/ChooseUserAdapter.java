@@ -42,7 +42,6 @@ public class ChooseUserAdapter extends RecyclerView.Adapter<ChooseUserAdapter.Vi
 
         holder.chatUserName.setText(user.getName());
 
-        holder.chatUserDesc.setText(user.getDescription());
 
         holder.chatUserCheckbox.setOnCheckedChangeListener(null);
 
@@ -67,7 +66,6 @@ public class ChooseUserAdapter extends RecyclerView.Adapter<ChooseUserAdapter.Vi
         TextView chatUserName;
 
         CircleImageView chatUserImage;
-        TextView chatUserDesc;
         TextView tag;
 
         public ViewHolder(@NonNull View itemView) {
@@ -75,7 +73,6 @@ public class ChooseUserAdapter extends RecyclerView.Adapter<ChooseUserAdapter.Vi
             chatUserImage = itemView.findViewById(R.id.image_avatar);
             chatUserCheckbox = itemView.findViewById(R.id.chatUserCheckbox);
             chatUserName = itemView.findViewById(R.id.text_name);
-            chatUserDesc = itemView.findViewById(R.id.text_description);
             tag = itemView.findViewById(R.id.tv_tag);
             // Ensure changes in checkbox state update the ChatUser object
 

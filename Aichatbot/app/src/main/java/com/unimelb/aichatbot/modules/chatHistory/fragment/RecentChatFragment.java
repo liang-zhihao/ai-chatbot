@@ -1,8 +1,6 @@
 package com.unimelb.aichatbot.modules.chatHistory.fragment;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -27,7 +25,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unimelb.aichatbot.CustomViewController;
-import com.unimelb.aichatbot.MainActivity;
 import com.unimelb.aichatbot.databinding.FragmentRecentChatBinding;
 import com.unimelb.aichatbot.modules.chatHistory.ChatHistoryViewModel;
 import com.unimelb.aichatbot.modules.chatHistory.HistoryItem;
@@ -44,7 +41,6 @@ import com.unimelb.aichatbot.network.dto.ErrorResponse;
 import com.unimelb.aichatbot.socketio.SocketClient;
 import com.unimelb.aichatbot.util.LoginManager;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -21,7 +21,7 @@ real_uri = config.get("mongodb", "uri")
 
 class MongoDB:
     def __init__(
-        self, MONGO_HOST=host, MONGO_PORT=port, MONGO_USER=username, MONGO_PASS=password
+            self, MONGO_HOST=host, MONGO_PORT=port, MONGO_USER=username, MONGO_PASS=password
     ):
         self.MONGO_HOST = MONGO_HOST
         self.MONGO_PORT = MONGO_PORT
@@ -53,9 +53,10 @@ class MongoDB:
         query = {"$or": [{"user_id": user_id}, {"username": username}]}
         for user in collection.find(query):
             if user["user_id"] == user_id:
-                return {"status": "error", "message": "user_id already exists"}
+                return {"status": "error",
+                        "message": "This email is already registered. Would you like to log in?"}
             if user["username"] == username:
-                return {"status": "error", "message": "username already exists"}
+                return {"status": "error", "message": "This username is taken. Please choose a different one."}
         if user_id == "" or username == "" or password == "":
             return {
                 "status": "error",
@@ -69,7 +70,8 @@ class MongoDB:
         db_status = collection.insert_one(record1).acknowledged
         if db_status:
             return {"status": "success", "message": "user created successfully"}
-        return {"status": "error", "message": "user created failed"}
+        return {"status": "error",
+                "message": "We couldn’t create your account. Please check your information and try again."}
 
     def get_user_info(self, user_id):
         db = self.get_databse(self.USER_DB)
@@ -100,8 +102,8 @@ class MongoDB:
                     },
                 }
             if user["user_id"] == user_id and user["password"] != password:
-                return {"status": "error", "message": "password incorrect"}
-        return {"status": "error", "message": "user_id not exists?"}
+                return {"status": "error", "message": "Email or password is wrong"}
+        return {"status": "error", "message": "Email or password is wrong"}
 
     def user_exists(self, user_id):
         query = {"user_id": user_id}
@@ -135,8 +137,8 @@ class MongoDB:
         }
         for user in collection.find(query):
             if (
-                user["user_id"] == record["user_id"]
-                and user["chatbot_id"] == record["chatbot_id"]
+                    user["user_id"] == record["user_id"]
+                    and user["chatbot_id"] == record["chatbot_id"]
             ):
                 return False
         return collection.insert_one(record).acknowledged
@@ -257,7 +259,7 @@ class MongoDB:
         collection = db[self.USER_COLLECTION]
         # validation check
 
-        if collection.find_one({"user_id": user_id})==None:
+        if collection.find_one({"user_id": user_id}) == None:
             return None
         query = {"user_id": user_id}
         friends = collection.find_one(query)["friends"]
@@ -297,7 +299,6 @@ class MongoDB:
         query = {"user_id": from_user_id}
         return collection.find_one(query)["username"]
 
-<<<<<<< HEAD
     def delete_user(self, user_id):
         # delete user from user_db
         db.get_user_collection().delete_one({"user_id": user_id})
@@ -308,20 +309,23 @@ class MongoDB:
             .acknowledged
         )
 
-
-=======
     # random recommend a user
     def recommend_user(self, user_id):
         query = {"user_id": user_id}
         collection = self.get_user_collection()
         friends = collection.find_one(query)["friends"]
         random_user = collection.aggregate([
-            {'$match': {'user_id': {'$nin': friends }}},
+            {'$match': {'user_id': {'$nin': friends}}},
             {'$sample': {'size': 1}}
         ])
-        user = random_user.next()['user_id']
-        return {"user_id":user}
->>>>>>> c999fb280779bd42493bd3cf1ae06e720d3960df
+        user = random_user.next()
+        # remove objectid
+        user.pop("_id")
+        user.pop("password")
+
+        return user
+
+
 db = MongoDB()
 
 

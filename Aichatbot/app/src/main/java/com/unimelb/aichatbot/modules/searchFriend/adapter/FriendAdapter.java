@@ -44,7 +44,6 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
     public FriendViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.row_item_friend, parent, false);
-
         return new FriendAdapter.FriendViewHolder(RowItemFriendBinding.bind(view));
 
     }
@@ -56,8 +55,6 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
 
         RowItemFriendBinding binding = holder.binding;
         binding.textName.setText(current.getName());
-        binding.textDescription.setText(current.getDescription());
-
         binding.tvTag.setText(UIHelper.isBot(current.getUserId()) ? "Bot" : "Human");
         holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(position, current));
         ImgUtil.setImgView(context, current.getAvatarUrl(), binding.imageAvatar);

@@ -35,7 +35,7 @@ public class CameraUtil {
         if (ContextCompat.checkSelfPermission(fragment.requireContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             // Request permission
             ActivityCompat.requestPermissions(fragment.requireActivity(), new String[]{Manifest.permission.CAMERA}, 1);
-            Toast.makeText(fragment.getContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(fragment.getContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
         } else {
             // Open camera
             dispatchTakePictureIntent(name);

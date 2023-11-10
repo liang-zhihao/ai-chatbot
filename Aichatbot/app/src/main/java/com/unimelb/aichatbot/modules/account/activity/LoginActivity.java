@@ -47,13 +47,15 @@ public class LoginActivity extends AppCompatActivity {
                 AccountService accountService = RetrofitFactory.create(AccountService.class);
                 String userId = emailEt.getText().toString().trim();
                 String password = passwordEt.getText().toString().trim();
-                //                  check user input
-                 if (userId.isEmpty() || password.isEmpty()) {
-                     String msg = "Please enter your email and password";
-                     Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();
-                 }else{
-                     loginBtn.startAnimation();
-                 }
+                //                  check user input and contains email
+
+                if (userId.isEmpty() || password.isEmpty()) {
+
+                    Toast.makeText(LoginActivity.this, "Enter your email and password to continue.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                loginBtn.startAnimation();
+
                 // TODO  Debug mode
                 if (userId.equals("a")) {
                     userId = "amy1.com";
@@ -103,7 +105,6 @@ public class LoginActivity extends AppCompatActivity {
                             if (t != null) {
                                 t.printStackTrace();
                             }
-                            //Toast.makeText(LoginActivity.this, "Server is not available", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

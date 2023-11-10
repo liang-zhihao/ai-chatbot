@@ -24,4 +24,5 @@
     <color name="green_500">#17ce92</color>`
     <color name="green_700">#77DE68</color>
     <color name="gray">#808080</color>
+    <color name="danger">#F05941</color>
 </resources>

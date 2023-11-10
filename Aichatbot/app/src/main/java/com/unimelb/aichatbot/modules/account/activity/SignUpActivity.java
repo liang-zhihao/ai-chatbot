@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton;
 import com.unimelb.aichatbot.MainActivity;
 import com.unimelb.aichatbot.R;
 import com.unimelb.aichatbot.modules.account.service.RegisterResponse;
@@ -26,7 +27,7 @@ import com.unimelb.aichatbot.util.UIHelper;
 public class SignUpActivity extends AppCompatActivity {
 
     TextView loginTv;
-    Button signUpBtn;
+    CircularProgressButton signUpBtn;
 
     EditText nameEt, emailEt, passwordEt, confirmPswdEt;
 
@@ -48,7 +49,7 @@ public class SignUpActivity extends AppCompatActivity {
         signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Check user input (TODO)
+
                 // Initialize Retrofit service
                 AccountService accountService = RetrofitFactory.create(AccountService.class);
                 String username = nameEt.getText().toString();
@@ -58,7 +59,7 @@ public class SignUpActivity extends AppCompatActivity {
                 if (userId.isEmpty() && password.isEmpty() && username.isEmpty()) {
                     String msg = "Please enter your Name, Email and password";
                     Toast.makeText(SignUpActivity.this, msg, Toast.LENGTH_SHORT).show();
-                }else if (username.isEmpty()) {
+                } else if (username.isEmpty()) {
                     String msg = "Name cannot be empty.";
                     Toast.makeText(SignUpActivity.this, msg, Toast.LENGTH_SHORT).show();
                 } else if (userId.isEmpty()) {
@@ -67,46 +68,47 @@ public class SignUpActivity extends AppCompatActivity {
                 } else if (password.isEmpty()) {
                     String msg = "Password cannot be empty.";
                     Toast.makeText(SignUpActivity.this, msg, Toast.LENGTH_SHORT).show();
-                }
-                else{
-                        // username = "loading842522";
-                        // userId = "1@22.comm";
-                        // password = "123456789";
-                        // Create a sign-up request
-                        SignUpRequest request = new SignUpRequest();
-                        request.setUsername(username);
-                        request.setUserId(userId);
-                        request.setPassword(password);
+                } else {
+                    // username = "loading842522";
+                    // userId = "1@22.comm";
+                    // password = "123456789";
+                    // Create a sign-up request
+                    SignUpRequest request = new SignUpRequest();
+                    request.setUsername(username);
+                    request.setUserId(userId);
+                    request.setPassword(password);
 
-                        // Asynchronously send the sign-up request
+                    // Asynchronously send the sign-up request
 
-                        accountService.register(request).enqueue(new MyCallback<RegisterResponse>() {
-                            @Override
-                            public void onSuccess(BaseResponse<RegisterResponse> result) {
-                                // Successfully signed up
-                                Toast.makeText(SignUpActivity.this, "Successfully signed up!", Toast.LENGTH_SHORT).show();
-                                LoginManager.getInstance(getApplicationContext()).saveLoginInfo(userId, username, result.getData().getAccessToken());
-                                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                                startActivity(intent);
-                                finish();
+                    accountService.register(request).enqueue(new MyCallback<RegisterResponse>() {
+                        @Override
+                        public void onSuccess(BaseResponse<RegisterResponse> result) {
+                            // Successfully signed up
+                            signUpBtn.revertAnimation();
+                            Toast.makeText(SignUpActivity.this, "You're all set! Sign-in to get started.", Toast.LENGTH_SHORT).show();
+                            LoginManager.getInstance(getApplicationContext()).saveLoginInfo(userId, username, result.getData().getAccessToken());
+                            Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+
+                        @Override
+                        public void onError(ErrorResponse error, @NonNull Throwable t) {
+                            // Handle errors
+                            signUpBtn.revertAnimation();
+                            if (error != null) {
+                                // Handle error defined by the server
+                                Toast.makeText(SignUpActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                            } else if (t != null) {
+                                // Handle other types of errors (e.g., network errors)
+                                t.printStackTrace();
+                                // Toast.makeText(SignUpActivity.this, "Server is not available", Toast.LENGTH_SHORT).show();
                             }
+                        }
 
-                            @Override
-                            public void onError(ErrorResponse error, @NonNull Throwable t) {
-                                // Handle errors
-                                if (error != null) {
-                                    // Handle error defined by the server
-                                    Toast.makeText(SignUpActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-                                } else if (t != null) {
-                                    // Handle other types of errors (e.g., network errors)
-                                    t.printStackTrace();
-                                    //Toast.makeText(SignUpActivity.this, "Server is not available", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-
-                        });
-                    }
+                    });
                 }
+            }
 
         });
 
@@ -119,6 +121,6 @@ public class SignUpActivity extends AppCompatActivity {
                 finish();
             }
         });
-        }
     }
+}
 
