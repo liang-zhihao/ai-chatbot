@@ -145,35 +145,35 @@ def handle_message(data):
     # if user is aibot
     bots = intersection(participants, all_roles.keys())
     if len(bots) > 0:
-        bot_id = bots[0]
-        # get bot response
-        # get bot name from "bot_Li_Bai" to "Li Bai"
-        bot_name = bot_id[4:].replace("_", " ")
-        init_prompt = get_role(bot_name)
-        prompts = [init_prompt]
-        for s in messages:
-            prompts.append({"role": s['role'], "content": s["content"]})
-        reply = chatbot.send_message(prompts)
-        reply_json = {
-            "role": "assistant",
-            "content": reply,
-            "room_id": room_id,
-            "sender_id": bot_id,
-            "timestamp": utcnow(),
-            "read_by": [],
-            "attachments": [
-                # "url": String,
-                # "type": String
-            ]
-        }
-        
-        messages.append(reply_json)
-        db.update_chat_history(room_id, messages)
-        # send bot response to user
-        reply_json["sender_name"] = db.get_user_name(bot_id)
-        print("bot_response", reply, flush=True)
-        data = standard_socket_message("message_to_client", data=reply_json)
-        emit("message_to_client", data, room=room_id)
+        for bot_id in bots:
+            # get bot response
+            # get bot name from "bot_Li_Bai" to "Li Bai"
+            bot_name = bot_id[4:].replace("_", " ")
+            init_prompt = get_role(bot_name)
+            prompts = [init_prompt]
+            for s in messages:
+                prompts.append({"role": s['role'], "content": s["content"]})
+            reply = chatbot.send_message(prompts)
+            reply_json = {
+                "role": "assistant",
+                "content": reply,
+                "room_id": room_id,
+                "sender_id": bot_id,
+                "timestamp": utcnow(),
+                "read_by": [],
+                "attachments": [
+                    # "url": String,
+                    # "type": String
+                ]
+            }
+
+            messages.append(reply_json)
+            db.update_chat_history(room_id, messages)
+            # send bot response to user
+            reply_json["sender_name"] = db.get_user_name(bot_id)
+            print("bot_response", reply, flush=True)
+            data = standard_socket_message("message_to_client", data=reply_json)
+            emit("message_to_client", data, room=room_id)
 
     # call chatbot
 
