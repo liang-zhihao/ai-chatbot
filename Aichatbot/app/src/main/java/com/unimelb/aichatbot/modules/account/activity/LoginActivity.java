@@ -48,10 +48,12 @@ public class LoginActivity extends AppCompatActivity {
                 String userId = emailEt.getText().toString().trim();
                 String password = passwordEt.getText().toString().trim();
                 //                  check user input
-                // if (userId.isEmpty() || password.isEmpty()) {
-                //     Toast.makeText(LoginActivity.this, "Please enter your email and password", Toast.LENGTH_SHORT).show();
-                //     return;
-                // }
+                 if (userId.isEmpty() || password.isEmpty()) {
+                     String msg = "Please enter your email and password";
+                     Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();
+                 }else{
+                     loginBtn.startAnimation();
+                 }
                 // TODO  Debug mode
                 if (userId.equals("a")) {
                     userId = "amy1.com";
@@ -62,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                     password = "1234567890";
 
                 }
-                loginBtn.startAnimation();
+
                 //     send login request to server
 
                 Call<BaseResponse<LoginResponse>> call = accountService.login(new LoginRequest(userId, password));
